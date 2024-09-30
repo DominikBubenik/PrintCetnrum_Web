@@ -1,0 +1,6 @@
+@PrintCetnrum_Web.Server_HostAddress = http://localhost:5211
+
+GET {{PrintCetnrum_Web.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
