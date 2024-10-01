@@ -1,0 +1,22 @@
+mat-toolbar nav {
+  display: flex;
+  align-items: center;
+  padding: 0rem !important;
+}
+
+  mat-toolbar nav a,
+  mat-toolbar nav button {
+    margin-right: 16px;
+  }
+
+    mat-toolbar nav a:last-child,
+    mat-toolbar nav button:last-child {
+      margin-right: 0;
+    }
+
+mat-toolbar {
+  background-color: var(--siemens-blue);
+}
+
+
+
