@@ -1,15 +1,3 @@
-<!--<mat-toolbar>
-  <nav>
-    <button class="btn btn-primary" [routerLink]="['/']">First Page</button>
-    <button class="btn btn-primary" [routerLink]="['/']">Second Page</button>
-    <button class="btn btn-primary" [routerLink]="['/']">Third Page</button>
-  </nav>
-</mat-toolbar>-->
-<!--<div class="col-md-3 col-sm-3 col-3">
-  <div class="logo">
-    <img src="assets/hano_logo.png" class="logo" alt="">
-  </div>
-</div>-->
 <!--navbar is from
     https://github.com/chrisira/angular17-responsive-header
  -->
@@ -23,10 +11,10 @@
         </div>
         <div class="desktop_menu" [class.mobile_menu]="menuValue">
           <ul>
-            <li (click)="closeMenu()">Home</li>
+            <li [routerLink]="['/']">Home</li>
             <li (click)="closeMenu()">About</li>
             <li (click)="closeMenu()">Settings</li>
-            <li (click)="closeMenu()">Log in</li>
+            <li [routerLink]="['/login']">Log in</li>
             <li (click)="closeMenu()">Contact</li>
           </ul>
         </div>
