@@ -10,11 +10,15 @@
     <img src="assets/hano_logo.png" class="logo" alt="">
   </div>
 </div>-->
+<!--navbar is from
+    https://github.com/chrisira/angular17-responsive-header
+ -->
+
 <header>
   <div class="container">
     <div class="row">
       <div class="col-md-9 col-sm-9 col-9">
-        <div class="menu-icon" (click)="openMenu()" >
+        <div class="menu-icon" (click)="openMenu()">
           <i class="{{menu_icon}}"></i>
         </div>
         <div class="desktop_menu" [class.mobile_menu]="menuValue">
