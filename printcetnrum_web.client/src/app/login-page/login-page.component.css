@@ -2,41 +2,35 @@
   width: 60%;
   height: 50%;
   border: 0.05em solid black;
-  /*margin-block-start: auto;*/
   margin-right: auto;
   margin-left: auto;
   margin-top: 200px;
-/*  margin-bottom: auto;*/
- /* justify-content: end;*/
 }
 
-/* Button Styles */
 .custom-btn-outline-gray {
-  border: 2px solid #6c757d; /* Gray border */
-  color: #6c757d; /* Gray text color */
-  background-color: transparent; /* Transparent background */
-  border-radius: 0; /* Sharp corners */
-  padding: 10px 20px; /* Adjust padding to make button bigger */
-  min-width: 180px; /* Set a minimum width for buttons */
+  border: 2px solid #6c757d; 
+  color: #6c757d; 
+  background-color: transparent;
+  border-radius: 0; 
+  padding: 10px 20px;
+  min-width: 180px; 
   max-width: 300px;
   margin-top: auto;
   margin-bottom: auto;
 }
 
   .custom-btn-outline-gray:hover {
-    background-color: #6c757d; /* Gray background on hover */
-    color: #fff; /* White text color on hover */
+    background-color: #6c757d; 
+    color: #fff; 
   }
 
-/* Input Field Styles */
 .form-control {
-  width: 90%; /* Full width for input fields */
+  width: 90%; 
 }
 
-@media (min-width: 577px) {
-  /* Styles for medium and larger devices */
+@media (max-width: 899px) {
   .btn-row {
-    flex-direction: row; /* Align buttons in a row */
+    flex-direction: row; 
   }
   #inner {
     width: 50%;  
@@ -45,15 +39,15 @@
     min-width: 400px;
   }
   .custom-btn-outline-gray {
-    font-size: 18px; /* Default font size for larger screens */
-    padding: 12px; /* Adjust padding for larger screens */
+    font-size: 18px;
+    padding: 12px; 
   }
 }
 
 @media (max-width: 576px) {
   .custom-btn-outline-gray {
-    font-size: 16px; /* Adjust font size for smaller screens */
-    padding: 15px; /* Increase padding for better touch targets */
+    font-size: 16px; 
+    padding: 15px;
   }
 
   #inner {
