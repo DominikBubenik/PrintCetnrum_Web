@@ -8,12 +8,14 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HomePageComponent } from './home-page/home-page.component';
+import { LoginPageComponent } from './login-page/login-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    HomePageComponent
+    HomePageComponent,
+    LoginPageComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, MatToolbarModule,
