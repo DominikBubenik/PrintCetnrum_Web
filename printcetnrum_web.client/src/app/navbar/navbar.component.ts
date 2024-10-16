@@ -32,5 +32,6 @@ export class NavbarComponent {
   closeMenu() {
     this.menuValue = false;
     this.menu_icon = 'bi bi-list';
+    console.log('ideeeeem close menu');
   }
 }
