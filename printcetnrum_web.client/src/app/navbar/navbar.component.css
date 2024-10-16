@@ -22,7 +22,7 @@ mat-toolbar nav button:last-child {
 }*/
 header {
   padding: 10px;
-  background: #02534d;
+  background: #3B62D9;
 }
 
 .logo {
@@ -40,6 +40,7 @@ header {
 .desktop_menu ul {
   padding: 0;
   margin: 0;
+  text-align: left;
 }
 
 .desktop_menu ul li {
@@ -60,7 +61,9 @@ header {
 
 .menu-icon {
   display: none;
+  padding-right: 10px;
 }
+
 
 @media screen and (min-width: 128px) and (max-width: 900px) {
   .desktop_menu {
@@ -68,7 +71,7 @@ header {
     right: -280px;
     transition: 0.4s ease-in-out;
     top: 64px;
-    background: #02534d;
+    background: #3B62D9;
     width: 280px;
     height: 100%;
   }
@@ -81,11 +84,14 @@ header {
     border-bottom: 1px solid grey;
   }
 
-  .menu-icon  {
+  .menu-icon {
     display: block;
-    color: lightcoral;
-    font-size: 400px;
+    color: white;
+    font-size: 40px;
     padding-top: 10px;
+    text-align: right;
+    /*position: absolute;*/
+    right: 10px;
   }
 
   .mobile_menu {
