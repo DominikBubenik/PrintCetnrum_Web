@@ -1,0 +1,66 @@
+<!--theme is based on the Agency theme by Start Bootstrap
+https://github.com/startbootstrap/startbootstrap-agency
+  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Website</title>
+
+  <link rel="stylesheet" href="about-page.component.css">
+  <link rel="stylesheet" href="../../assets/startbootstrap-agency/styles-agency.css">
+  <link rel="stylesheet" href="../../../node_modules/@angular/material/prebuilt-themes/azure-blue.css">
+  <!--<link rel="stylesheet" href="../../../node_modules/startbootstrap-agency/dist/css/styles.css">-->
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="container">
+      <div class="masthead-subheading">Welcome In Our Shop!</div>
+      <div class="masthead-heading text-title-uppercase ">PrintCentrum Púchov</div>
+      <a class="btn btn-primary btn-xl text-uppercase" href="#services">Tell Me More</a>
+    </div>
+  </header>
+  <!-- Services section -->
+  <section class="page-section" id="services">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="section-heading text-uppercase">Services</h2>
+        <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+      </div>
+      <div class="row text-center">
+        <div class="col-md-4">
+          <span class="fa-stack fa-4x">
+            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
+          </span>
+          <h4 class="my-3">E-Commerce</h4>
+          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+        </div>
+        <div class="col-md-4">
+          <span class="fa-stack fa-4x">
+            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
+          </span>
+          <h4 class="my-3">Responsive Design</h4>
+          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+        </div>
+        <div class="col-md-4">
+          <span class="fa-stack fa-4x">
+            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
+          </span>
+          <h4 class="my-3">Web Security</h4>
+          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <button mat-icon-button class="go-to-top" (click)="scrollToTop()">
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+
+</body>
+</html>

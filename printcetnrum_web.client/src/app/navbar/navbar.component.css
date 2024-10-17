@@ -3,7 +3,7 @@
 */
 header {
   padding: 10px;
-  background: #3B62D9;
+  background: var(--printcentrum-blue);
 }
 
 .logo {

@@ -9,16 +9,21 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
+import { AboutPageComponent } from './about-page/about-page.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     HomePageComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    AboutPageComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule, MatToolbarModule,
+    BrowserModule, HttpClientModule, MatToolbarModule, MatButtonModule, MatIconModule,
     AppRoutingModule
   ],
   providers: [
