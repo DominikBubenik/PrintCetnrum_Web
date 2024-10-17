@@ -10,6 +10,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AboutPageComponent } from './about-page/about-page.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -20,7 +23,7 @@ import { AboutPageComponent } from './about-page/about-page.component';
     AboutPageComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule, MatToolbarModule,
+    BrowserModule, HttpClientModule, MatToolbarModule, MatButtonModule, MatIconModule,
     AppRoutingModule
   ],
   providers: [

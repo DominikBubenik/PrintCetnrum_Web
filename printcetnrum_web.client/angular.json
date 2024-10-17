@@ -40,6 +40,7 @@
               "@angular/material/prebuilt-themes/azure-blue.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/bootstrap-icons-1.11.3/font/bootstrap-icons.scss",
+              //"node_modules/startbootstrap-agency/dist/css/styles.css",
               "src/styles.css"
             ],
             "scripts": []
