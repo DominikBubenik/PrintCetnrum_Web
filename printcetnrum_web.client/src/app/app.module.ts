@@ -12,6 +12,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { AboutPageComponent } from './about-page/about-page.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { RegisterPageComponent } from './register-page/register-page.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { MatIconModule } from '@angular/material/icon';
     NavbarComponent,
     HomePageComponent,
     LoginPageComponent,
-    AboutPageComponent
+    AboutPageComponent,
+    RegisterPageComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, MatToolbarModule, MatButtonModule, MatIconModule,
