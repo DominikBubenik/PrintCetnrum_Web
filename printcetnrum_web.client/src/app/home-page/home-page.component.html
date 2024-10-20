@@ -1,27 +1,27 @@
-<p>home-page works!</p>
-<i class="bi bi-list"></i>
-<button class="btn btn-primary">Click</button>
-<i class="bi-alarm"></i>
-<!--<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler"
-            type="button"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your </title>
+</head>
+<div class="users-table-container">
+  <h2>User List</h2>
 
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-      <i class="fas fa-bars"></i>
-    </button>
-    <div class="collapse navbar-collapse"
-         id="navbarNavAltMarkup"
-         mdbCollapse
-         noListNav="mdbCollapse">
-      <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
-        <a class="nav-link" href="#">Features</a>
-        <a class="nav-link" href="#">Pricing</a>
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </div>
-    </div>
-  </div>
-</nav>-->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th (click)="sortByName()">Name</th>
+        <th (click)="sortByEmail()">Email</th>
+        <th (click)="sortByRole()">Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
