@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { EditPhotoPageComponent } from './edit-photo-page/edit-photo-page.component';
 import { UploadPhotoPageComponent } from './upload-photo-page/upload-photo-page.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { UploadPhotoPageComponent } from './upload-photo-page/upload-photo-page.
   ],
   imports: [
     BrowserModule, HttpClientModule, MatToolbarModule, MatButtonModule, MatIconModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [

@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrl: './edit-photo-page.component.css'
 })
 export class EditPhotoPageComponent {
+  brightness: number = 100;
 
+  get brightnessStyle(): string {
+    return `brightness(${this.brightness}%)`;
+  }
 }
