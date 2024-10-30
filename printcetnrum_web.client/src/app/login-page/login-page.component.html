@@ -15,7 +15,8 @@
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <h2 class="text-primary mb-4" style="font-size: 36px; font-weight: bold;">Log in</h2>
 
-            <input formControlName="email" type="text" class="form-control mb-3" placeholder="Enter your name/email">
+            <input formControlName="email" type="text" class="form-control mb-3"
+                   [ngClass]="{'is-invalid': loginForm.controls['email'].dirty && loginForm.controls['email'].hasError('required')}" placeholder="Enter your name/email">
             <small *ngIf="loginForm.controls['email'].dirty && loginForm.controls['email'].hasError('required')" class="text-danger">*Email is required*</small>
             <small *ngIf="loginForm.controls['email'].dirty && loginForm.controls['email'].hasError('email')" class="text-danger">*Invalid email*</small>
 
@@ -24,7 +25,8 @@
                      id="password"
                      formControlName="password"
                      class="form-control"
-                     placeholder="Enter your password">
+                     placeholder="Enter your password"
+                     [ngClass]="{'is-invalid': loginForm.controls['password'].dirty && loginForm.controls['password'].hasError('required')}">
               <button class="btn btn-outline-secondary"
                       type="button"
                       (click)="togglePasswordVisibility()"

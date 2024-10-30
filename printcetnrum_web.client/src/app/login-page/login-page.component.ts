@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 /**TODO make the form look better
  * add option to log in via google
@@ -22,7 +22,7 @@ export class LoginPageComponent {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email: ['', Validators.required, Validators.email],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
@@ -53,6 +53,19 @@ export class LoginPageComponent {
       //});
     } else {
       //ValidateForm.validateAllFormFields(this.loginForm);
+      console.log('Form not valid');
+      LoginPageComponent.validateAllFormFields(this.loginForm);
     }
+  }
+
+  static validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsDirty({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
+      }
+    });
   }
 }
