@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PrintCetnrum_Web.Server.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer"));
+    //option.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer"));
+    option.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnStr"));
 });
 
 
