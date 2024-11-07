@@ -25,6 +25,8 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             var user = await _authContext.Users.SingleOrDefaultAsync(x => x.UserName == userParam.UserName && x.Password == userParam.Password);
 
+            //System.Console.WriteLine(user.UserName +  "  " + user.Password);
+            System.Console.WriteLine("toto je meno " + userParam.UserName +  "  " + userParam.Password);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
 
