@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrintCetnrum_Web.Server.Context;
 using PrintCetnrum_Web.Server.Models;
@@ -25,7 +27,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             var user = await _authContext.Users.SingleOrDefaultAsync(x => x.UserName == userParam.UserName && x.Password == userParam.Password);
 
-            //System.Console.WriteLine(user.UserName +  "  " + user.Password);
             System.Console.WriteLine("toto je meno " + userParam.UserName +  "  " + userParam.Password);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
@@ -38,12 +39,22 @@ namespace PrintCetnrum_Web.Server.Controllers
         {
             if (userParam == null)
                 return BadRequest();
+            
+            // check email
+            if (await CheckEmailExistAsync(userParam.Email))
+                return BadRequest(new { Message = "Email Already Exist" });
 
-            var user = await _authContext.Users.SingleOrDefaultAsync(x => x.UserName == userParam.UserName);
+            //check username
+            if (await CheckUsernameExistAsync(userParam.UserName))
+                return BadRequest(new { Message = "Username Already Exist" });
 
-            if (user != null)
-                return BadRequest(new { message = "Username already exists" });
+            var passMessage = CheckPasswordStrength(userParam.Password);
+            if (!string.IsNullOrEmpty(passMessage))
+                return BadRequest(new { Message = passMessage.ToString() });
 
+            userParam.Password = PasswordHasher.HashPassword(userParam.Password);
+            userParam.Role = "User";
+            userParam.Token = "";
             await _authContext.Users.AddAsync(userParam);
             await _authContext.SaveChangesAsync();
 
@@ -62,6 +73,24 @@ namespace PrintCetnrum_Web.Server.Controllers
                 })
                 .ToListAsync();
             return Ok(users);
+        }
+
+        private Task<bool> CheckEmailExistAsync(string? email)
+            => _authContext.Users.AnyAsync(x => x.Email == email);
+
+        private Task<bool> CheckUsernameExistAsync(string? username)
+            => _authContext.Users.AnyAsync(x => x.UserName == username);
+
+        private static string CheckPasswordStrength(string pass)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (pass.Length < 9)
+                sb.Append("Minimum password length should be 8" + Environment.NewLine);
+            if (!(Regex.IsMatch(pass, "[a-z]") && Regex.IsMatch(pass, "[A-Z]") && Regex.IsMatch(pass, "[0-9]")))
+                sb.Append("Password should be AlphaNumeric" + Environment.NewLine);
+            if (!Regex.IsMatch(pass, "[<,>,@,!,#,$,%,^,&,*,(,),_,+,\\[,\\],{,},?,:,;,|,',\\,.,/,~,`,-,=]"))
+                sb.Append("Password should contain special charcter" + Environment.NewLine);
+            return sb.ToString();
         }
     }
 }
