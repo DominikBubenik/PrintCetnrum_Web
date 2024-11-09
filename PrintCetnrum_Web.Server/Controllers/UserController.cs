@@ -49,5 +49,19 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             return Ok(new { message = "User Created Successfully" });
         }
+
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _authContext.Users
+                .Select(user => new
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email
+                })
+                .ToListAsync();
+            return Ok(users);
+        }
     }
 }

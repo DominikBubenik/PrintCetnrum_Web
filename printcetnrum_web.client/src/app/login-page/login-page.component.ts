@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 /**TODO make the form look better
  * add option to log in via google
@@ -16,7 +17,7 @@ export class LoginPageComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    //private router: Router,
+    private router: Router
     //private toast: NgToastService,
 /*    private userStore: UserStoreService*/
   ) { }
@@ -40,13 +41,14 @@ export class LoginPageComponent {
         next: (res) => {
           console.log(res.message);
           this.loginForm.reset();
+          this.router.navigate(['']);
+
           //this.auth.storeToken(res.accessToken);
           //this.auth.storeRefreshToken(res.refreshToken);
           //const tokenPayload = this.auth.decodedToken();
           //this.userStore.setFullNameForStore(tokenPayload.name);
           //this.userStore.setRoleForStore(tokenPayload.role);
           //this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 });
-          //this.router.navigate(['dashboard'])
         },
         error: (err) => {
          //this.toast.error({ detail: "ERROR", summary: "Something when wrong!", duration: 5000 });

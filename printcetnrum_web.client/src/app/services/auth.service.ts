@@ -18,4 +18,8 @@ export class AuthService {
   registerUser(user: any) {
     return this.http.post<any>(this.baseUrl + 'register', user);
   }
+
+  getAllUsers() {
+    return this.http.get<any>(this.baseUrl + 'getAll');
+  }
 }

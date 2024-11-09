@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginPageComponent } from '../login-page/login-page.component';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-page',
@@ -13,7 +14,8 @@ export class RegisterPageComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {
     // Initialize the form group with validators
     this.registerForm = this.formBuilder.group({
@@ -37,6 +39,7 @@ export class RegisterPageComponent implements OnInit {
         next: (res) => {
           console.log(res.message);
           this.registerForm.reset();
+          this.router.navigate(['login']);
         },
         error: (err) => {
           alert(err.error.message);
