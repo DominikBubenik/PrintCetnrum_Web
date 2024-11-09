@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using PrintCetnrum_Web.Server.Context;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +20,25 @@ builder.Services.AddCors(option =>
 
 builder.Services.AddDbContext<AppDbContext>(option =>
 {
-    //option.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer"));
     option.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnStr"));
+});
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-very-secure-secret-key-that-is-at-least-256-bits-long")),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero
+    };
 });
 
 
