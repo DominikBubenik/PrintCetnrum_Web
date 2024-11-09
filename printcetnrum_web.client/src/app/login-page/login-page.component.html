@@ -15,7 +15,7 @@
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
             <h2 class="text-primary mb-4" style="font-size: 36px; font-weight: bold;">Log in</h2>
             <!--[ngClass]="{'is-invalid': loginForm.controls['email'].dirty && loginForm.controls['email'].hasError('required')}"-->
-            <input formControlName="surname" type="text" class="form-control mb-3"
+            <input formControlName="username" type="text" class="form-control mb-3"
                    placeholder="Enter your name/email">
 
             <!--<small *ngIf="loginForm.controls['email'].dirty && loginForm.controls['email'].hasError('required')" class="text-danger">*Email is required*</small>

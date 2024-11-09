@@ -17,7 +17,7 @@ export class RegisterPageComponent implements OnInit {
   ) {
     // Initialize the form group with validators
     this.registerForm = this.formBuilder.group({
-      firstname: ['', Validators.required],
+      firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],

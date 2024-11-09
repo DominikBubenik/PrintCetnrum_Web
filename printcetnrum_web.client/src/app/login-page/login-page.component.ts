@@ -23,7 +23,7 @@ export class LoginPageComponent {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      surname: ['', [Validators.required]], // Validators.email
+      username: ['', [Validators.required]], // Validators.email
       password: ['', Validators.required],
     });
   }
@@ -33,6 +33,7 @@ export class LoginPageComponent {
   }
 
   onLogin() {
+    console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       console.log('Form submitted', this.loginForm.value);
       this.auth.loginUser(this.loginForm.value).subscribe({
