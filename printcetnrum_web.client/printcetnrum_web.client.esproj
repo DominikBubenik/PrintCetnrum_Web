@@ -10,4 +10,7 @@
   <ItemGroup>
     <None Include="printcetnrum_web.client.esproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\app\guards\" />
+  </ItemGroup>
 </Project>

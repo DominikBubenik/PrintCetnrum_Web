@@ -34,4 +34,9 @@ export class UsersListPageComponent {
   sortByRole() {
     this.users.sort((a, b) => a.role.localeCompare(b.role));
   }
+
+  onLogout() {
+    this.auth.logOut();
+
+  }
 }

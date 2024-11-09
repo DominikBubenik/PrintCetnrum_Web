@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,6 +33,7 @@ import { UsersListPageComponent } from './users-list-page/users-list-page.compon
     HttpClientModule,
     MatToolbarModule, MatButtonModule, MatIconModule,
     ReactiveFormsModule,
+    MatSnackBarModule,
     AppRoutingModule
   ],
   providers: [

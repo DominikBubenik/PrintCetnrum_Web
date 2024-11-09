@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { Injectable } from '@angular/core';
 export class AuthService {
 
   private baseUrl = 'https://localhost:7074/api/User/';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   loginUser(user: any) {
     console.log(user.surname);
@@ -21,5 +22,22 @@ export class AuthService {
 
   getAllUsers() {
     return this.http.get<any>(this.baseUrl + 'getAll');
+  }
+
+  storeToken(tokenValue: string) {
+    localStorage.setItem('token', tokenValue)
+  }
+
+  getToken() {
+    return localStorage.getItem('token');
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token')
+  }
+
+  logOut() {
+    localStorage.clear();
+    this.router.navigate(['login'])
   }
 }
