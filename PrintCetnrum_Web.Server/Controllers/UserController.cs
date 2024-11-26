@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -83,6 +84,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             return Ok(new { message = "User Created Successfully" });
         }
 
+        [Authorize]
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -91,6 +93,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
+                    UserName = user.UserName,
                     Email = user.Email
                 })
                 .ToListAsync();
@@ -130,7 +133,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddHours(1),
                 SigningCredentials = credentials
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
@@ -152,7 +155,7 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         private ClaimsPrincipal GetPrincipleFromExpiredToken(string token)
         {
-            var key = Encoding.ASCII.GetBytes("veryverysceret.....");
+            var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key-that-is-at-least-256-bits-long");
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
