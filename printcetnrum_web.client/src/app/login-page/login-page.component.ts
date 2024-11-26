@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserStoreService } from "../services/user-store.service";
 
 /**TODO make the form look better
  * add option to log in via google
@@ -19,8 +20,8 @@ export class LoginPageComponent {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
-/*    private userStore: UserStoreService*/
+    private snackBar: MatSnackBar,
+    private userStore: UserStoreService
   ) { }
 
   ngOnInit() {
@@ -40,23 +41,28 @@ export class LoginPageComponent {
       console.log('Form submitted', this.loginForm.value);
       this.auth.loginUser(this.loginForm.value).subscribe({
         next: (res) => {
-          console.log(res.message);
 
-          this.auth.storeToken(res.accessToken);
+          this.auth.storeToken(res.token);
           //this.auth.storeRefreshToken(res.refreshToken);
-          //const tokenPayload = this.auth.decodedToken();
-          //this.userStore.setFullNameForStore(tokenPayload.name);
-          //this.userStore.setRoleForStore(tokenPayload.role);
+          const tokenPayload = this.auth.decodedToken();
+          this.userStore.setFullNameForStore(tokenPayload.unique_name);
+          this.userStore.setRoleForStore(tokenPayload.role);
           this.snackBar.open('This is a snackbar message', 'Close', {
-            duration: 3000,  // Duration in milliseconds
-            horizontalPosition: 'right',  // Position the snackbar on the screen (optional)
-            verticalPosition: 'top'       // Position the snackbar on the screen (optional)
+            duration: 3000,
+            horizontalPosition: 'center',  
+            verticalPosition: 'top',
+            panelClass: 'app-notification-success'
           });
           this.loginForm.reset();
           this.router.navigate(['']);
         },
         error: (err) => {
-         //this.toast.error({ detail: "ERROR", summary: "Something when wrong!", duration: 5000 });
+          this.snackBar.open('This is a snackbar message', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-error',
+          });
           console.log(err);
         },
       });
