@@ -57,3 +57,8 @@
     min-width: 200px;
   }
 }
+
+.mat-snack-bar-container {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+}

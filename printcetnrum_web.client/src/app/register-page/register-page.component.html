@@ -3,16 +3,60 @@
 <head>
   <meta charset="UTF-8"> <!-- Character encoding declaration -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your </title>
+  <title>Your Registration</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 </head>
-<div class="container-fluid h-100">
-  <div id="inner" class="text-center">
-    <h2 class="text-primary mb-4" style="font-size: 36px; font-weight: bold;">Register</h2>
-    <input type="text" class="form-control mb-3" placeholder="Enter your name">
-    <input type="text" class="form-control mb-3" placeholder="Enter your email">
-    <input type="text" class="form-control mb-3" placeholder="Phone number">
-    <input type="password" class="form-control mb-3" placeholder="Enter your password">
-    <input type="password" class="form-control mb-3" placeholder="Repeat your password">
-    <button class="btn custom-btn-outline-gray btn-lg" style="margin-bottom: 25px;" onclick="submitForm()">Create Account</button>
+<body>
+  <div class="container-fluid h-100">
+    <div id="inner" class="text-center">
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <h2 class="text-primary mb-4" style="font-size: 36px; font-weight: bold;">Register</h2>
+
+        <input formControlName="firstName" type="text" class="form-control mb-3"
+               [ngClass]="{'is-invalid': registerForm.controls['firstName'].dirty && registerForm.controls['firstName'].hasError('required')}"
+               placeholder="Enter your firstname">
+        <small *ngIf="registerForm.controls['firstName'].dirty && registerForm.controls['firstName'].hasError('required')" class="text-danger">*Firstname is required*</small>
+
+        <input formControlName="lastName" type="text" class="form-control mb-3"
+               [ngClass]="{'is-invalid': registerForm.controls['lastName'].dirty && registerForm.controls['lastName'].hasError('required')}"
+               placeholder="Enter your lastname">
+        <small *ngIf="registerForm.controls['lastName'].dirty && registerForm.controls['lastName'].hasError('required')" class="text-danger">*Lastname is required*</small>
+
+        <input formControlName="email" type="text" class="form-control mb-3"
+               [ngClass]="{'is-invalid': registerForm.controls['email'].dirty && (registerForm.controls['email'].hasError('required') || registerForm.controls['email'].hasError('email'))}"
+               placeholder="Enter your email">
+        <small *ngIf="registerForm.controls['email'].dirty && registerForm.controls['email'].hasError('required')" class="text-danger">*Email is required*</small>
+        <small *ngIf="registerForm.controls['email'].dirty && registerForm.controls['email'].hasError('email')" class="text-danger">*Invalid email*</small>
+
+        <input formControlName="userName" type="text" class="form-control mb-3"
+               [ngClass]="{'is-invalid': registerForm.controls['userName'].dirty && registerForm.controls['userName'].hasError('required')}"
+               placeholder="Enter your username">
+        <small *ngIf="registerForm.controls['userName'].dirty && registerForm.controls['userName'].hasError('required')" class="text-danger">*Username is required*</small>
+
+        <input formControlName="phone" type="text" class="form-control mb-3"
+               [ngClass]="{'is-invalid': registerForm.controls['phone'].dirty && registerForm.controls['phone'].hasError('required')}"
+               placeholder="Phone number">
+        <small *ngIf="registerForm.controls['phone'].dirty && registerForm.controls['phone'].hasError('required')" class="text-danger">*Phone number is required*</small>
+
+        <input formControlName="password" type="password" class="form-control mb-3"
+               [ngClass]="{'is-invalid': registerForm.controls['password'].dirty && registerForm.controls['password'].hasError('required')}"
+               placeholder="Enter your password">
+        <small *ngIf="registerForm.controls['password'].dirty && registerForm.controls['password'].hasError('required')" class="text-danger">*Password is required*</small>
+
+        <input formControlName="confirmPassword" type="password" class="form-control mb-3"
+               [ngClass]="{'is-invalid': registerForm.controls['confirmPassword'].dirty && (registerForm.controls['confirmPassword'].hasError('required') || (registerForm.controls['confirmPassword'].value !== registerForm.controls['password'].value))}"
+               placeholder="Repeat your password">
+        <small *ngIf="registerForm.controls['confirmPassword'].dirty && registerForm.controls['confirmPassword'].value !== registerForm.controls['password'].value" class="text-danger">*Passwords must match*</small>
+
+        <div class="row mb-3">
+          <div class="col">
+            <button class="btn custom-btn-outline-gray btn-lg" type="submit">Create Account</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+</body>
+</html>
+
