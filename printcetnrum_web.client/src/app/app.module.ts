@@ -5,6 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,6 +37,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     MatToolbarModule, MatButtonModule, MatIconModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [
