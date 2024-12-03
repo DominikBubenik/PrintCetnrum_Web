@@ -19,9 +19,11 @@
           <ul>
             <li [routerLink]="['/']">Home</li>
             <li [routerLink]="['/about']">About</li>
+            <li *ngIf="isLoggedIn" [routerLink]="['/users']">Users</li>
             <li (click)="closeMenu()">...</li>
             <li [routerLink]="['/login']">Log in</li>
             <li [routerLink]="['/register']">Register</li>
+            <li *ngIf="isLoggedIn" (click)="onLogout()">Logout</li>
           </ul>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,14 +12,17 @@ export class NavbarComponent {
   currentUrl: string | undefined;
   menuValue: boolean = false;
   menu_icon: string = 'bi bi-list';
+  isLoggedIn: boolean = false;
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private auth: AuthService
   ) { }
 
   ngOnInit(): void {
     this.currentUrl = this.router.url;
 
+    this.isLoggedIn = this.auth.isLoggedIn();
     this.router.events.subscribe(() => {
       this.currentUrl = this.router.url;
     });
@@ -33,5 +37,10 @@ export class NavbarComponent {
     this.menuValue = false;
     this.menu_icon = 'bi bi-list';
     console.log('ideeeeem close menu');
+  }
+
+  onLogout() {
+    this.auth.logOut();
+    this.isLoggedIn = false;
   }
 }
