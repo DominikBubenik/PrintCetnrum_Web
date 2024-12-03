@@ -91,14 +91,55 @@ namespace PrintCetnrum_Web.Server.Controllers
             var users = await _authContext.Users
                 .Select(user => new
                 {
+                    Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     UserName = user.UserName,
-                    Email = user.Email
+                    Email = user.Email,
+                    Role = user.Role
                 })
                 .ToListAsync();
             return Ok(users);
         }
+
+        [Authorize]
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        {
+            if (updatedUser == null || id != updatedUser.Id)
+                return BadRequest();
+
+            var user = await _authContext.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User Not Found" });
+
+            user.FirstName = updatedUser.FirstName;
+            user.LastName = updatedUser.LastName;
+            user.UserName = updatedUser.UserName;
+            user.Email = updatedUser.Email;
+            if (!string.IsNullOrEmpty(updatedUser.Password))
+            {
+                user.Password = PasswordHasher.HashPassword(updatedUser.Password);
+            }
+
+            await _authContext.SaveChangesAsync();
+            return Ok(new { message = "User Updated Successfully" });
+        }
+
+        [Authorize]
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _authContext.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User Not Found" });
+
+            _authContext.Users.Remove(user);
+            await _authContext.SaveChangesAsync();
+
+            return Ok(new { message = "User Deleted Successfully" });
+        }
+
 
         private Task<bool> CheckEmailExistAsync(string? email)
             => _authContext.Users.AnyAsync(x => x.Email == email);
@@ -133,7 +174,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddHours(1),
+                Expires = DateTime.Now.AddDays(100),
                 SigningCredentials = credentials
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
