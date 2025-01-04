@@ -43,19 +43,30 @@
       <div class="modal-body">
         <form (ngSubmit)="onSave()">
           <div class="mb-3">
-            <label for="firstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName" [(ngModel)]="currentUser.firstName" name="firstName" required>
-          </div>
-          <div class="mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName" [(ngModel)]="currentUser.lastName" name="lastName" required>
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Save</button>
-        </form>
+            <div *ngIf="currentUser" class="mb-3">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" [(ngModel)]="currentUser.firstName" name="firstName" required>
+            </div>
+            </div>
+            <div class="mb-3">
+              <div *ngIf="currentUser" class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" [(ngModel)]="currentUser.lastName" name="lastName" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div *ngIf="currentUser" class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email"
+                       class="form-control"
+                       id="email"
+                       [(ngModel)]="currentUser.email"
+                       name="email"
+                       required />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+</form>
       </div>
     </div>
   </div>

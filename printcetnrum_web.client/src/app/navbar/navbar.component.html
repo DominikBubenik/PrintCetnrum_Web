@@ -25,7 +25,11 @@
             <li [routerLink]="['/register']">Register</li>
             <li *ngIf="isLoggedIn" (click)="onLogout()">Logout</li>
           </ul>
+
         </div>
+      </div>
+      <div class="col-md-3 col-sm-3 col-3 text-right">
+        <span *ngIf="isLoggedIn">Welcome, {{ userName }}!</span>
       </div>
     </div>
   </div>

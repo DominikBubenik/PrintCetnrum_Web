@@ -174,7 +174,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddDays(100),
+                Expires = DateTime.Now.AddDays(10),
                 SigningCredentials = credentials
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);

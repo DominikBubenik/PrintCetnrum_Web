@@ -13,6 +13,7 @@ export class NavbarComponent {
   menuValue: boolean = false;
   menu_icon: string = 'bi bi-list';
   isLoggedIn: boolean = false;
+  userName: string = '';
   constructor(
     private router: Router,
     private http: HttpClient,
@@ -21,8 +22,11 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.currentUrl = this.router.url;
-
     this.isLoggedIn = this.auth.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userName = this.auth.getfullNameFromToken();
+    }
+
     this.router.events.subscribe(() => {
       this.currentUrl = this.router.url;
     });
@@ -42,5 +46,6 @@ export class NavbarComponent {
   onLogout() {
     this.auth.logOut();
     this.isLoggedIn = false;
+    this.userName = '';
   }
 }
