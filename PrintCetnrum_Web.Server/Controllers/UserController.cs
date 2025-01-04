@@ -45,14 +45,14 @@ namespace PrintCetnrum_Web.Server.Controllers
             user.Token = CreateJwt(user);
             var newAccessToken = user.Token;
             var newRefreshToken = CreateRefreshToken();
-            //user.RefreshToken = newRefreshToken;
-            //user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
             await _authContext.SaveChangesAsync();
 
-            return Ok(new
+            return Ok(new TokenApiDto()
             {
-                Token = user.Token,
-                message = "Login success"
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
             });
         }
 
@@ -186,11 +186,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var refreshToken = Convert.ToBase64String(tokenBytes);
 
-            //var tokenInUser = _authContext.Users.Any(a => a.RefreshToken == refreshToken);
-            //if (tokenInUser)
-            //{
-            //    return CreateRefreshToken();
-            //}
+            var tokenInUser = _authContext.Users.Any(a => a.RefreshToken == refreshToken);
+            if (tokenInUser)
+            {
+                return CreateRefreshToken();
+            }
             return refreshToken;
         }
 
@@ -215,28 +215,28 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         }
 
-        //[HttpPost("refresh")]
-        //public async Task<IActionResult> Refresh([FromBody] TokenApiDto tokenApiDto)
-        //{
-        //    if (tokenApiDto is null)
-        //        return BadRequest("Invalid Client Request");
-        //    string accessToken = tokenApiDto.AccessToken;
-        //    string refreshToken = tokenApiDto.RefreshToken;
-        //    var principal = GetPrincipleFromExpiredToken(accessToken);
-        //    var username = principal.Identity.Name;
-        //    var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
-        //    if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-        //        return BadRequest("Invalid Request");
-        //    var newAccessToken = CreateJwt(user);
-        //    var newRefreshToken = CreateRefreshToken();
-        //    user.RefreshToken = newRefreshToken;
-        //    await _authContext.SaveChangesAsync();
-        //    return Ok(new TokenApiDto()
-        //    {
-        //        AccessToken = newAccessToken,
-        //        RefreshToken = newRefreshToken,
-        //    });
-        //}
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] TokenApiDto tokenApiDto)
+        {
+            if (tokenApiDto is null)
+                return BadRequest("Invalid Client Request");
+            string accessToken = tokenApiDto.AccessToken;
+            string refreshToken = tokenApiDto.RefreshToken;
+            var principal = GetPrincipleFromExpiredToken(accessToken);
+            var username = principal.Identity.Name;
+            var user = await _authContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                return BadRequest("Invalid Request");
+            var newAccessToken = CreateJwt(user);
+            var newRefreshToken = CreateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            await _authContext.SaveChangesAsync();
+            return Ok(new TokenApiDto()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+            });
+        }
 
     }
 }
