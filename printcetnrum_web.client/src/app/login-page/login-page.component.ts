@@ -1,27 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserStoreService } from "../services/user-store.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-/**TODO make the form look better
- * add option to log in via google
+
+/** TODO make the form look better
+ * add option to log in via Google
  */
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.css'
+  styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent {
   isPasswordVisible: boolean = false;
-  public loginForm!: FormGroup;
+  loginForm!: FormGroup;
+  forgotEmail?: string;
+  isValidEmail: boolean = false;
+
   constructor(
     private fb: FormBuilder,
-    private auth: AuthService,
+    private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private userStore: UserStoreService
+    private userStore: UserStoreService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -39,17 +45,16 @@ export class LoginPageComponent {
     console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       console.log('Form submitted', this.loginForm.value);
-      this.auth.loginUser(this.loginForm.value).subscribe({
+      this.authService.loginUser(this.loginForm.value).subscribe({
         next: (res) => {
-
-          this.auth.storeToken(res.accessToken);
-          this.auth.storeRefreshToken(res.refreshToken);
-          const tokenPayload = this.auth.decodedToken();
+          this.authService.storeToken(res.accessToken);
+          this.authService.storeRefreshToken(res.refreshToken);
+          const tokenPayload = this.authService.decodedToken();
           this.userStore.setFullNameForStore(tokenPayload.unique_name);
           this.userStore.setRoleForStore(tokenPayload.role);
-          this.snackBar.open('This is a snackbar message', 'Close', {
+          this.snackBar.open('Login successful!', 'Close', {
             duration: 3000,
-            horizontalPosition: 'center',  
+            horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: 'app-notification-success'
           });
@@ -57,7 +62,7 @@ export class LoginPageComponent {
           this.router.navigate(['']);
         },
         error: (err) => {
-          this.snackBar.open('This is a snackbar message', 'Close', {
+          this.snackBar.open('Login failed. Please try again.', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
@@ -67,7 +72,6 @@ export class LoginPageComponent {
         },
       });
     } else {
-      //ValidateForm.validateAllFormFields(this.loginForm);
       console.log('Form not valid');
       LoginPageComponent.validateAllFormFields(this.loginForm);
     }
@@ -83,4 +87,52 @@ export class LoginPageComponent {
       }
     });
   }
+
+  open(forgotModal: any) {
+    this.modalService.open(forgotModal); // Open the modal using template reference
+  }
+
+  // Handle reset link logic
+  saveChanges() {
+    if (this.forgotEmail) {
+      // Here, you can call your service to send the reset link, e.g.
+      // this.authService.sendPasswordResetLink(this.forgotEmail).subscribe(...);
+
+      console.log('Reset link sent to', this.forgotEmail);
+      this.modalService.dismissAll(); // Close the modal after sending the reset link
+    }
+    //this.authService.sendPasswordResetLink(this.forgotEmail).subscribe({
+    //  next: () => {
+    //    this.snackBar.open('Password reset link sent to your email!', 'Close', {
+    //      duration: 3000,
+    //      horizontalPosition: 'center',
+    //      verticalPosition: 'top',
+    //      panelClass: 'app-notification-success'
+    //    });
+    //    this.forgotEmail = '';
+    //    const modalElement = this.forgotPasswordModal.nativeElement;
+    //    if (modalElement) {
+    //      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    //      modalInstance?.hide();
+    //    }
+    //  },
+    //  error: () => {
+    //    this.snackBar.open('Failed to send reset link. Please try again.', 'Close', {
+    //      duration: 3000,
+    //      horizontalPosition: 'center',
+    //      verticalPosition: 'top',
+    //      panelClass: 'app-notification-error',
+    //    });
+    //  }
+    //});
+  }
+
+  checkValidEmail(event: string) {
+    const value = event;
+    this.isValidEmail = value.includes('@') && value.includes('.');
+    return this.isValidEmail;
+  }
+
+    
+  //}
 }
