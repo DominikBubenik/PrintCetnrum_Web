@@ -6,6 +6,7 @@ import { AboutPageComponent } from './about-page/about-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { UsersListPageComponent } from './users-list-page/users-list-page.component';
 import { AuthGuard } from './guards/auth.guard';
+import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,12 @@ const routes: Routes = [
     title: 'Users list',
     pathMatch: 'full',
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'reset',
+    component: ResetPasswordPageComponent,
+    title: 'Reset Password',
+    pathMatch: 'full'
   }
 ];
 

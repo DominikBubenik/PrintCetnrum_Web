@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserStoreService } from "../services/user-store.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ResetPasswordService } from '../services/reset-password.service';
 
 
 /** TODO make the form look better
@@ -27,7 +28,8 @@ export class LoginPageComponent {
     private router: Router,
     private snackBar: MatSnackBar,
     private userStore: UserStoreService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private resetService: ResetPasswordService
   ) { }
 
   ngOnInit() {
@@ -93,39 +95,33 @@ export class LoginPageComponent {
   }
 
   // Handle reset link logic
-  saveChanges() {
-    if (this.forgotEmail) {
-      // Here, you can call your service to send the reset link, e.g.
-      // this.authService.sendPasswordResetLink(this.forgotEmail).subscribe(...);
-
+  sendResetLink() {
+    if (this.checkValidEmail(this.forgotEmail ?? '')) {
       console.log('Reset link sent to', this.forgotEmail);
-      this.modalService.dismissAll(); // Close the modal after sending the reset link
+      this.resetService.sendResetPasswordLink(this.forgotEmail!).subscribe({
+        next: (res) => {
+          this.forgotEmail = '';
+          this.modalService.dismissAll();
+          this.snackBar.open('Link Send', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-success'
+          });
+        },
+        error: (err) => {
+          this.snackBar.open('Sth failed. Please try again.', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-error',
+          });
+      }
+      })
+    
     }
-    //this.authService.sendPasswordResetLink(this.forgotEmail).subscribe({
-    //  next: () => {
-    //    this.snackBar.open('Password reset link sent to your email!', 'Close', {
-    //      duration: 3000,
-    //      horizontalPosition: 'center',
-    //      verticalPosition: 'top',
-    //      panelClass: 'app-notification-success'
-    //    });
-    //    this.forgotEmail = '';
-    //    const modalElement = this.forgotPasswordModal.nativeElement;
-    //    if (modalElement) {
-    //      const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    //      modalInstance?.hide();
-    //    }
-    //  },
-    //  error: () => {
-    //    this.snackBar.open('Failed to send reset link. Please try again.', 'Close', {
-    //      duration: 3000,
-    //      horizontalPosition: 'center',
-    //      verticalPosition: 'top',
-    //      panelClass: 'app-notification-error',
-    //    });
-    //  }
-    //});
   }
+  
 
   checkValidEmail(event: string) {
     const value = event;

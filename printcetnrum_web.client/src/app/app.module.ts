@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { UsersListPageComponent } from './users-list-page/users-list-page.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
 
 
 
@@ -31,7 +32,8 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     LoginPageComponent,
     AboutPageComponent,
     RegisterPageComponent,
-    UsersListPageComponent
+    UsersListPageComponent,
+    ResetPasswordPageComponent
   ],
   imports: [
     BrowserModule,
