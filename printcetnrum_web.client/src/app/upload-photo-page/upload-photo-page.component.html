@@ -1,1 +1,25 @@
-<p>upload-photo-page works!</p>
+<div class="upload-container">
+  <h1>Upload Photo</h1>
+
+  <!-- File input -->
+  <div class="file-input">
+    <input type="file" (change)="onFileSelected($event)" />
+  </div>
+
+  <!-- Upload button -->
+  <div class="upload-button">
+    <button (click)="uploadImage()" [disabled]="!selectedFile">Upload</button>
+  </div>
+
+  <!-- Preview uploaded image -->
+  <div class="uploaded-image" *ngIf="uploadedImagePath">
+    <h3>Uploaded Image:</h3>
+    <img [src]="uploadedImagePath" alt="Uploaded Image" />
+  </div>
+
+  <!-- Error message -->
+  <div class="error-message" *ngIf="!selectedFile">
+    <p>Please select a file to upload.</p>
+  </div>
+</div>
+
