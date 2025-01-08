@@ -1,27 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserStoreService } from "../services/user-store.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ResetPasswordService } from '../services/reset-password.service';
 
-/**TODO make the form look better
- * add option to log in via google
+
+/** TODO make the form look better
+ * add option to log in via Google
  */
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.css'
+  styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent {
   isPasswordVisible: boolean = false;
-  public loginForm!: FormGroup;
+  loginForm!: FormGroup;
+  forgotEmail?: string;
+  isValidEmail: boolean = false;
+
   constructor(
     private fb: FormBuilder,
-    private auth: AuthService,
+    private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private userStore: UserStoreService
+    private userStore: UserStoreService,
+    private modalService: NgbModal,
+    private resetService: ResetPasswordService
   ) { }
 
   ngOnInit() {
@@ -39,17 +47,16 @@ export class LoginPageComponent {
     console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       console.log('Form submitted', this.loginForm.value);
-      this.auth.loginUser(this.loginForm.value).subscribe({
+      this.authService.loginUser(this.loginForm.value).subscribe({
         next: (res) => {
-
-          this.auth.storeToken(res.token);
-          //this.auth.storeRefreshToken(res.refreshToken);
-          const tokenPayload = this.auth.decodedToken();
+          this.authService.storeToken(res.accessToken);
+          this.authService.storeRefreshToken(res.refreshToken);
+          const tokenPayload = this.authService.decodedToken();
           this.userStore.setFullNameForStore(tokenPayload.unique_name);
           this.userStore.setRoleForStore(tokenPayload.role);
-          this.snackBar.open('This is a snackbar message', 'Close', {
+          this.snackBar.open('Login successful!', 'Close', {
             duration: 3000,
-            horizontalPosition: 'center',  
+            horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: 'app-notification-success'
           });
@@ -57,7 +64,7 @@ export class LoginPageComponent {
           this.router.navigate(['']);
         },
         error: (err) => {
-          this.snackBar.open('This is a snackbar message', 'Close', {
+          this.snackBar.open('Login failed. Please try again.', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
@@ -67,7 +74,6 @@ export class LoginPageComponent {
         },
       });
     } else {
-      //ValidateForm.validateAllFormFields(this.loginForm);
       console.log('Form not valid');
       LoginPageComponent.validateAllFormFields(this.loginForm);
     }
@@ -83,4 +89,46 @@ export class LoginPageComponent {
       }
     });
   }
+
+  open(forgotModal: any) {
+    this.modalService.open(forgotModal); // Open the modal using template reference
+  }
+
+  // Handle reset link logic
+  sendResetLink() {
+    if (this.checkValidEmail(this.forgotEmail ?? '')) {
+      console.log('Reset link sent to', this.forgotEmail);
+      this.resetService.sendResetPasswordLink(this.forgotEmail!).subscribe({
+        next: (res) => {
+          this.forgotEmail = '';
+          this.modalService.dismissAll();
+          this.snackBar.open('Link Send', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-success'
+          });
+        },
+        error: (err) => {
+          this.snackBar.open('Sth failed. Please try again.', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-error',
+          });
+      }
+      })
+    
+    }
+  }
+  
+
+  checkValidEmail(event: string) {
+    const value = event;
+    this.isValidEmail = value.includes('@') && value.includes('.');
+    return this.isValidEmail;
+  }
+
+    
+  //}
 }

@@ -11,6 +11,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { TokenApiModel } from '../models/token-api.model';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -36,33 +37,33 @@ export class TokenInterceptor implements HttpInterceptor {
             });
             this.router.navigate(['login'])
             //handle
-           //return this.handleUnAuthorizedError(request, next);
+           return this.handleUnAuthorizedError(request, next);
           }
         }
         return throwError(() => err)
       })
     );
   }
-  //handleUnAuthorizedError(req: HttpRequest<any>, next: HttpHandler) {
-  //  let tokeApiModel = new TokenApiModel();
-  //  tokeApiModel.accessToken = this.auth.getToken()!;
-  //  tokeApiModel.refreshToken = this.auth.getRefreshToken()!;
-  //  return this.auth.renewToken(tokeApiModel)
-  //    .pipe(
-  //      switchMap((data: TokenApiModel) => {
-  //        this.auth.storeRefreshToken(data.refreshToken);
-  //        this.auth.storeToken(data.accessToken);
-  //        req = req.clone({
-  //          setHeaders: { Authorization: `Bearer ${data.accessToken}` }  // "Bearer "+myToken
-  //        })
-  //        return next.handle(req);
-  //      }),
-  //      catchError((err) => {
-  //        return throwError(() => {
-  //          this.toast.warning({ detail: "Warning", summary: "Token is expired, Please Login again" });
-  //          this.router.navigate(['login'])
-  //        })
-  //      })
-  //    )
-  //}
+  handleUnAuthorizedError(req: HttpRequest<any>, next: HttpHandler) {
+    let tokeApiModel = new TokenApiModel();
+    tokeApiModel.accessToken = this.auth.getToken()!;
+    tokeApiModel.refreshToken = this.auth.getRefreshToken()!;
+    return this.auth.renewToken(tokeApiModel)
+      .pipe(
+        switchMap((data: TokenApiModel) => {
+          this.auth.storeRefreshToken(data.refreshToken);
+          this.auth.storeToken(data.accessToken);
+          req = req.clone({
+            setHeaders: { Authorization: `Bearer ${data.accessToken}` }  // "Bearer "+myToken
+          })
+          return next.handle(req);
+        }),
+        catchError((err) => {
+          return throwError(() => {
+            //this.toast.warning({ detail: "Warning", summary: "Token is expired, Please Login again" });
+            this.router.navigate(['login'])
+          })
+        })
+      )
+  }
 }

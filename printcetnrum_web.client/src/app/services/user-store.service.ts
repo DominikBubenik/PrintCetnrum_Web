@@ -20,7 +20,7 @@ export class UserStoreService {
   }
 
   public getFullNameFromStore() {
-    return this.fullName$.asObservable();
+    return this.fullName$.getValue();
   }
 
   public setFullNameForStore(fullname: string) {
