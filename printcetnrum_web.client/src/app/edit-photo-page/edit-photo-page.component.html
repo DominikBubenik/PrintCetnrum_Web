@@ -1,7 +1,8 @@
 <p>edit-photo-page works!</p>
 
 <div>
+  <input type="file" (change)="onFileSelected($event)" />
   <input type="range" min="0" max="200" [(ngModel)]="brightness" />
-  <img [style.filter]="brightnessStyle" src="../../assets/about-pictures/PrintCentrum_foto.jpg" alt="Image" />
+  <img [style.filter]="brightnessStyle" [src]="imageUrl" alt="Image" />
 </div>
 
