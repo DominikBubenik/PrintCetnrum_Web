@@ -10,10 +10,12 @@ namespace PrintCetnrum_Web.Server.Context
 
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserFile> UserFiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<User>().ToTable("users");
+            builder.Entity<UserFile>().ToTable("user_files");
         }
     }
 }

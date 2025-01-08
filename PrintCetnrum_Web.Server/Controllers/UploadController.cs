@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PrintCetnrum_Web.Server.Context;
+using PrintCetnrum_Web.Server.Models;
 
 namespace PrintCetnrum_Web.Server.Controllers
 {
@@ -7,9 +10,10 @@ namespace PrintCetnrum_Web.Server.Controllers
     public class UploadController : ControllerBase
     {
         private readonly string _uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserData");
-
-        public UploadController()
+        private readonly AppDbContext _dbContext;
+        public UploadController(AppDbContext dbContext)
         {
+            this._dbContext = dbContext;
             if (!Directory.Exists(_uploadsFolder))
             {
                 Directory.CreateDirectory(_uploadsFolder);
@@ -17,24 +21,46 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
         [HttpPost("uploadImage")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] string userName, [FromForm] bool shouldPrint)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file uploaded.");
             }
 
-            // Generate a unique file name (optional)
             var fileName = Path.GetFileName(file.FileName);
-            var filePath = Path.Combine(_uploadsFolder, fileName);
+            var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
+            var filePath = Path.Combine(_uploadsFolder, uniqueName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            // Return the file URL or response after upload
-            return Ok(new { filePath = $"/UserData/{fileName}" });
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var userFile = new UserFile
+            {
+                FileName = fileName,
+                UniqueName = uniqueName,
+                FilePath = $"/UserData/{uniqueName}",
+                UploadDate = DateTime.Now,
+                ShouldPrint = shouldPrint,
+                UserId = user.Id,
+                Extension = Path.GetExtension(fileName),
+                FileSize = file.Length
+            };
+
+            _dbContext.UserFiles.Add(userFile);
+            await _dbContext.SaveChangesAsync();
+
+           
+            return Ok(new { filePath = $"/UserData/{uniqueName}" });
         }
     }
 }
