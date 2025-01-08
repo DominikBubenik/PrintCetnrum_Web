@@ -15,5 +15,9 @@ namespace PrintCetnrum_Web.Server.Models
         public string Email { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
+        public string? ResetPasswordToken { get; set; }
+        public DateTime ResetPasswordExpiry { get; set; }
+        public DateTime AcountCreated { get; set; }
+
     }
 }
