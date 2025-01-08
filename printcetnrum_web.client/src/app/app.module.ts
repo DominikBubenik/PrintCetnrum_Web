@@ -5,9 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; 
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -26,7 +24,6 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +33,7 @@ import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/
     AboutPageComponent,
     RegisterPageComponent,
     EditPhotoPageComponent,
-    UploadPhotoPageComponent
+    UploadPhotoPageComponent,
     UsersListPageComponent,
     ResetPasswordPageComponent
   ],

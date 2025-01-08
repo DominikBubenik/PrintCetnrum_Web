@@ -1,4 +1,5 @@
-﻿# Use the official .NET SDK to build the application
+﻿/*
+# Use the official .NET SDK to build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS image
 WORKDIR /src
 
@@ -17,3 +18,4 @@ EXPOSE 5000
 
 # Start the application
 ENTRYPOINT ["dotnet", "pritncetnrum_web.dll"]
+*/
