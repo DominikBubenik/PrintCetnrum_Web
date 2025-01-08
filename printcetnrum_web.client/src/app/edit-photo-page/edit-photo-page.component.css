@@ -1,0 +1,8 @@
+/* styles.css or component-specific CSS */
+.displayed-image {
+  width: 100%; /* Adjust width as needed */
+  max-width: 500px; /* Set max-width to avoid stretching */
+  height: auto; /* Keep the aspect ratio */
+  border: 2px solid #ccc; /* Optional: to make image boundary visible */
+  background-color: #f0f0f0; /* Optional: background color if image fails */
+}

@@ -18,6 +18,9 @@ import { AboutPageComponent } from './about-page/about-page.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { EditPhotoPageComponent } from './edit-photo-page/edit-photo-page.component';
+import { UploadPhotoPageComponent } from './upload-photo-page/upload-photo-page.component';
+import { FormsModule } from '@angular/forms';
 import { UsersListPageComponent } from './users-list-page/users-list-page.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
@@ -32,6 +35,8 @@ import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/
     LoginPageComponent,
     AboutPageComponent,
     RegisterPageComponent,
+    EditPhotoPageComponent,
+    UploadPhotoPageComponent
     UsersListPageComponent,
     ResetPasswordPageComponent
   ],
