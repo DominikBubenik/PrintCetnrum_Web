@@ -62,5 +62,72 @@ namespace PrintCetnrum_Web.Server.Controllers
            
             return Ok(new { filePath = $"/UserData/{uniqueName}" });
         }
+
+
+        [HttpGet("getUserFiles")]
+        public async Task<IActionResult> GetUserFiles([FromQuery] string userName)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var files = await _dbContext.UserFiles
+                .Where(uf => uf.UserId == user.Id)
+                .Select(uf => new
+                {
+                    uf.Id,
+                    uf.FileName,
+                    uf.FilePath,
+                    uf.Extension,
+                    uf.UploadDate,
+                    uf.ShouldPrint
+                })
+                .ToListAsync();
+
+            return Ok(files);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFile(int id)
+        {
+            var file = await _dbContext.UserFiles.FindAsync(id);
+
+            if (file == null)
+            {
+                return NotFound("File not found.");
+            }
+
+            var fullPath = Path.Combine(_uploadsFolder, file.UniqueName);
+
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
+
+            _dbContext.UserFiles.Remove(file);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPut("updatePrintStatus/{id}")]
+        public async Task<IActionResult> UpdatePrintStatus(int id, [FromBody] bool shouldPrint)
+        {
+            var file = await _dbContext.UserFiles.FindAsync(id);
+
+            if (file == null)
+            {
+                return NotFound("File not found.");
+            }
+
+            file.ShouldPrint = shouldPrint;
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }

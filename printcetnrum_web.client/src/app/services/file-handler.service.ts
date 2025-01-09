@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { UserFile } from '../shared/user-file';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +20,18 @@ export class FileHandlerService {
       console.log(`${key}: ${value}`);
     });
     return this.http.post<any>(this.baseUrl + 'uploadImage', formData);
+  }
+
+
+  fetchFiles(): Observable<UserFile[]> {
+    return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken()}`);
+  }
+
+  markForPrint(id: number, shouldPrint: boolean): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, shouldPrint);
+  }
+
+  deleteFile(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}${id}`);
   }
 }
