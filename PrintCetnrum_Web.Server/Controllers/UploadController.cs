@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrintCetnrum_Web.Server.Context;
 using PrintCetnrum_Web.Server.Models;
@@ -20,12 +21,19 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("uploadImage")]
         public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] string userName, [FromForm] bool shouldPrint)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file uploaded.");
+            }
+
+            var maxFileSize = 10 * 1024 * 1024; // 10MB
+            if (file.Length > maxFileSize)
+            {
+                return BadRequest("File is too large.");
             }
 
             var fileName = Path.GetFileName(file.FileName);
@@ -63,7 +71,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             return Ok(new { filePath = $"/UserData/{uniqueName}" });
         }
 
-
+        [Authorize]
         [HttpGet("getUserFiles")]
         public async Task<IActionResult> GetUserFiles([FromQuery] string userName)
         {
@@ -90,6 +98,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             return Ok(files);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFile(int id)
         {
@@ -113,6 +122,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPut("updatePrintStatus/{id}")]
         public async Task<IActionResult> UpdatePrintStatus(int id, [FromBody] bool shouldPrint)
         {
@@ -129,5 +139,18 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpGet("getUserFile/{id}")]
+        public async Task<IActionResult> GetUserFile(int id)
+        {
+            var file = await _dbContext.UserFiles
+                .FirstOrDefaultAsync(uf => uf.Id == id);
+
+            if (file == null)
+            {
+                return NotFound("File not found.");
+            }
+            return Ok(file);
+        }
     }
 }

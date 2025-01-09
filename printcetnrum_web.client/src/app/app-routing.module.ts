@@ -27,14 +27,14 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'edit',
+    path: 'edit/:id',
     component: EditPhotoPageComponent,
     title: 'Edit page',
     pathMatch: 'full'
   },{
     path: 'upload',
     component: UploadPhotoPageComponent,
-    title: 'Edit page',
+    title: 'Upload page',
     pathMatch: 'full'
   },{
     path: 'userFiles',

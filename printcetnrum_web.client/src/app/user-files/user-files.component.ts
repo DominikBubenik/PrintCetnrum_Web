@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserFile } from '../shared/user-file';
 import { FileHandlerService } from '../services/file-handler.service';
+import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-files',
@@ -9,8 +11,9 @@ import { FileHandlerService } from '../services/file-handler.service';
 })
 export class UserFilesComponent implements OnInit{
   files: UserFile[] = [];
+  baseUrl = environment.apiUrl;
 
-  constructor(private fileHandlerService: FileHandlerService) { }
+  constructor(private fileHandlerService: FileHandlerService, private router: Router) { }
 
   ngOnInit() {
     this.fileHandlerService.fetchFiles().subscribe(files => this.files = files);
@@ -39,6 +42,6 @@ export class UserFilesComponent implements OnInit{
   }
 
   editFile(id: number) {
-    console.log(`Edit file ${id}`);
+    this.router.navigate(['/edit', id]); 
   }
 }

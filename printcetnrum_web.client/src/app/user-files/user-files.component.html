@@ -1,7 +1,9 @@
 <div class="file-grid">
   <div class="file-card" *ngFor="let file of files">
     <div class="file-image-wrapper">
-      <img *ngIf="isImage(file.extension)" [src]="file.filePath" alt="{{ file.fileName }}" class="file-image" />
+      <img *ngIf="isImage(file.extension)" [src]="baseUrl + file.filePath" alt="{{ file.fileName }}" class="file-image" />
+      <!--<img *ngIf="isImage(file.extension)" [src]="this.test" alt="{{ file.fileName }}" class="file-image" />-->
+      <p>{{ file.filePath }}</p>
       <div *ngIf="!isImage(file.extension)" class="file-placeholder">
         <i class="fas fa-file-alt"></i>
       </div>

@@ -1,41 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FileHandlerService } from '../services/file-handler.service';
+import { UserFile } from '../shared/user-file';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-photo-page',
   templateUrl: './edit-photo-page.component.html',
-  styleUrl: './edit-photo-page.component.css'
+  styleUrls: ['./edit-photo-page.component.css']
 })
-export class EditPhotoPageComponent {
+export class EditPhotoPageComponent implements OnInit {
+  file: UserFile | null = null; 
   brightness: number = 100;  // Default brightness
   brightnessStyle: string = `brightness(${this.brightness}%)`;
-  imageUrl: string = '';  // Store the uploaded image URL
+  imageUrl: string = '';  
+  baseUrl = environment.apiUrl;
 
-  // Handle file selection
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imageUrl = e.target.result;  // Set the image URL for preview
-      };
-      reader.readAsDataURL(file);
+  constructor(
+    private route: ActivatedRoute,
+    private fileHandlerService: FileHandlerService // Inject file service to fetch file data
+  ) { }
 
-      // Call the method to upload the file to the server
-      this.uploadFile(file);
+  ngOnInit(): void {
+    const fileId = this.route.snapshot.paramMap.get('id'); // Get file ID from URL
+    if (fileId) {
+      this.loadFile(parseInt(fileId)); // Load the file details
     }
   }
 
-  // Function to upload the file to the server
-  uploadFile(file: File) {
-    //const formData = new FormData();
-    //formData.append('file', file, file.name);
+  loadFile(fileId: number): void {
+    this.fileHandlerService.getFile(fileId).subscribe(file => {
+      this.file = file;
+      this.imageUrl = this.baseUrl + this.file?.filePath;
+    });
+  }
 
-    //// Use Angular's HttpClient to send the file to the server
-    //// For simplicity, we'll assume you have an API endpoint for handling the file upload
-    //this.http.post('http://localhost:5000/api/upload', formData).subscribe(response => {
-    //  console.log('File uploaded successfully', response);
-    //}, error => {
-    //  console.error('Error uploading file', error);
-    //});
+  updateBrightness(): void {
+    this.brightnessStyle = `brightness(${this.brightness}%)`;  // Update the filter with new brightness
   }
 }
