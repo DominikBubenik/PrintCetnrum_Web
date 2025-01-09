@@ -11,11 +11,11 @@
       <p class="file-date">Uploaded: {{ file.uploadDate | date }}</p>
     </div>
     <div class="file-actions">
-      <button class="btn-primary" (click)="markForPrint(file.id, !file.shouldPrint)">
+      <button class="btn btn-primary" (click)="markForPrint(file.id, !file.shouldPrint)">
         {{ file.shouldPrint ? 'Unmark' : 'Mark for Print' }}
       </button>
-      <button *ngIf="isImage(file.extension)" class="btn-secondary" (click)="editFile(file.id)">Edit</button>
-      <button class="btn-danger" (click)="deleteFile(file.id)">Remove</button>
+      <button *ngIf="isImage(file.extension)" class="btn btn-secondary" (click)="editFile(file.id)">Edit</button>
+      <button class="btn btn-danger" (click)="deleteFile(file.id)">Remove</button>
     </div>
   </div>
 </div>
