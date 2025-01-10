@@ -1,0 +1,104 @@
+/* Modern grid layout */
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Maximum 4 cards next to each other */
+  gap: 1rem; /* Spacing between cards */
+  padding: 0.5rem;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 1024px) {
+  .file-grid {
+    grid-template-columns: repeat(3, 1fr); /* Maximum 3 cards next to each other */
+  }
+}
+
+@media (max-width: 768px) {
+  .file-grid {
+    grid-template-columns: repeat(2, 1fr); /* Maximum 2 cards next to each other */
+  }
+}
+
+@media (max-width: 480px) {
+  .file-grid {
+    grid-template-columns: repeat(1, 1fr); /* Maximum 1 card per row */
+  }
+}
+
+/* Individual file card */
+.file-card {
+  border: 1px solid #d0d0d0;
+  border-radius: 6px; /* Smaller border radius */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 500px; /* Maximum width */
+  max-height: 800px;
+  padding: 1rem; /* Reduced padding */
+  background-color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+  .file-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Slight hover effect */
+  }
+
+/* File image wrapper */
+.file-image-wrapper {
+  position: relative;
+  width: 90%; /* Adjusted width */
+  padding-top: 90%; /* Adjusted aspect ratio */
+  overflow: hidden;
+  border-radius: 6px; /* Matches card's border radius */
+  background-color: #f0f0f0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-placeholder {
+  font-size: 1.5rem; /* Smaller placeholder */
+  color: #aaa;
+}
+
+  .file-placeholder i {
+    font-size: 2rem;
+  }
+
+/* File details */
+.file-title {
+  font-size: 0.9rem; /* Smaller font */
+  font-weight: 600;
+  margin: 0.25rem 0;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.file-date {
+  font-size: 0.75rem; /* Reduced font size */
+  color: #777;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Action buttons */
+.file-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem; /* Reduced spacing between buttons */
+  width: 100%;
+}
+
+

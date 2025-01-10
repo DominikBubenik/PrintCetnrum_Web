@@ -1,41 +1,119 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FileHandlerService } from '../services/file-handler.service';
+import { UserFile } from '../shared/user-file';
+import { environment } from '../../environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-photo-page',
   templateUrl: './edit-photo-page.component.html',
-  styleUrl: './edit-photo-page.component.css'
+  styleUrls: ['./edit-photo-page.component.css']
 })
-export class EditPhotoPageComponent {
-  brightness: number = 100;  // Default brightness
+export class EditPhotoPageComponent implements OnInit {
+  file: UserFile | null = null; 
+  brightness: number = 100; 
   brightnessStyle: string = `brightness(${this.brightness}%)`;
-  imageUrl: string = '';  // Store the uploaded image URL
+  imageUrl: string = '';  
+  baseUrl = environment.apiUrl;
 
-  // Handle file selection
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imageUrl = e.target.result;  // Set the image URL for preview
-      };
-      reader.readAsDataURL(file);
+  constructor(
+    private route: ActivatedRoute,
+    private fileHandlerService: FileHandlerService,
+    private snackBar: MatSnackBar
+  ) { }
 
-      // Call the method to upload the file to the server
-      this.uploadFile(file);
+  ngOnInit(): void {
+    const fileId = this.route.snapshot.paramMap.get('id'); 
+    if (fileId) {
+      this.loadFile(parseInt(fileId)); 
+      this.fileHandlerService.getFile(parseInt(fileId)).subscribe(file => {
+        this.file = file;
+      });
     }
   }
 
-  // Function to upload the file to the server
-  uploadFile(file: File) {
-    //const formData = new FormData();
-    //formData.append('file', file, file.name);
-
-    //// Use Angular's HttpClient to send the file to the server
-    //// For simplicity, we'll assume you have an API endpoint for handling the file upload
-    //this.http.post('http://localhost:5000/api/upload', formData).subscribe(response => {
-    //  console.log('File uploaded successfully', response);
-    //}, error => {
-    //  console.error('Error uploading file', error);
-    //});
+  loadFile(fileId: number): void {
+    this.fileHandlerService.downloadFile(fileId).subscribe((blob) => {
+      const url = URL.createObjectURL(blob);
+      this.imageUrl = url;
+    });
   }
+
+
+  updateBrightness(): void {
+    this.brightnessStyle = `brightness(${this.brightness}%)`; 
+  }
+
+  revertChanges(): void {
+    this.brightness = 100;
+    this.brightnessStyle = `brightness(100%)`;  
+  }
+
+  download(): void {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    const img = document.getElementById('image') as HTMLImageElement;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      ctx.filter = `brightness(${this.brightness}%)`; 
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png'); 
+      link.download = 'modified-image.png'; 
+      link.click(); 
+    }
+  }
+  
+
+  saveChanges(): void {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    const img = document.getElementById('image') as HTMLImageElement;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      ctx.filter = `brightness(${this.brightness}%)`;
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      canvas.toBlob((blob) => {
+        if (blob) {      
+          const file = new File([blob], this.file?.fileName ?? "no_name", { type: blob.type });
+          const fileId = this.file?.id;
+          if (fileId) {
+            this.fileHandlerService.saveChanges(fileId, file).subscribe({
+              next: (newFileId) => {
+                this.loadFile(newFileId);
+                this.snackBar.open('Chages saved!!', 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'top',
+                  panelClass: 'app-notification-success'
+                });
+              },
+              error: (err) => {
+                console.error(err);
+                this.snackBar.open('Saving Failed!!', 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'top',
+                  panelClass: 'app-notification-error'
+                });
+              },
+            });
+          }
+        }
+      }, 'image/' + this.file?.extension); 
+    }
+  }
+
+
 }

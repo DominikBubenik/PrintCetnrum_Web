@@ -22,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { UsersListPageComponent } from './users-list-page/users-list-page.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
+import { UserFilesComponent } from './user-files/user-files.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/
     EditPhotoPageComponent,
     UploadPhotoPageComponent,
     UsersListPageComponent,
-    ResetPasswordPageComponent
+    ResetPasswordPageComponent,
+    UserFilesComponent
   ],
   imports: [
     BrowserModule,

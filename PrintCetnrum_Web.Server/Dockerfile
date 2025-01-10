@@ -1,12 +1,13 @@
 ﻿/*
 # Use the official .NET SDK to build the application
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS image
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS BUILD
 WORKDIR /src
 
 
-COPY . .
-RUN dotnet restore "./PrintCetnrum_Web.Server.csproj" --disable-parallel
-RUN dotnet publish "./PrintCetnrum_Web.Server.csproj"  -c Release -o /app
+COPY *.csproj ./
+RUN dotnet restore 
+COPY . ./
+RUN dotnet publish -c Release -o out
 
 # Use the official .NET runtime to run the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
@@ -17,5 +18,4 @@ COPY --from=build /app ./
 EXPOSE 5000
 
 # Start the application
-ENTRYPOINT ["dotnet", "pritncetnrum_web.dll"]
-*/
+ENTRYPOINT ["dotnet", "pritncetnrum_web.dll"]*/

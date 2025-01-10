@@ -1,16 +1,16 @@
 # Step 1: Use Node.js for building the Angular app
-FROM node:16 AS build
+FROM node:18.19 AS build
 
 # Set working directory
 WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --force
 
 # Copy Angular project files
 COPY . .
-RUN npm install
+RUN npm install --force
 RUN npm run build
 ## Build Angular app for production
 #RUN npm run build --prod

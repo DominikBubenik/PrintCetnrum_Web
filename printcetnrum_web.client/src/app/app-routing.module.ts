@@ -9,6 +9,7 @@ import { UploadPhotoPageComponent } from './upload-photo-page/upload-photo-page.
 import { UsersListPageComponent } from './users-list-page/users-list-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
+import { UserFilesComponent } from './user-files/user-files.component';
 
 
 
@@ -26,14 +27,19 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'edit',
+    path: 'edit/:id',
     component: EditPhotoPageComponent,
     title: 'Edit page',
     pathMatch: 'full'
   },{
     path: 'upload',
     component: UploadPhotoPageComponent,
-    title: 'Edit page',
+    title: 'Upload page',
+    pathMatch: 'full'
+  },{
+    path: 'userFiles',
+    component: UserFilesComponent,
+    title: 'Data page',
     pathMatch: 'full'
   },
   {

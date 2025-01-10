@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /printcetnrum_web.client/printcetnrum_web.client.esproj
+/PrintCetnrum_Web.Server/wwwroot/UserData
