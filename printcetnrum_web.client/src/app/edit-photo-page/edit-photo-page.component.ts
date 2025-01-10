@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FileHandlerService } from '../services/file-handler.service';
 import { UserFile } from '../shared/user-file';
 import { environment } from '../../environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-photo-page',
@@ -18,7 +19,8 @@ export class EditPhotoPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private fileHandlerService: FileHandlerService 
+    private fileHandlerService: FileHandlerService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -88,13 +90,23 @@ export class EditPhotoPageComponent implements OnInit {
           const fileId = this.file?.id;
           if (fileId) {
             this.fileHandlerService.saveChanges(fileId, file).subscribe({
-              next: () => {
-                alert('Image saved successfully.');
-                this.loadFile(fileId); 
+              next: (newFileId) => {
+                this.loadFile(newFileId);
+                this.snackBar.open('Chages saved!!', 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'top',
+                  panelClass: 'app-notification-success'
+                });
               },
               error: (err) => {
                 console.error(err);
-                alert('Failed to save the image.');
+                this.snackBar.open('Saving Failed!!', 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'top',
+                  panelClass: 'app-notification-error'
+                });
               },
             });
           }

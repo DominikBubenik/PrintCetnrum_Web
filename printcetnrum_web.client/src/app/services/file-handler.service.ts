@@ -40,14 +40,14 @@ export class FileHandlerService {
     return this.http.get<UserFile>(`${this.baseUrl}getUserFile/${id}`);
   }
 
-  saveChanges(id: number, file: File): Observable<void> {
+  saveChanges(id: number, file: File): Observable<number> {
     const formData = new FormData();
     formData.append('newFile', file); // Append the file to the FormData object
     console.log(formData.forEach((value, key) => {
       console.log('this is value' + value);
     }
     ));
-    return this.http.put<void>(`${this.baseUrl}replaceFile/${id}`, formData);
+    return this.http.put<number>(`${this.baseUrl}replaceFile/${id}`, formData);
   }
 
 

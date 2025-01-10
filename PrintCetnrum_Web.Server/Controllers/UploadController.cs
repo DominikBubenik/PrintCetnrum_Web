@@ -157,6 +157,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpPut("replaceFile/{id}")]
         public async Task<IActionResult> ReplaceUserFile(int id, [FromForm] IFormFile newFile)
         {
+            // Retrieve the current file from the database
             var currentFile = await _dbContext.UserFiles
                 .FirstOrDefaultAsync(uf => uf.Id == id);
 
@@ -165,6 +166,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return NotFound("File not found.");
             }
 
+            // Ensure the new file is valid
             if (newFile == null || newFile.Length == 0)
             {
                 return BadRequest("No file uploaded.");
@@ -175,18 +177,50 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 return BadRequest("File is too large.");
             }
-            var fullPath = Path.Combine(_uploadsFolder, currentFile.UniqueName);
-            if (System.IO.File.Exists(fullPath))
+
+            // Create a new unique file name
+            var fileName = Path.GetFileName(newFile.FileName);
+            var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
+            var filePath = Path.Combine(_uploadsFolder, uniqueName);
+
+            // Save the new file to disk
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                System.IO.File.Delete(fullPath);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    await newFile.CopyToAsync(stream);
-                }
+                await newFile.CopyToAsync(stream);
             }
 
-            return Ok();
+            // Create a new UserFile object for the database
+            var userFile = new UserFile
+            {
+                FileName = fileName,
+                UniqueName = uniqueName,
+                FilePath = $"/UserData/{uniqueName}",
+                UploadDate = DateTime.Now,
+                ShouldPrint = currentFile.ShouldPrint, // Retain the previous "ShouldPrint" value
+                UserId = currentFile.UserId,
+                Extension = Path.GetExtension(fileName),
+                FileSize = newFile.Length
+            };
+
+            // Add the new file to the database
+            _dbContext.UserFiles.Add(userFile);
+            await _dbContext.SaveChangesAsync();
+
+            // Delete the old file from disk
+            var oldFilePath = Path.Combine(_uploadsFolder, currentFile.UniqueName);
+            if (System.IO.File.Exists(oldFilePath))
+            {
+                System.IO.File.Delete(oldFilePath);
+            }
+
+            // Remove the old file entry from the database
+            _dbContext.UserFiles.Remove(currentFile);
+            await _dbContext.SaveChangesAsync();
+
+            // Return the new file ID
+            return Ok(new { newFileId = userFile.Id });
         }
+
 
 
         [Authorize]
