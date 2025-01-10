@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { UserFile } from '../shared/user-file';
+import { ValueChangeEvent } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,22 @@ export class FileHandlerService {
 
   getFile(id: number): Observable<UserFile> {
     return this.http.get<UserFile>(`${this.baseUrl}getUserFile/${id}`);
+  }
+
+  saveChanges(id: number, file: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('newFile', file); // Append the file to the FormData object
+    console.log(formData.forEach((value, key) => {
+      console.log('this is value' + value);
+    }
+    ));
+    return this.http.put<void>(`${this.baseUrl}replaceFile/${id}`, formData);
+  }
+
+
+  downloadFile(fileId: number) {
+    return this.http.get(`${this.baseUrl}downloadFile/${fileId}`, {
+      responseType: 'blob', // Binary response
+    });
   }
 }

@@ -1,6 +1,11 @@
 
 <div>
   <input type="range" min="0" max="200" [(ngModel)]="brightness" (input)="updateBrightness()" />
-  <img [style.filter]="brightnessStyle" [src]="imageUrl" alt="Image" />
+  <button class="btn btn-primary" (click)="revertChanges()">Revert</button>
+  <button class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+  <button class="btn btn-primary" (click)="download()">Download Image</button>
+  <p>{{this.brightness}}</p>
+  <img [style.filter]="brightnessStyle" [src]="imageUrl" alt="Image" id="image" crossorigin="anonymous" />
+  <canvas id="canvas" style="display: none;"></canvas>
   <p>{{this.imageUrl}}</p>
 </div>

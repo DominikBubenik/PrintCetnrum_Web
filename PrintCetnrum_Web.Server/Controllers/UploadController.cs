@@ -152,5 +152,64 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
             return Ok(file);
         }
+
+        [Authorize]
+        [HttpPut("replaceFile/{id}")]
+        public async Task<IActionResult> ReplaceUserFile(int id, [FromForm] IFormFile newFile)
+        {
+            var currentFile = await _dbContext.UserFiles
+                .FirstOrDefaultAsync(uf => uf.Id == id);
+
+            if (currentFile == null)
+            {
+                return NotFound("File not found.");
+            }
+
+            if (newFile == null || newFile.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var maxFileSize = 10 * 1024 * 1024; // 10MB
+            if (newFile.Length > maxFileSize)
+            {
+                return BadRequest("File is too large.");
+            }
+            var fullPath = Path.Combine(_uploadsFolder, currentFile.UniqueName);
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await newFile.CopyToAsync(stream);
+                }
+            }
+
+            return Ok();
+        }
+
+
+        [Authorize]
+        [HttpGet("downloadFile/{id}")]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            var file = await _dbContext.UserFiles.FirstOrDefaultAsync(f => f.Id == id);
+            if (file == null)
+            {
+                return NotFound("File not found.");
+            }
+            var fullPath = Path.Combine(_uploadsFolder, file.UniqueName);
+            if (!System.IO.File.Exists(fullPath))
+            {
+                return NotFound("File does not exist on the server.");
+            }
+
+            var fileName = Path.GetFileName(fullPath);
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(fullPath);
+
+            return File(fileBytes, "image/" + file.Extension, fileName); // Adjust MIME type as needed (e.g., image/png)
+        }
+
+
     }
 }

@@ -11,31 +11,97 @@ import { environment } from '../../environments/environment';
 })
 export class EditPhotoPageComponent implements OnInit {
   file: UserFile | null = null; 
-  brightness: number = 100;  // Default brightness
+  brightness: number = 100; 
   brightnessStyle: string = `brightness(${this.brightness}%)`;
   imageUrl: string = '';  
   baseUrl = environment.apiUrl;
 
   constructor(
     private route: ActivatedRoute,
-    private fileHandlerService: FileHandlerService // Inject file service to fetch file data
+    private fileHandlerService: FileHandlerService 
   ) { }
 
   ngOnInit(): void {
-    const fileId = this.route.snapshot.paramMap.get('id'); // Get file ID from URL
+    const fileId = this.route.snapshot.paramMap.get('id'); 
     if (fileId) {
-      this.loadFile(parseInt(fileId)); // Load the file details
+      this.loadFile(parseInt(fileId)); 
+      this.fileHandlerService.getFile(parseInt(fileId)).subscribe(file => {
+        this.file = file;
+      });
     }
   }
 
   loadFile(fileId: number): void {
-    this.fileHandlerService.getFile(fileId).subscribe(file => {
-      this.file = file;
-      this.imageUrl = this.baseUrl + this.file?.filePath;
+    this.fileHandlerService.downloadFile(fileId).subscribe((blob) => {
+      const url = URL.createObjectURL(blob);
+      this.imageUrl = url;
     });
   }
 
+
   updateBrightness(): void {
-    this.brightnessStyle = `brightness(${this.brightness}%)`;  // Update the filter with new brightness
+    this.brightnessStyle = `brightness(${this.brightness}%)`; 
   }
+
+  revertChanges(): void {
+    this.brightness = 100;
+    this.brightnessStyle = `brightness(100%)`;  
+  }
+
+  download(): void {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    const img = document.getElementById('image') as HTMLImageElement;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      ctx.filter = `brightness(${this.brightness}%)`; 
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png'); 
+      link.download = 'modified-image.png'; 
+      link.click(); 
+    }
+  }
+  
+
+  saveChanges(): void {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    const img = document.getElementById('image') as HTMLImageElement;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      ctx.filter = `brightness(${this.brightness}%)`;
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      canvas.toBlob((blob) => {
+        if (blob) {      
+          const file = new File([blob], this.file?.fileName ?? "no_name", { type: blob.type });
+          const fileId = this.file?.id;
+          if (fileId) {
+            this.fileHandlerService.saveChanges(fileId, file).subscribe({
+              next: () => {
+                alert('Image saved successfully.');
+                this.loadFile(fileId); 
+              },
+              error: (err) => {
+                console.error(err);
+                alert('Failed to save the image.');
+              },
+            });
+          }
+        }
+      }, 'image/' + this.file?.extension); 
+    }
+  }
+
+
 }

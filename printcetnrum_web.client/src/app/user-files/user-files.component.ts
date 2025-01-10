@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { UserFile } from '../shared/user-file';
 import { FileHandlerService } from '../services/file-handler.service';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-user-files',
@@ -11,12 +12,16 @@ import { Router } from '@angular/router';
 })
 export class UserFilesComponent implements OnInit{
   files: UserFile[] = [];
+  //allFiles = new BehaviorSubject<UserFile[]>([]);
+  reloadImages = signal<boolean>(false);
   baseUrl = environment.apiUrl;
+  
 
   constructor(private fileHandlerService: FileHandlerService, private router: Router) { }
 
   ngOnInit() {
     this.fileHandlerService.fetchFiles().subscribe(files => this.files = files);
+    console.log("I am back");
   }
 
   fetchFiles(): void {
@@ -42,6 +47,13 @@ export class UserFilesComponent implements OnInit{
   }
 
   editFile(id: number) {
-    this.router.navigate(['/edit', id]); 
+    this.router.navigate(['/edit', id]);
+    
+  }
+
+  reloadFiles(reload: boolean): void {
+    if (reload) {
+      this.fetchFiles();
+    }
   }
 }
