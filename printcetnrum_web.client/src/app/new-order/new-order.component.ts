@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class NewOrderComponent implements OnInit {
   files: UserFile[] = [];
-  order!: Order;
+  order?: Order = undefined;
   orderItems: OrderItem[] = []; 
   totalPrice: number = 0;
   pricePerFile: number = 5;
@@ -45,12 +45,12 @@ export class NewOrderComponent implements OnInit {
 
   initializeOrder(): void {
     this.order = {
+      id: 0,
       orderCreated: new Date(),
       orderName: 'ff',
       isPreparedForCustomer: false,
       isTakenByCustomer: false,
       totalPrice: 0,
-      //orderItems: this.orderItems,
       orderFinished: undefined,
       orderTakenTime: undefined,
       userId: 0
@@ -81,16 +81,17 @@ export class NewOrderComponent implements OnInit {
   }
 
   submitOrder(): void {
-
-
-    console.log(this.orderItems);
-    //this.order.orderItems = this.orderItems;
+    if (!this.order) {
+      return;
+    }
     this.orderService.createOrder(this.order).subscribe(
       (createdOrder) => {
         console.log('Order created successfully:', createdOrder);
         this.orderService.addOrderItems(createdOrder.orderName, this.orderItems).subscribe(
           () => {
             console.log('Order items added successfully');
+            this.order = undefined;
+            this.router.navigate(['/allOrders']);
           },
           (error) => {
             console.log('Error adding order items:', error);
