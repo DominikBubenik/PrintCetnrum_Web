@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { UserFile } from '../shared/user-file';
+import { UserFile } from '../models/user-file';
 import { FileHandlerService } from '../services/file-handler.service';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
