@@ -23,5 +23,9 @@ namespace PrintCetnrum_Web.Server.Models.OrderModels
         public int Count { get; set; }
         [Required]
         public decimal Price { get; set; }
+        public string Color { get; set; }
+        public string PaperType { get; set; }
+        public string Size { get; set; }
+        public string Description { get; set; }
     }
 }
