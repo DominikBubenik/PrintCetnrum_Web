@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrintCetnrum_Web.Server.Context;
 
@@ -11,9 +12,11 @@ using PrintCetnrum_Web.Server.Context;
 namespace PrintCetnrum_Web.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250111205623_AddOrderName")]
+    partial class AddOrderName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,10 +83,6 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -96,9 +95,14 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.Property<string>("Size")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserFileId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("UserFileId");
 
                     b.ToTable("order_items", (string)null);
                 });
@@ -236,7 +240,15 @@ namespace PrintCetnrum_Web.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.UserFile", "UserFile")
+                        .WithMany()
+                        .HasForeignKey("UserFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Order");
+
+                    b.Navigation("UserFile");
                 });
 
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserFile", b =>

@@ -36,6 +36,8 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
             order.UserId = user.Id;
 
+            //string timeStamp = DateTime.Now.ToString("yyMMddHHmmss");
+            //order.OrderName = $"{timeStamp}{order.UserId}";
             decimal totalPrice = 0;
 
             //if (order.OrderItems != null && order.OrderItems.Any())
@@ -53,20 +55,58 @@ namespace PrintCetnrum_Web.Server.Controllers
             //return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
         }
 
+        [HttpPost("add-order-items")]
+        public async Task<IActionResult> AddOrderItems([FromBody] OrderItem items, [FromQuery] string orderName)
+        {
+            var order = this._context.Orders.FirstOrDefault(o => o.OrderName == orderName);
+            if (order == null)
+            {
+                return BadRequest("No Order Found!");
+            }
+
+            //var userFile = this._context.UserFiles.FirstOrDefaultAsync(u => u.UserId == order.UserId);
+            //if (items.IsNullOrEmpty())
+            //{
+            //    return BadRequest("OrderItems are required.");
+            //}
+            decimal totalPrice = 0;
+            int orderId = order.Id;
+            //foreach (var item in items)
+            //{
+            //    item.OrderId = orderId;
+            //    totalPrice += item.Count * item.Price;
+            //    this._context.OrderItems.Add(item);
+            //}
+            items.OrderId = orderId;
+            items.Price = 5;
+            items.Count = 1;
+            items.FileName = "nevbiem";
+            //items.UserFile.UserId = 1;
+            //items.UserFile = userFile.Result;
+            this._context.OrderItems.Add(items);
+            //dont forget to update order total price
+            await _context.SaveChangesAsync();
+            
+            return Ok();
+            //return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
+        }
+
+
         [HttpGet("get-order/{id}")]
         public async Task<IActionResult> GetOrder(int id)
         {
-            var order = await _context.Orders
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.UserFileId)
-                .FirstOrDefaultAsync(o => o.Id == id);
+            //var order = await _context.Orders
+            //    .Include(o => o.OrderItems)
+            //    .ThenInclude(oi => oi.UserFileId)
+            //    .FirstOrDefaultAsync(o => o.Id == id);
 
-            if (order == null)
-            {
-                return NotFound();
-            }
+            //if (order == null)
+            //{
+            //    return NotFound();
+            //}
 
-            return Ok(order);
+            //return Ok(order);
+            return Ok();
         }
 
 
@@ -132,12 +172,13 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpGet("get-all-orders")]
         public async Task<IActionResult> GetAllOrders()
         {
-            var orders = await _context.Orders
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.UserFileId)
-                .ToListAsync();
+            //var orders = await _context.Orders
+            //    .Include(o => o.OrderItems)
+            //    .ThenInclude(oi => oi.UserFileId)
+            //    .ToListAsync();
 
-            return Ok(orders);
+            //return Ok(orders);
+            return Ok();
         }
 
         [HttpGet("all-user-orders/{userName}")]

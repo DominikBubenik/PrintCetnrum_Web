@@ -8,6 +8,8 @@ namespace PrintCetnrum_Web.Server.Models.OrderModels
     {
         [Key]
         public int Id { get; set; }
+        [Required]
+        public string OrderName { get; set; }
 
         [Required]
         public DateTime OrderCreated { get; set; }

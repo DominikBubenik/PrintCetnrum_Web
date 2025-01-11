@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Order } from '../models/order-models/order.model';
+import { Order, OrderItem } from '../models/order-models/order.model';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
@@ -18,6 +18,10 @@ export class OrderService {
     const params = new HttpParams().set('userName', userName);
    // return this.http.post<Order>(`${this.baseUrl}create-order?userName=${userName}`, order);
     return this.http.post<Order>(`${this.baseUrl}create-order`, order, { params });
+  }
+
+  addOrderItems(orederName: string, orderItems: OrderItem[]): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}add-order-items?orderName=${orederName}`, orderItems[0]);
   }
 
   getOrderById(id: number): Observable<Order> {

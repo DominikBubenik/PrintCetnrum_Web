@@ -46,6 +46,7 @@ export class NewOrderComponent implements OnInit {
   initializeOrder(): void {
     this.order = {
       orderCreated: new Date(),
+      orderName: 'ff',
       isPreparedForCustomer: false,
       isTakenByCustomer: false,
       totalPrice: 0,
@@ -59,8 +60,9 @@ export class NewOrderComponent implements OnInit {
   initializeOrderDetails(): void {
     this.orderItems = this.files.map(file => ({
       orderId: 0,
-      userFileId: file.id,
-      userFile: file,
+      fileName: 'daco',
+      //userFileId: file.id,
+      //userFile: file,
       count: 1,
       color: 'black',
       paperType: 'regular',
@@ -85,6 +87,14 @@ export class NewOrderComponent implements OnInit {
     this.orderService.createOrder(this.order).subscribe(
       (createdOrder) => {
         console.log('Order created successfully:', createdOrder);
+        this.orderService.addOrderItems(createdOrder.orderName, this.orderItems).subscribe(
+          () => {
+            console.log('Order items added successfully');
+          },
+          (error) => {
+            console.log('Error adding order items:', error);
+          }
+        );
       },
       (error) => {
         console.error('Error creating order:', error);

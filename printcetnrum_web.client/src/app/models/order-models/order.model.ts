@@ -4,6 +4,7 @@ import { User } from "../user.model";
 
 export interface Order {
   orderCreated: Date;
+  orderName: string;
   isPreparedForCustomer: boolean;
   isTakenByCustomer: boolean;
   totalPrice: number;
@@ -15,8 +16,9 @@ export interface Order {
 
 export interface OrderItem {
   orderId: number;
-  userFileId: number;
-  userFile: UserFile;  
+  //userFileId: number;
+  //userFile: UserFile;
+  fileName: string;
   count: number;
   color: string; //new
   paperType: string; //new
