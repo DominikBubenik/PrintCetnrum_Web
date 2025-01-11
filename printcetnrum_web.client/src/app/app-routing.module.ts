@@ -10,6 +10,8 @@ import { UsersListPageComponent } from './users-list-page/users-list-page.compon
 import { AuthGuard } from './guards/auth.guard';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
 import { UserFilesComponent } from './user-files/user-files.component';
+import { NewOrderComponent } from './new-order/new-order.component';
+import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
 
 
 
@@ -40,6 +42,16 @@ const routes: Routes = [
     path: 'userFiles',
     component: UserFilesComponent,
     title: 'Data page',
+    pathMatch: 'full'
+  },{
+    path: 'newOrder',
+    component: NewOrderComponent,
+    title: 'New Order',
+    pathMatch: 'full'
+  },{
+    path: 'allOrders',
+    component: AllOrdersListComponent,
+    title: 'All Orders',
     pathMatch: 'full'
   },
   {

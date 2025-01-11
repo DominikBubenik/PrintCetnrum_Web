@@ -1,8 +1,14 @@
+<div class="file-actions-row">
+  <button class="btn btn-primary" [routerLink]="['/upload']">Upload New File</button>
+  <button class="btn btn-primary" [routerLink]="['/newOrder']">Create New Order</button>
+  <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
+  <button class="btn btn-primary">My Orders</button>
+</div>
+
 <div class="file-grid">
   <div class="file-card" *ngFor="let file of files">
     <div class="file-image-wrapper">
       <img *ngIf="isImage(file.extension)" [src]="baseUrl + file.filePath" alt="{{ file.fileName }}" class="file-image" />
-      <!--<img *ngIf="isImage(file.extension)" [src]="this.test" alt="{{ file.fileName }}" class="file-image" />-->
       <p>{{ file.filePath }}</p>
       <div *ngIf="!isImage(file.extension)" class="file-placeholder">
         <i class="fas fa-file-alt"></i>
@@ -10,10 +16,11 @@
     </div>
     <div class="file-details">
       <h4 class="file-title">{{ file.fileName }}</h4>
-      <p class="file-date">Uploaded: {{ file.uploadDate | date }}</p>
+      <p class="file-date">Uploaded: {{ file.uploadDate  }}</p>
     </div>
     <div class="file-actions">
       <button class="btn btn-primary" (click)="markForPrint(file.id, !file.shouldPrint)">
+        <i class="bi bi-printer"></i>
         {{ file.shouldPrint ? 'Unmark' : 'Mark for Print' }}
       </button>
       <button *ngIf="isImage(file.extension)" class="btn btn-secondary" (click)="editFile(file.id)">Edit</button>

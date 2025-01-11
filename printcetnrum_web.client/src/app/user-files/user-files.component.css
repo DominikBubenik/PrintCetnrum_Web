@@ -1,4 +1,12 @@
-/* Modern grid layout */
+.file-actions-row {
+  display: flex;
+  justify-content: center; /* Align buttons to the left */
+  margin-bottom: 20px; /* Add space between the row and the grid */
+}
+
+  .file-actions-row .btn {
+    margin-right: 10px; /* Add spacing between buttons */
+  }
 .file-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Maximum 4 cards next to each other */
@@ -6,7 +14,6 @@
   padding: 0.5rem;
 }
 
-/* Responsive layout for smaller screens */
 @media (max-width: 1024px) {
   .file-grid {
     grid-template-columns: repeat(3, 1fr); /* Maximum 3 cards next to each other */

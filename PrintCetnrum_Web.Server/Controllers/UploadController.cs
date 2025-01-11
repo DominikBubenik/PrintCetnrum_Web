@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrintCetnrum_Web.Server.Context;
 using PrintCetnrum_Web.Server.Models;
+using PrintCetnrum_Web.Server.Models.UserModels;
 
 namespace PrintCetnrum_Web.Server.Controllers
 {
@@ -88,6 +89,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 {
                     uf.Id,
                     uf.FileName,
+                    uf.UniqueName,
                     uf.FilePath,
                     uf.Extension,
                     uf.UploadDate,

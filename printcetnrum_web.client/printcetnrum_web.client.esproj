@@ -13,5 +13,7 @@
   <ItemGroup>
     <Folder Include="src\app\guards\" />
     <Folder Include="src\app\interceptors\" />
+    <Folder Include="src\app\orders\" />
+    <Folder Include="src\app\shared\" />
   </ItemGroup>
 </Project>

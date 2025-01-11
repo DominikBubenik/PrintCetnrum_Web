@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { UserFile } from '../shared/user-file';
+import { UserFile } from '../models/user-file';
 import { ValueChangeEvent } from '@angular/forms';
 
 @Injectable({

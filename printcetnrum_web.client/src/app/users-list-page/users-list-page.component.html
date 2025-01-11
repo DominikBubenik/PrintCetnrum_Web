@@ -33,7 +33,7 @@
   </div>
   <button class="btn btn-secondary mt-3" (click)="onLogout()">Log out</button>
 </div>
-<div class="modal fade show" *ngIf="isModalVisible" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" style="display: block;">
+<div *ngIf="isModalVisible" class="modal fade show" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" style="display: block;">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -41,33 +41,23 @@
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="onSave()">
+        <form *ngIf="currentUser" (ngSubmit)="onSave()">
           <div class="mb-3">
-            <div *ngIf="currentUser" class="mb-3">
-              <label for="firstName" class="form-label">First Name</label>
-              <input type="text" class="form-control" id="firstName" [(ngModel)]="currentUser.firstName" name="firstName" required>
-            </div>
-            </div>
-            <div class="mb-3">
-              <div *ngIf="currentUser" class="mb-3">
-                <label for="lastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="lastName" [(ngModel)]="currentUser.lastName" name="lastName" required>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div *ngIf="currentUser" class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email"
-                       class="form-control"
-                       id="email"
-                       [(ngModel)]="currentUser.email"
-                       name="email"
-                       required />
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-</form>
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" [(ngModel)]="currentUser.firstName" name="firstName" required>
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" [(ngModel)]="currentUser.lastName" name="lastName" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
