@@ -3,8 +3,48 @@
 
   <div class="file-list">
     <div *ngFor="let orderItem of orderItems; let i = index" class="file-item order-row">
-      
+      <div class="col-2 d-flex justify-content-center align-items-center">
+        <img *ngIf="isImage(orderItem.userFile.extension)" [src]="baseUrl + '/' + orderItem.userFile.filePath" alt="{{ orderItem.userFile.fileName }}" class="file-preview" />
+        <i *ngIf="orderItem.userFile.extension === '.pdf'" class="bi bi-filetype-pdf file-icon pdf"></i>
+        <i *ngIf="orderItem.userFile.extension === '.doc' || orderItem.userFile.extension === '.docx'" class="bi bi-file-earmark-word file-icon word"></i>
+        <i *ngIf="orderItem.userFile.extension === '.xls' || orderItem.userFile.extension === '.xlsx'" class="bi bi-filetype-xlsx file-icon excel"></i>
+      </div>
 
+      <div class="col-3 d-flex align-items-center">
+        <h4 class="file-name mb-0">{{ orderItem.userFile.fileName }}</h4>
+      </div>
+
+      <div class="col-4">
+        <label for="description-{{i}}">Description</label>
+        <textarea id="description-{{i}}" [(ngModel)]="orderItem.description" placeholder="Add description..." rows="2"></textarea>
+      </div>
+
+      <div class="col-2">
+        <div *ngIf="isImage(orderItem.userFile.extension)">
+          <label for="imageSize-{{i}}">Image Size</label>
+          <select id="imageSize-{{i}}" [(ngModel)]="orderItem.size" class="form-select">
+            <option value="10x15">10x15</option>
+            <option value="9x13">9x13</option>
+            <option value="13x19">13x19</option>
+            <option value="20x25">20x25</option>
+            <option value="A4">A4</option>
+          </select>
+        </div>
+        <div *ngIf="!isImage(orderItem.userFile.extension)">
+          <label for="fileType-{{i}}">File Type</label>
+          <select id="fileType-{{i}}" [(ngModel)]="orderItem.color" class="form-select">
+            <option value="blackAndWhite">Black & White</option>
+            <option value="color">Color</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-1">
+        <label for="count-{{i}}">Count</label>
+        <input type="number" id="count-{{i}}" [(ngModel)]="orderItem.count" (input)="calculateTotalPrice()" min="1" class="form-control" />
+      </div>
+    </div>
+  </div>
 
   <div class="order-summary text-end mt-4">
     <h3>Total Price: ${{ totalPrice | number: '1.2-2' }}</h3>

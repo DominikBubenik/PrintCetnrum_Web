@@ -60,9 +60,8 @@ export class NewOrderComponent implements OnInit {
   initializeOrderDetails(): void {
     this.orderItems = this.files.map(file => ({
       orderId: 0,
-      fileName: 'daco',
-      //userFileId: file.id,
-      //userFile: file,
+      userFileId: file.id,
+      userFile: file,
       count: 1,
       color: 'black',
       paperType: 'regular',
@@ -82,6 +81,8 @@ export class NewOrderComponent implements OnInit {
   }
 
   submitOrder(): void {
+
+
     console.log(this.orderItems);
     //this.order.orderItems = this.orderItems;
     this.orderService.createOrder(this.order).subscribe(

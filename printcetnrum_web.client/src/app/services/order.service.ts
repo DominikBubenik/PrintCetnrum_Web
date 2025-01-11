@@ -16,12 +16,11 @@ export class OrderService {
   createOrder(order: Order): Observable<Order> {
     const userName = this.authService.getfullNameFromToken();
     const params = new HttpParams().set('userName', userName);
-   // return this.http.post<Order>(`${this.baseUrl}create-order?userName=${userName}`, order);
     return this.http.post<Order>(`${this.baseUrl}create-order`, order, { params });
   }
 
   addOrderItems(orederName: string, orderItems: OrderItem[]): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}add-order-items?orderName=${orederName}`, orderItems[0]);
+    return this.http.post<void>(`${this.baseUrl}add-order-items?orderName=${orederName}`, orderItems);
   }
 
   getOrderById(id: number): Observable<Order> {

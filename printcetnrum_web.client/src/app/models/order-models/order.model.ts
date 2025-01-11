@@ -16,9 +16,8 @@ export interface Order {
 
 export interface OrderItem {
   orderId: number;
-  //userFileId: number;
-  //userFile: UserFile;
-  fileName: string;
+  userFileId: number;
+  userFile: UserFile;
   count: number;
   color: string; //new
   paperType: string; //new

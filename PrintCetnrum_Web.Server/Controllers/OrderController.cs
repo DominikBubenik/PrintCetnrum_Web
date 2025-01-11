@@ -56,7 +56,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
         [HttpPost("add-order-items")]
-        public async Task<IActionResult> AddOrderItems([FromBody] OrderItem items, [FromQuery] string orderName)
+        public async Task<IActionResult> AddOrderItems([FromBody] OrderItem[] items, [FromQuery] string orderName)
         {
             var order = this._context.Orders.FirstOrDefault(o => o.OrderName == orderName);
             if (order == null)
@@ -64,31 +64,22 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return BadRequest("No Order Found!");
             }
 
-            //var userFile = this._context.UserFiles.FirstOrDefaultAsync(u => u.UserId == order.UserId);
-            //if (items.IsNullOrEmpty())
-            //{
-            //    return BadRequest("OrderItems are required.");
-            //}
             decimal totalPrice = 0;
-            int orderId = order.Id;
-            //foreach (var item in items)
-            //{
-            //    item.OrderId = orderId;
-            //    totalPrice += item.Count * item.Price;
-            //    this._context.OrderItems.Add(item);
-            //}
-            items.OrderId = orderId;
-            items.Price = 5;
-            items.Count = 1;
-            items.FileName = "nevbiem";
-            //items.UserFile.UserId = 1;
-            //items.UserFile = userFile.Result;
-            this._context.OrderItems.Add(items);
+
+            foreach (var item in items)
+            {
+                item.OrderId = order.Id;
+                totalPrice += item.Count * item.Price;
+                this._context.OrderItems.Add(item);
+            }
+
+            order.TotalPrice = totalPrice;
+
             //dont forget to update order total price
             await _context.SaveChangesAsync();
             
             return Ok();
-            //return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
+
         }
 
 

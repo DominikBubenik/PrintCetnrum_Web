@@ -14,9 +14,7 @@ namespace PrintCetnrum_Web.Server.Models.OrderModels
 
         public Order Order { get; set; }
         [Required]
-        public string FileName { get; set; }
-
-        //public int UserFileId { get; set; } 
+        public int UserFileId { get; set; } 
 
         //public UserFile UserFile { get; set; }
 
