@@ -3,9 +3,19 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
   margin: 0 auto;
+  max-height: 80vh;
+  overflow-y: auto;
 }
+
+  .order-container::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .order-container::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+  }
 
 h2 {
   font-size: 1.8em;
@@ -73,3 +83,25 @@ textarea {
   .order-summary button:hover {
     background-color: #0056b3;
   }
+
+.order-row {
+  min-width: 800px;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 800px) {
+  .order-row-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+    .order-row-wrapper::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .order-row-wrapper::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 10px;
+    }
+}

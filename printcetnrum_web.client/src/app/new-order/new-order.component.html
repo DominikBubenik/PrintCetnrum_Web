@@ -2,7 +2,7 @@
 <div class="order-container">
 
   <div class="file-list">
-    <div *ngFor="let order of orderDetails; let i = index" class="file-item row">
+    <div *ngFor="let order of orderDetails; let i = index" class="file-item order-row">
       <div class="col-2 d-flex justify-content-center align-items-center">
         <img *ngIf="isImage(order.file.extension)" [src]="baseUrl + '/' + order.file.filePath" alt="{{ order.file.fileName }}" class="file-preview" />
         <i *ngIf="order.file.extension === '.pdf'" class="bi bi-filetype-pdf file-icon pdf"></i>

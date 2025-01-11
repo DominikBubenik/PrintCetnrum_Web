@@ -15,8 +15,8 @@ export class NewOrderComponent implements OnInit {
     file: UserFile;
     count: number;
     description: string;
-    fileType: string;  // Add fileType
-    imageSize: string; // Add imageSize
+    fileType: string;  
+    imageSize: string; 
   }[] = [];
   totalPrice: number = 0;
   pricePerFile: number = 5;
