@@ -1,107 +1,84 @@
 .order-container {
-  padding: 30px;
+  padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
-  max-height: 80vh;
-  overflow-y: auto;
+  margin: 20px auto;
+  max-width: 1200px;
 }
 
-  .order-container::-webkit-scrollbar {
-    width: 10px;
-  }
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  background-color: white;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
 
-  .order-container::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 10px;
-  }
-
-h2 {
-  font-size: 1.8em;
-  margin-bottom: 20px;
+.order-info h4 {
+  margin: 0;
   color: #333;
 }
 
-.file-item {
-  border-bottom: 1px solid #ddd;
-  padding: 15px 0;
-}
-
-.file-preview {
-  width: 100px;
-  height: auto;
-  border-radius: 4px;
-}
-
-.file-icon {
-  font-size: 3rem;
-  color: #777;
-}
-
-  .file-icon.pdf {
-    color: #d9534f;
-  }
-
-  .file-icon.word {
-    color: #0275d8;
-  }
-
-  .file-icon.excel {
-    color: #5cb85c;
-  }
-
-.file-name {
-  font-size: 1.2em;
+.order-info p {
+  margin: 5px 0;
   color: #555;
 }
 
-textarea,
-input,
-select {
-  margin-top: 5px;
-  width: 100%;
+.status-yes {
+  color: green;
+  font-weight: bold;
 }
 
-textarea {
-  resize: none;
+.status-no {
+  color: red;
+  font-weight: bold;
 }
 
-.order-summary h3 {
-  font-size: 1.5em;
-  margin-bottom: 15px;
+.order-actions {
+  display: flex;
+  gap: 10px;
 }
 
-.order-summary button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  font-size: 1rem;
-  border-radius: 4px;
-}
-
-  .order-summary button:hover {
-    background-color: #0056b3;
+  .order-actions .btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s;
   }
 
-.order-row {
-  min-width: 800px;
-  display: flex;
-  flex-wrap: nowrap;
-}
+  .order-actions .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+
+    .order-actions .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+  .order-actions .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+  }
+
+    .order-actions .btn-secondary:hover {
+      background-color: #5a6268;
+    }
 
 @media (max-width: 800px) {
-  .order-row-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .order-row {
+    flex-wrap: wrap;
+    padding: 10px;
   }
 
-    .order-row-wrapper::-webkit-scrollbar {
-      height: 10px;
-    }
-
-    .order-row-wrapper::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 10px;
-    }
+  .order-actions {
+    justify-content: center;
+    margin-top: 10px;
+    width: 100%;
+  }
 }

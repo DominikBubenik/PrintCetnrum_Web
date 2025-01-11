@@ -25,10 +25,6 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return BadRequest("UserName is required.");
             }
 
-            //if (order.OrderItems.IsNullOrEmpty())
-            //{
-            //    return BadRequest("OrderItems are required.");
-            //}
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
             if (user == null)
             {
@@ -36,14 +32,9 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
             order.UserId = user.Id;
 
-            //string timeStamp = DateTime.Now.ToString("yyMMddHHmmss");
-            //order.OrderName = $"{timeStamp}{order.UserId}";
+            string timeStamp = DateTime.Now.ToString("yyMMddHHmmss");
+            order.OrderName = $"{timeStamp}{order.UserId}";
             decimal totalPrice = 0;
-
-            //if (order.OrderItems != null && order.OrderItems.Any())
-            //{
-            //    totalPrice = order.OrderItems.Sum(item => item.Count * item.Price);
-            //}
 
             order.TotalPrice = 5;
             order.OrderCreated = DateTime.UtcNow;
