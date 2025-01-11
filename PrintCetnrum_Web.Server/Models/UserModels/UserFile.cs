@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace PrintCetnrum_Web.Server.Models
+namespace PrintCetnrum_Web.Server.Models.UserModels
 {
     public class UserFile
     {
@@ -14,20 +14,20 @@ namespace PrintCetnrum_Web.Server.Models
         public string UniqueName { get; set; }
 
         [Required]
-        public string FilePath { get; set; } 
+        public string FilePath { get; set; }
 
         [Required]
-        public DateTime UploadDate { get; set; } 
+        public DateTime UploadDate { get; set; }
 
         [Required]
-        public bool ShouldPrint { get; set; } 
+        public bool ShouldPrint { get; set; }
 
         [ForeignKey("User")]
-        public int UserId { get; set; } 
+        public int UserId { get; set; }
 
         public User User { get; set; }
 
-        public string? Extension { get; set; } 
+        public string Extension { get; set; }
 
         public long FileSize { get; set; }
     }
