@@ -236,7 +236,7 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.UserFile", "UserFile")
                         .WithMany()
                         .HasForeignKey("UserFileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");

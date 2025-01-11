@@ -14,7 +14,6 @@ namespace PrintCetnrum_Web.Server.Models.OrderModels
 
         public Order Order { get; set; }
 
-        [ForeignKey("UserFile")]
         public int UserFileId { get; set; } 
 
         public UserFile UserFile { get; set; }

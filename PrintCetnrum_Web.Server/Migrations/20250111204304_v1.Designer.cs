@@ -12,8 +12,8 @@ using PrintCetnrum_Web.Server.Context;
 namespace PrintCetnrum_Web.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250111133726_AddPropertiesOrderItem")]
-    partial class AddPropertiesOrderItem
+    [Migration("20250111204304_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,7 +239,7 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.UserFile", "UserFile")
                         .WithMany()
                         .HasForeignKey("UserFileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");

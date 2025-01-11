@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PrintCetnrum_Web.Server.Context;
 using PrintCetnrum_Web.Server.Models.OrderModels;
 
@@ -23,6 +24,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 return BadRequest("UserName is required.");
             }
+
+            //if (order.OrderItems.IsNullOrEmpty())
+            //{
+            //    return BadRequest("OrderItems are required.");
+            //}
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
             if (user == null)
             {
@@ -32,16 +38,16 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             decimal totalPrice = 0;
 
-            if (order.OrderItems != null && order.OrderItems.Any())
-            {
-                totalPrice = order.OrderItems.Sum(item => item.Count * item.Price);
-            }
+            //if (order.OrderItems != null && order.OrderItems.Any())
+            //{
+            //    totalPrice = order.OrderItems.Sum(item => item.Count * item.Price);
+            //}
 
-            order.TotalPrice = totalPrice;
+            order.TotalPrice = 5;
             order.OrderCreated = DateTime.UtcNow;
 
-            //_context.Orders.Add(order);
-            //await _context.SaveChangesAsync();
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
 
             return Ok(order);
             //return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);

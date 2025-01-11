@@ -3,7 +3,6 @@ import { User } from "../user.model";
 
 
 export interface Order {
-  id: number;
   orderCreated: Date;
   isPreparedForCustomer: boolean;
   isTakenByCustomer: boolean;
@@ -11,11 +10,10 @@ export interface Order {
   orderFinished?: Date;
   orderTakenTime?: Date;
   userId: number;
-  orderItems?: OrderItem[]; 
+  //orderItems?: OrderItem[]; 
 }
 
 export interface OrderItem {
-  id: number;
   orderId: number;
   userFileId: number;
   userFile: UserFile;  

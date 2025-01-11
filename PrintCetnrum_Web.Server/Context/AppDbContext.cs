@@ -36,13 +36,6 @@ namespace PrintCetnrum_Web.Server.Context
                 .HasForeignKey(oi => oi.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);  
 
-           
-            builder.Entity<OrderItem>()
-                .HasOne(oi => oi.UserFile)
-                .WithMany()
-                .HasForeignKey(oi => oi.UserFileId)
-                .OnDelete(DeleteBehavior.Restrict);  
-
             builder.Entity<Order>()
                 .HasOne(o => o.User)
                 .WithMany()

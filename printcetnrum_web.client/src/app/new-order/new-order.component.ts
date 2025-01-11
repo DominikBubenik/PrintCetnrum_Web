@@ -45,12 +45,11 @@ export class NewOrderComponent implements OnInit {
 
   initializeOrder(): void {
     this.order = {
-      id: 0,
       orderCreated: new Date(),
       isPreparedForCustomer: false,
       isTakenByCustomer: false,
       totalPrice: 0,
-      orderItems: this.orderItems,
+      //orderItems: this.orderItems,
       orderFinished: undefined,
       orderTakenTime: undefined,
       userId: 0
@@ -59,8 +58,7 @@ export class NewOrderComponent implements OnInit {
 
   initializeOrderDetails(): void {
     this.orderItems = this.files.map(file => ({
-      id: 0,
-      orderId: this.order.id,
+      orderId: 0,
       userFileId: file.id,
       userFile: file,
       count: 1,
@@ -83,7 +81,7 @@ export class NewOrderComponent implements OnInit {
 
   submitOrder(): void {
     console.log(this.orderItems);
-    this.order.orderItems = this.orderItems;
+    //this.order.orderItems = this.orderItems;
     this.orderService.createOrder(this.order).subscribe(
       (createdOrder) => {
         console.log('Order created successfully:', createdOrder);
