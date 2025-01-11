@@ -89,6 +89,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 {
                     uf.Id,
                     uf.FileName,
+                    uf.UniqueName,
                     uf.FilePath,
                     uf.Extension,
                     uf.UploadDate,
