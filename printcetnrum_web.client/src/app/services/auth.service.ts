@@ -16,18 +16,18 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   constructor(private http: HttpClient, private router: Router) {
     this.userPayload = this.decodedToken();
-    console.log('this is the payoad', this.userPayload);
-    console.log('in AuthService init', localStorage.getItem('token'));
+
     if (this.isLoggedIn()) {
-      this.isLoggedInSubject.next(true);
+      console.log('ten idot si mysli ze je prihlaseny');
+      //this.isLoggedInSubject.next(true);
+    } else {
+      console.log('ten idot si mysli ze nie je prihlaseny');
     }
   }
 
   loginUser(user: any) {
-    console.log(user.surname);
     return this.http.post<any>(this.baseUrl + 'authenticate', user);
   }
-
 
   registerUser(user: any) {
     return this.http.post<any>(this.baseUrl + 'register', user);

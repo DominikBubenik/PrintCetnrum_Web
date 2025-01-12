@@ -14,27 +14,11 @@ import { AuthService } from '../services/auth.service';
 export class UserFilesComponent implements OnInit {
   private authService = inject(AuthService);
   files: UserFile[] = [];
-  //allFiles = new BehaviorSubject<UserFile[]>([]);
-  reloadImages = signal<boolean>(false);
   baseUrl = environment.apiUrl;
   
-
-  constructor(private fileHandlerService: FileHandlerService, private router: Router) {
-    this.fetchFiles();
-  }
+  constructor(private fileHandlerService: FileHandlerService, private router: Router) {}
 
   ngOnInit() {
-    console.log("I am bacckkk");
-    this.authService.getLoginState().subscribe((isLoggedIn) => {
-      if (isLoggedIn) {
-        console.log('User logged in. Fetching files...');
-        this.fetchFiles(); // Fetch files when user logs in
-      } else {
-        console.log('User logged out. Fetching files...');
-        this.fetchFiles(); // Fetch files when user logs out
-      }
-    });
-
     if (this.authService.isLoggedIn()) {
       this.fetchFiles();
     }
@@ -64,13 +48,6 @@ export class UserFilesComponent implements OnInit {
 
   editFile(id: number) {
     this.router.navigate(['/edit', id]);
-    
-  }
-
-  reloadFiles(reload: boolean): void {
-    if (reload) {
-      this.fetchFiles();
-    }
   }
 }
 

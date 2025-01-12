@@ -16,9 +16,7 @@ export class NavbarComponent {
   currentUrl: string | undefined;
   menuValue: boolean = false;
   menu_icon: string = 'bi bi-list';
-  //isLoggedIn: boolean = false;
   isLoggedIn = signal<boolean>(false);
-  userName: string = '';
   userNameSignal = signal<string>('');
   private subscription?: Subscription;
   constructor(
@@ -28,17 +26,19 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.currentUrl = this.router.url;
-    this.isLoggedIn.set(this.auth.isLoggedIn());
     this.subscription = this.authStore.getFullNameFromStoreObservable().subscribe((fullName) => {
-      console.log('navbar', this.authStore.getFullNameFromStore());
       if (this.authStore.getFullNameFromStore()) {
         this.userNameSignal.set(this.authStore.getFullNameFromStore());
+        this.isLoggedIn.set(true);
       } else {
         this.userNameSignal.set(this.auth.getfullNameFromToken());
+        this.isLoggedIn.set(true);
       }
-      this.isLoggedIn.set(true);
+
     });
- 
+    if (!this.auth.getfullNameFromToken()) {
+      this.isLoggedIn.set(false);
+    }
 
     this.router.events.subscribe(() => {
       this.currentUrl = this.router.url;
@@ -63,6 +63,6 @@ export class NavbarComponent {
   onLogout() {
     this.auth.logOut();
     this.isLoggedIn.set(false);
-    this.userName = '';
+    this.userNameSignal.set('');
   }
 }
