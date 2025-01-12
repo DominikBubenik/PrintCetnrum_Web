@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { UserStoreService } from '../services/user-store.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -9,27 +11,42 @@ import { AuthService } from '../services/auth.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  authStore = inject(UserStoreService);
+  auth = inject(AuthService);
   currentUrl: string | undefined;
   menuValue: boolean = false;
   menu_icon: string = 'bi bi-list';
-  isLoggedIn: boolean = false;
+  //isLoggedIn: boolean = false;
+  isLoggedIn = signal<boolean>(false);
   userName: string = '';
+  userNameSignal = signal<string>('');
+  private subscription?: Subscription;
   constructor(
     private router: Router,
-    private http: HttpClient,
-    private auth: AuthService
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
     this.currentUrl = this.router.url;
-    this.isLoggedIn = this.auth.isLoggedIn();
-    if (this.isLoggedIn) {
-      this.userName = this.auth.getfullNameFromToken();
-    }
+    this.isLoggedIn.set(this.auth.isLoggedIn());
+    this.subscription = this.authStore.getFullNameFromStoreObservable().subscribe((fullName) => {
+      console.log('navbar', this.authStore.getFullNameFromStore());
+      if (this.authStore.getFullNameFromStore()) {
+        this.userNameSignal.set(this.authStore.getFullNameFromStore());
+      } else {
+        this.userNameSignal.set(this.auth.getfullNameFromToken());
+      }
+      this.isLoggedIn.set(true);
+    });
+ 
 
     this.router.events.subscribe(() => {
       this.currentUrl = this.router.url;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
   openMenu() {
@@ -45,7 +62,7 @@ export class NavbarComponent {
 
   onLogout() {
     this.auth.logOut();
-    this.isLoggedIn = false;
+    this.isLoggedIn.set(false);
     this.userName = '';
   }
 }

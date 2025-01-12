@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./upload-photo-page.component.css']
 })
 export class UploadPhotoPageComponent {
-  selectedFiles: File[] = []; // Initialize as an empty array
+  selectedFiles: File[] = [];
 
   constructor(
     private fileHandlerService: FileHandlerService,

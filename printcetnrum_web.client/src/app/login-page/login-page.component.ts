@@ -44,9 +44,9 @@ export class LoginPageComponent {
   }
 
   onLogin() {
-    console.log(this.loginForm.value);
+    //console.log(this.loginForm.value);
     if (this.loginForm.valid) {
-      console.log('Form submitted', this.loginForm.value);
+      //console.log('Form submitted', this.loginForm.value);
       this.authService.loginUser(this.loginForm.value).subscribe({
         next: (res) => {
           this.authService.storeToken(res.accessToken);

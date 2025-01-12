@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { UserFile } from '../models/user-file';
 import { ValueChangeEvent } from '@angular/forms';
+import { UserStoreService } from './user-store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileHandlerService {
+  private userStore = inject(UserStoreService);
   private baseUrl = 'https://localhost:7074/api/Upload/'
   constructor(private http: HttpClient, private auth: AuthService) { }
 
