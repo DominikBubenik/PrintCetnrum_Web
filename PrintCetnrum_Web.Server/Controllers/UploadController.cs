@@ -23,22 +23,16 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
         [Authorize]
-        [HttpPost("uploadImage")]
-        public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] string userName, [FromForm] bool shouldPrint)
+        [HttpPost("uploadFiles")]
+        public async Task<IActionResult> UploadFiles(List<IFormFile> files, [FromForm] string userName, [FromForm] bool shouldPrint)
         {
-            if (file == null || file.Length == 0)
+            if (files == null || !files.Any())
             {
-                return BadRequest("No file uploaded.");
+                return BadRequest("No files uploaded.");
             }
-
-            var maxFileSize = 10 * 1024 * 1024; // 10MB
-            if (file.Length > maxFileSize)
-            {
-                return BadRequest("File is too large.");
-            }
-
+            var maxFilesSize = 15 * 1024 * 1024; // 15MB per file
+            
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);
-
             if (user == null)
             {
                 return NotFound("User not found.");
@@ -50,33 +44,52 @@ namespace PrintCetnrum_Web.Server.Controllers
                 Directory.CreateDirectory(userFolder);
             }
 
-            var fileName = Path.GetFileName(file.FileName);
-            var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
-            var filePath = Path.Combine(userFolder, uniqueName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            var uploadedFiles = new List<object>();
+            int currentSize = 0;
+            foreach (var file in files)
             {
-                await file.CopyToAsync(stream);
+                if (file.Length == 0)
+                {
+                    continue; // Skip empty files
+                }
+                currentSize += (int)file.Length;
+                if (currentSize > maxFilesSize)
+                {
+                    return BadRequest($"Files are too large. Maximum size allowed is 15MB.");
+                }
+                var fileName = Path.GetFileName(file.FileName);
+                var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
+                var filePath = Path.Combine(userFolder, uniqueName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var userFile = new UserFile
+                {
+                    FileName = fileName,
+                    UniqueName = uniqueName,
+                    FilePath = $"/UserData/{user.UserName}/{uniqueName}",
+                    UploadDate = DateTime.Now,
+                    ShouldPrint = shouldPrint,
+                    UserId = user.Id,
+                    Extension = Path.GetExtension(fileName),
+                    FileSize = file.Length
+                };
+
+                _dbContext.UserFiles.Add(userFile);
+                uploadedFiles.Add(new
+                {
+                    userFile.Id,
+                    userFile.FileName,
+                    userFile.FilePath
+                });
             }
-
-            var userFile = new UserFile
-            {
-                FileName = fileName,
-                UniqueName = uniqueName,
-                FilePath = $"/UserData/{userName}/{uniqueName}",
-                UploadDate = DateTime.Now,
-                ShouldPrint = shouldPrint,
-                UserId = user.Id,
-                Extension = Path.GetExtension(fileName),
-                FileSize = file.Length
-            };
-
-            _dbContext.UserFiles.Add(userFile);
             await _dbContext.SaveChangesAsync();
-
-           
-            return Ok(new { filePath = $"/UserData/{userName}/{uniqueName}" });
+            return Ok(uploadedFiles);
         }
+
 
         [Authorize]
         [HttpGet("getUserFiles")]

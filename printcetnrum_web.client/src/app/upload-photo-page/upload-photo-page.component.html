@@ -1,25 +1,26 @@
 <div class="upload-container">
-  <h1 class="text-primary mb-4" style="font-size: 36px; font-weight: bold;">Upload Image</h1>
+  <h1 class="title">Upload Files</h1>
 
-  <!-- File input -->
   <div class="file-input">
-    <input type="file" (change)="onFileSelected($event)" />
+    <label for="file-upload" class="custom-file-upload">Select Files</label>
+    <input id="file-upload" type="file" (change)="onFilesSelected($event)" multiple />
   </div>
 
-  <!-- Upload button -->
+  <div *ngIf="selectedFiles" class="file-list">
+    <h5 class="file-list-title">Selected Files:</h5>
+    <ul>
+      <li *ngFor="let file of selectedFiles">
+        <i class="bi bi-file-earmark-text"></i>
+        {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)
+      </li>
+    </ul>
+  </div>
+
   <div class="upload-button">
-    <button (click)="uploadImage()" [disabled]="!selectedFile">Upload</button>
+    <button (click)="uploadFiles()" [disabled]="!selectedFiles || selectedFiles.length === 0">Upload</button>
   </div>
 
-  <!-- Preview uploaded image -->
-  <div class="uploaded-image" *ngIf="uploadedImagePath">
-    <h3>Uploaded Image:</h3>
-    <img [src]="uploadedImagePath" alt="Uploaded Image" />
-  </div>
-
-  <!-- Error message -->
-  <div class="error-message" *ngIf="!selectedFile">
-    <p>Please select a file to upload.</p>
+  <div class="error-message" *ngIf="!selectedFiles || selectedFiles.length === 0">
+    <p>Please select at least one file to upload.</p>
   </div>
 </div>
-

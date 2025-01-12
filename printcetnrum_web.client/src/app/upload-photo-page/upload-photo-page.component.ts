@@ -1,43 +1,55 @@
 import { Component } from '@angular/core';
 import { FileHandlerService } from '../services/file-handler.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload-photo-page',
   templateUrl: './upload-photo-page.component.html',
-  styleUrl: './upload-photo-page.component.css'
+  styleUrls: ['./upload-photo-page.component.css']
 })
 export class UploadPhotoPageComponent {
-  selectedFile: File | null = null;
-  uploadedImagePath: string | null = null;
+  selectedFiles: File[] = []; // Initialize as an empty array
 
   constructor(
     private fileHandlerService: FileHandlerService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
+  onFilesSelected(event: any): void {
+    this.selectedFiles = event.target.files ? Array.from(event.target.files) : [];
   }
 
-  uploadImage(): void {
-    if (this.selectedFile) {
-      this.fileHandlerService.uploadImage(this.selectedFile).subscribe(
+  uploadFiles(): void {
+    if (this.selectedFiles && this.selectedFiles.length > 0) {
+      this.fileHandlerService.uploadFiles(this.selectedFiles).subscribe(
         (response) => {
-          this.uploadedImagePath = response.filePath; // Use the returned file path
-          console.log('Image uploaded successfully:', this.uploadedImagePath);
-          this.snackBar.open('Upload successfull!', 'Close', {
+          this.snackBar.open('Upload successful!', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: 'app-notification-success'
           });
+          this.router.navigate(['/userFiles']);
         },
         (error) => {
-          console.error('Image upload failed:', error);
+          console.error('File upload failed:', error);
+          this.snackBar.open('Upload failed. Please try again.', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-error'
+          });
         }
       );
+    } else {
+      this.snackBar.open('No files selected for upload.', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        panelClass: 'app-notification-warning'
+      });
     }
   }
 }

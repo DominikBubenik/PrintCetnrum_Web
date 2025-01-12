@@ -12,17 +12,15 @@ export class FileHandlerService {
   private baseUrl = 'https://localhost:7074/api/Upload/'
   constructor(private http: HttpClient, private auth: AuthService) { }
 
-  uploadImage(file: File): Observable<{ filePath: string }> {
+  uploadFiles(files: File[]): Observable<{ filePath: string }[]> {
     const formData = new FormData();
-    formData.append('file', file);
+    files.forEach((file) => {
+      formData.append('files', file); 
+    });
     formData.append('userName', this.auth.getfullNameFromToken());
     formData.append('shouldPrint', String(false));
-    formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`);
-    });
-    return this.http.post<any>(this.baseUrl + 'uploadImage', formData);
+    return this.http.post<{ filePath: string }[]>(this.baseUrl + 'uploadFiles', formData);
   }
-
 
   fetchFiles(): Observable<UserFile[]> {
     return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken()}`);
