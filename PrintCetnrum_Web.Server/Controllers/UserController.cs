@@ -307,6 +307,5 @@ namespace PrintCetnrum_Web.Server.Controllers
                 Message = "Password Reset Successful"
             });
         }
-
     }
 }
