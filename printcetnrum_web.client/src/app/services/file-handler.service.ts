@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from './auth.service';
 import { UserFile } from '../models/user-file';
 import { ValueChangeEvent } from '@angular/forms';
@@ -12,7 +12,11 @@ import { UserStoreService } from './user-store.service';
 export class FileHandlerService {
   private userStore = inject(UserStoreService);
   private baseUrl = 'https://localhost:7074/api/Upload/'
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  userName: string = '';
+  reloadImages = signal<boolean>(false);
+  constructor(private http: HttpClient, private auth: AuthService) {
+  }
+
 
   uploadFiles(files: File[]): Observable<{ filePath: string }[]> {
     const formData = new FormData();
@@ -25,7 +29,7 @@ export class FileHandlerService {
   }
 
   fetchFiles(): Observable<UserFile[]> {
-    return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken()}`);
+    return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken() }`);
   }
 
   markForPrint(id: number, shouldPrint: boolean): Observable<void> {

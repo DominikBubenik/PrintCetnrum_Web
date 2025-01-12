@@ -1,19 +1,26 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { TokenApiModel } from '../models/token-api.model';
+import { UserStoreService } from './user-store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private userStore = inject(UserStoreService);
   private baseUrl = 'https://localhost:7074/api/User/';
   private userPayload: any;
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   constructor(private http: HttpClient, private router: Router) {
     this.userPayload = this.decodedToken();
-    console.log('in AuthService init');
+    console.log('this is the payoad', this.userPayload);
+    console.log('in AuthService init', localStorage.getItem('token'));
+    if (this.isLoggedIn()) {
+      this.isLoggedInSubject.next(true);
+    }
   }
 
   loginUser(user: any) {
@@ -52,6 +59,7 @@ export class AuthService {
 
   logOut() {
     localStorage.clear();
+    this.isLoggedInSubject.next(false); 
     this.router.navigate(['login'])
   }
 
@@ -63,6 +71,9 @@ export class AuthService {
   }
 
   getfullNameFromToken() {
+    if (this.userStore.getFullNameFromStore()) {
+      return this.userStore.getFullNameFromStore();
+    }
     if (this.userPayload)
       return this.userPayload.unique_name;
   }
@@ -74,5 +85,9 @@ export class AuthService {
 
   renewToken(tokenApi: TokenApiModel) {
     return this.http.post<any>(`${this.baseUrl}refresh`, tokenApi)
+  }
+
+  getLoginState(): Observable<boolean> {
+    return this.isLoggedInSubject.asObservable();
   }
 }
