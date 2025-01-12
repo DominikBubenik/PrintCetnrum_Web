@@ -7,16 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './about-page.component.css'
 })
 export class AboutPageComponent {
-  showTopButton = false;
-
-  //@HostListener('window:scroll')
-  //onWindowScroll() {
-  //  this.showTopButton = window.scrollY > 350;
-  //}
-
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  
 }
 
 //function HostListener(arg0: string): (target: AboutPageComponent, propertyKey: "onWindowScroll", descriptor: TypedPropertyDescriptor<() => void>) => void | TypedPropertyDescriptor<() => void> {
