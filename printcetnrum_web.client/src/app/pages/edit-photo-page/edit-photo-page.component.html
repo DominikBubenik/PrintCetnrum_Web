@@ -1,11 +1,19 @@
+<body>
+  <div class="container">
+    <div class="image-container">
+      <input type="range" min="0" max="200" [(ngModel)]="brightness" (input)="updateBrightness()" />
+      <button class="btn btn-primary" (click)="revertChanges()">Revert</button>
+      <button class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+      <button class="btn btn-primary" (click)="download()">Download Image</button>
+      <p>{{ this.brightness }}</p>
 
-<div>
-  <input type="range" min="0" max="200" [(ngModel)]="brightness" (input)="updateBrightness()" />
-  <button class="btn btn-primary" (click)="revertChanges()">Revert</button>
-  <button class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
-  <button class="btn btn-primary" (click)="download()">Download Image</button>
-  <p>{{this.brightness}}</p>
-  <img [style.filter]="brightnessStyle" [src]="imageUrl" alt="Image" id="image" crossorigin="anonymous" />
-  <canvas id="canvas" style="display: none;"></canvas>
-  <p>{{this.imageUrl}}</p>
-</div>
+      <!-- Displaying the image inside a square frame -->
+      <div class="image-frame">
+        <img [style.filter]="brightnessStyle" [src]="imageUrl" alt="Image" id="image" crossorigin="anonymous" />
+      </div>
+
+      <canvas id="canvas" style="display: none;"></canvas>
+      <p>{{ this.imageUrl }}</p>
+    </div>
+  </div>
+</body>

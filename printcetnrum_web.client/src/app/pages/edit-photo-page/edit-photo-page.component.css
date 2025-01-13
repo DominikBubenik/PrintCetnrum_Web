@@ -6,3 +6,47 @@
   border: 2px solid #ccc; /* Optional: to make image boundary visible */
   background-color: #f0f0f0; /* Optional: background color if image fails */
 }
+/* Add this CSS to make the image fit within a fixed-size square frame */
+
+/* Add this CSS to make the image fit within a fixed-size square frame */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.image-container {
+  text-align: center;
+}
+
+.image-frame {
+  width: 80%; /* Fixed width for the square frame */
+  height: 80%; /* Fixed height for the square frame */
+  margin: 10px auto;
+  margin-top: 1px; /* Reduced top margin to bring the frame closer to the buttons */
+  border: 2px solid #ccc;
+  overflow: hidden; /* Hide overflow to maintain square frame */
+  background-color: #f0f0f0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  max-width: 100%; /* Ensure the image fits inside the frame */
+  max-height: 600px;
+  object-fit: contain; /* Keep the aspect ratio */
+}
+
+button {
+  margin: 5px; /* Reduced gap between buttons */
+  padding: 8px 16px; /* Smaller button size */
+  font-size: 14px; /* Reduced font size */
+}
+
+canvas {
+  display: none;
+}

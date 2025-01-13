@@ -6,7 +6,6 @@ import { environment } from '../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 
-
 @Component({
   selector: 'app-edit-photo-page',
   templateUrl: './edit-photo-page.component.html',
