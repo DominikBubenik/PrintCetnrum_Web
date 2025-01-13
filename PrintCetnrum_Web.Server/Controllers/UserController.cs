@@ -142,6 +142,24 @@ namespace PrintCetnrum_Web.Server.Controllers
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
 
+            var userOrders = await _authContext.Orders.Where(a => a.UserId == id).ToListAsync();
+
+            foreach (var order in userOrders)
+            {
+                var orderItems = await _authContext.OrderItems.Where(a => a.OrderId == order.Id).ToListAsync();
+                foreach (var orderItem in orderItems)
+                {
+                    _authContext.OrderItems.Remove(orderItem);
+                }
+
+                _authContext.Orders.Remove(order);
+            }
+            UploadController uploadController = new UploadController(_authContext);
+            var userFiles = await _authContext.UserFiles.Where(a => a.UserId == id).ToListAsync();
+            foreach (var file in userFiles)
+            {
+                await uploadController.DeleteFile(file.Id);
+            }
             _authContext.Users.Remove(user);
             await _authContext.SaveChangesAsync();
 
