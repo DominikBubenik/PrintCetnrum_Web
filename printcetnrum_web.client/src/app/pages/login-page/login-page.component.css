@@ -1,64 +1,103 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
 #inner {
-  width: 60%;
-  height: 50%;
-  border: 0.05em solid black;
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 200px;
+  max-width: 900px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
 }
 
-.custom-btn-outline-gray {
-  border: 2px solid #6c757d; 
-  color: #6c757d; 
-  background-color: transparent;
-  border-radius: 0; 
-  padding: 10px 20px;
-  min-width: 180px; 
-  max-width: 300px;
-  margin-top: auto;
-  margin-bottom: auto;
+h2 {
+  font-size: 28px;
+  font-weight: bold;
 }
 
-  .custom-btn-outline-gray:hover {
-    background-color: #6c757d; 
-    color: #fff; 
-  }
+p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
 
 .form-control {
-  width: 90%; 
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-@media (max-width: 899px) {
-  .btn-row {
-    flex-direction: row; 
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: 2px solid #007bff; 
+  border-radius: 5px;
+  background-color: transparent;
+  color: #007bff;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+  .btn:hover {
+    background-color: #007bff;
+    color: #fff;
   }
+
+.custom-btn {
+  border: 2px solid #6c757d;
+  background-color: transparent;
+  color: #6c757d;
+}
+
+  .custom-btn:hover {
+    background-color: #6c757d;
+    color: #fff;
+  }
+
+.text-danger {
+  color: red;
+}
+
+@media (max-width: 768px) {
   #inner {
-    width: 50%;  
-    height: 20%;
-    margin-top: 60px;
-    min-width: 400px;
+    padding: 20px;
   }
-  .custom-btn-outline-gray {
-    font-size: 18px;
-    padding: 12px; 
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .btn {
+    font-size: 14px;
   }
 }
 
 @media (max-width: 576px) {
-  .custom-btn-outline-gray {
-    font-size: 16px; 
-    padding: 15px;
-  }
-
   #inner {
-    width: 200px;
-    height: 20%;
-    margin-top: 60px;
-    min-width: 200px;
+    width: 90%;
   }
-}
 
-.mat-snack-bar-container {
-  background-color: #4CAF50; /* Green background */
-  color: white; /* White text */
+  .form-control {
+    font-size: 14px;
+  }
 }
