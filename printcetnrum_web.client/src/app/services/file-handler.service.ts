@@ -34,6 +34,11 @@ export class FileHandlerService {
     return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, shouldPrint);
   }
 
+  getFilesWithId(listOfId: number[]): Observable<UserFile[]> {
+    return this.http.post<UserFile[]>(`${this.baseUrl}getFilesWithId`, listOfId);
+  }
+
+
   deleteFile(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}`);
   }

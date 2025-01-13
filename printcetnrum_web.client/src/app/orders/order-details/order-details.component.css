@@ -1,0 +1,18 @@
+.order-items {
+  margin-top: 20px;
+}
+
+.order-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+  .order-item strong {
+    font-size: 1.1rem;
+  }
+
+  .order-item button {
+    display: inline-block;
+  }

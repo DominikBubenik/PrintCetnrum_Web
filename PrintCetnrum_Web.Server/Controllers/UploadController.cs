@@ -261,6 +261,29 @@ namespace PrintCetnrum_Web.Server.Controllers
             return File(fileBytes, "image/" + file.Extension, fileName);
         }
 
+        [HttpPost("getFilesWithId")]
+        public async Task<IActionResult> GetFilesWithId([FromBody] List<int> listOfId)
+        {
+            if (listOfId == null || !listOfId.Any())
+            {
+                return BadRequest("List of IDs is empty or null.");
+            }
+
+            List<UserFile> files = new List<UserFile>();
+            foreach (var id in listOfId)
+            {
+                files.Add(await _dbContext.UserFiles.FirstOrDefaultAsync(o => o.Id == id));
+            }
+
+         
+
+            if (!files.Any())
+            {
+                return NotFound("No files found for the provided IDs.");
+            }
+
+            return Ok(files);
+        }
 
     }
 }

@@ -17,20 +17,22 @@
         {{ order.isTakenByCustomer ? 'Yes' : 'No' }}
       </span>
     </p>
+  </div>
 
-    <div *ngIf="orderItems && orderItems.length > 0">
-      <h4>Order Items</h4>
-      <ul>
-        <li *ngFor="let item of orderItems">
-          <strong>{{ item.userFile?.fileName || 'No File' }}</strong> -
-          {{ item.count }} x {{ item.price | currency }}<br>
-          <span><strong>Color:</strong> {{ item.color }}</span><br>
-          <span><strong>Size:</strong> {{ item.size }}</span><br>
-          <span><strong>Paper Type:</strong> {{ item.paperType }}</span><br>
-          <span><strong>Description:</strong> {{ item.description }}</span>
-        </li>
-      </ul>
-    </div>
+  <div *ngIf="orderItems && orderItems.length > 0" class="order-items">
+    <h4>Order Items</h4>
+    <ul>
+      <li *ngFor="let item of orderItems; let i = index" class="order-item">
+        <strong>{{ item.userFile?.fileName || 'No File' }}</strong><br>
+        <span><strong>Quantity:</strong> {{ item.count }}</span><br>
+        <span><strong>Color:</strong> {{ item.color }}</span><br>
+        <span><strong>Size:</strong> {{ item.size }}</span><br>
+        <span><strong>Paper Type:</strong> {{ item.paperType }}</span><br>
+        <span><strong>Description:</strong> {{ item.description }}</span><br>
+        <span><strong>Price:</strong> ${{ item.price | number: '1.2-2' }}</span><br>
+        <button class="btn btn-success mt-2" (click)="downloadFile(item)">Download</button>
+      </li>
+    </ul>
   </div>
 </div>
 
