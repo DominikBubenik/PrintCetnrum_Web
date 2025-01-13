@@ -9,7 +9,20 @@
 
       <!-- Displaying the image inside a square frame -->
       <div class="image-frame">
-        <img [style.filter]="brightnessStyle" [src]="imageUrl" alt="Image" id="image" crossorigin="anonymous" />
+        <img [style.filter]="brightnessStyle"
+             [src]="imageUrl"
+             alt="Image"
+             id="image"
+             crossorigin="anonymous"
+             (load)="onImageLoad()" />
+      </div>
+
+      <div class="crop-controls">
+        <label for="cropWidth">Width:</label>
+        <input id="cropWidth" type="number" [(ngModel)]="cropWidth" min="50" />
+        <label for="cropHeight">Height:</label>
+        <input id="cropHeight" type="number" [(ngModel)]="cropHeight" min="50" />
+        <button class="btn btn-secondary" (click)="applyCrop()">Apply Crop</button>
       </div>
 
       <canvas id="canvas" style="display: none;"></canvas>
