@@ -6,7 +6,6 @@ import { environment } from '../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 
-
 @Component({
   selector: 'app-edit-photo-page',
   templateUrl: './edit-photo-page.component.html',
@@ -18,6 +17,11 @@ export class EditPhotoPageComponent implements OnInit {
   brightnessStyle: string = `brightness(${this.brightness}%)`;
   imageUrl: string = '';
   baseUrl = environment.apiUrl;
+  cropWidth: number = 200;  
+  cropHeight: number = 200; 
+  cropX: number = 50;      
+  cropY: number = 50;      
+  imgElement: HTMLImageElement | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,6 +46,10 @@ export class EditPhotoPageComponent implements OnInit {
     });
   }
 
+  onImageLoad(): void {
+    this.imgElement = document.getElementById('image') as HTMLImageElement;
+  }
+
   updateBrightness(): void {
     this.brightnessStyle = `brightness(${this.brightness}%)`;
   }
@@ -52,17 +60,24 @@ export class EditPhotoPageComponent implements OnInit {
   }
 
   download(): void {
+    if (!this.imgElement) return;
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    const img = document.getElementById('image') as HTMLImageElement;
-
-    canvas.width = img.width;
-    canvas.height = img.height;
-
     const ctx = canvas.getContext('2d');
 
     if (ctx) {
       ctx.filter = `brightness(${this.brightness}%)`;
-      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      ctx.drawImage(
+        this.imgElement,
+        this.cropX,
+        this.cropY,
+        this.cropWidth,
+        this.cropHeight,
+        0,
+        0,
+        this.cropWidth,
+        this.cropHeight
+      );
 
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
@@ -71,18 +86,50 @@ export class EditPhotoPageComponent implements OnInit {
     }
   }
 
-  saveChanges(): void {
+  applyCrop(): void {
+    if (!this.imgElement) return;
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    const img = document.getElementById('image') as HTMLImageElement;
+    const ctx = canvas.getContext('2d');
 
-    canvas.width = img.width;
-    canvas.height = img.height;
+    if (ctx) {
+      canvas.width = this.cropWidth;
+      canvas.height = this.cropHeight;
 
+      ctx.clearRect(0, 0, canvas.width, canvas.height); 
+
+      ctx.drawImage(
+        this.imgElement,
+        this.cropX, this.cropY,
+        this.cropWidth, this.cropHeight,
+        0, 0,
+        this.cropWidth, this.cropHeight
+      );
+
+      const croppedImageUrl = canvas.toDataURL('image/png');
+      this.imageUrl = croppedImageUrl;
+    }
+  }
+
+  saveChanges(): void {
+    if (!this.imgElement) return;
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
 
     if (ctx) {
       ctx.filter = `brightness(${this.brightness}%)`;
-      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      // Apply crop to canvas context
+      ctx.drawImage(
+        this.imgElement,
+        this.cropX,
+        this.cropY,
+        this.cropWidth,
+        this.cropHeight,
+        0,
+        0,
+        this.cropWidth,
+        this.cropHeight
+      );
 
       canvas.toBlob((blob) => {
         if (blob) {
