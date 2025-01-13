@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user-files',
@@ -15,8 +16,12 @@ export class UserFilesComponent implements OnInit {
   private authService = inject(AuthService);
   files: UserFile[] = [];
   baseUrl = environment.apiUrl;
-  
-  constructor(private fileHandlerService: FileHandlerService, private router: Router) {}
+  fileIdToDelete: number | null = null;
+  constructor(
+    private fileHandlerService: FileHandlerService,
+    private modalService: NgbModal,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -40,10 +45,18 @@ export class UserFilesComponent implements OnInit {
     });
   }
 
-  deleteFile(id: number): void {
-    this.fileHandlerService.deleteFile(id).subscribe(() => {
-      this.fetchFiles(); 
-    });
+  openDeleteModal(fileId: number, modal: any): void {
+    this.fileIdToDelete = fileId;
+    this.modalService.open(modal);
+  }
+
+  confirmDelete(): void {
+    if (this.fileIdToDelete) {
+      this.fileHandlerService.deleteFile(this.fileIdToDelete).subscribe(() => {
+        this.fetchFiles();
+        this.modalService.dismissAll();
+      });
+    }
   }
 
   editFile(id: number) {
