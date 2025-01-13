@@ -43,7 +43,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(order);
-            //return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
         }
 
         [HttpPost("add-order-items")]
@@ -77,18 +76,14 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpGet("get-order/{id}")]
         public async Task<IActionResult> GetOrder(int id)
         {
-            //var order = await _context.Orders
-            //    .Include(o => o.OrderItems)
-            //    .ThenInclude(oi => oi.UserFileId)
-            //    .FirstOrDefaultAsync(o => o.Id == id);
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
 
-            //if (order == null)
-            //{
-            //    return NotFound();
-            //}
+            if (order == null)
+            {
+                return NotFound();
+            }
 
-            //return Ok(order);
-            return Ok();
+            return Ok(order);
         }
 
 
@@ -151,38 +146,32 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
 
-        [HttpGet("get-all-orders")]
-        public async Task<IActionResult> GetAllOrders()
-        {
-            //var orders = await _context.Orders
-            //    .Include(o => o.OrderItems)
-            //    .ThenInclude(oi => oi.UserFileId)
-            //    .ToListAsync();
-
-            //return Ok(orders);
-            return Ok();
-        }
-
-        [HttpGet("all-user-orders/{userName}")]
-        public async Task<IActionResult> GetOrdersOfUser(string userName)
+        [HttpGet("get-orders/{userName}")]
+        public async Task<IActionResult> GetOrders(string userName)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
             if (user == null)
             {
                 return NotFound("User not found.");
             }
-            var userId = user.Id;
-            var orders = await _context.Orders
-                .Where(o => o.UserId == userId)
-                .Include(o => o.OrderItems)
-                .ToListAsync();
-
-            if (orders == null || !orders.Any())
+ 
+            if (user.Role == "Admin")
             {
-                return NotFound("No orders found for this user.");
-            }
+                var orders = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .ToListAsync();
 
-            return Ok(orders);
+                return Ok(orders);
+            }
+            else
+            {
+                var orders = await _context.Orders
+                    .Where(o => o.UserId == user.Id)
+                    .Include(o => o.OrderItems)
+                    .ToListAsync();
+
+                return Ok(orders);
+            }
         }
     }
 }

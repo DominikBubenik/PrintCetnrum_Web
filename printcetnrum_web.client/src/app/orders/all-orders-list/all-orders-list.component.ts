@@ -24,8 +24,7 @@ export class AllOrdersListComponent {
   }
 
   getAllOrders(): void {
-    var name = this.authService.getfullNameFromToken();
-    this.orderService.getOrdersOfUser(name).subscribe(
+    this.orderService.getOrders().subscribe(
       (orders) => {
         this.orders = orders; 
       },

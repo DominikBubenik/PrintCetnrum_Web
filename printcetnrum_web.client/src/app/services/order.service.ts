@@ -31,8 +31,8 @@ export class OrderService {
     return this.http.get<Order[]>(`${this.baseUrl}get-all-orders`);
   }
 
-  getOrdersOfUser(userName: string): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}all-user-orders/${userName}`);
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.baseUrl}get-orders/${this.authService.getfullNameFromToken()}`);
   }
 
   updateOrder(id: number, order: Order): Observable<void> {
