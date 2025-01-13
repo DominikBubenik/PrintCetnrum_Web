@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { AboutPageComponent } from './about-page/about-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { EditPhotoPageComponent } from './edit-photo-page/edit-photo-page.component';
 import { UploadPhotoPageComponent } from './upload-photo-page/upload-photo-page.component';
@@ -10,7 +9,7 @@ import { UsersListPageComponent } from './users-list-page/users-list-page.compon
 import { AuthGuard } from './guards/auth.guard';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
 import { UserFilesComponent } from './user-files/user-files.component';
-import { NewOrderComponent } from './new-order/new-order.component';
+import { NewOrderComponent } from './orders/new-order/new-order.component';
 import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 
@@ -66,12 +65,6 @@ const routes: Routes = [
     path: 'register',
     component: RegisterPageComponent,
     title: 'Register page',
-    pathMatch: 'full'
-  },
-  {
-    path: 'about',
-    component: AboutPageComponent,
-    title: 'About page',
     pathMatch: 'full'
   },
   {

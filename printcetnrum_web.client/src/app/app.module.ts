@@ -12,7 +12,6 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { AboutPageComponent } from './about-page/about-page.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RegisterPageComponent } from './register-page/register-page.component';
@@ -23,7 +22,7 @@ import { UsersListPageComponent } from './users-list-page/users-list-page.compon
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
 import { UserFilesComponent } from './user-files/user-files.component';
-import { NewOrderComponent } from './new-order/new-order.component';
+import { NewOrderComponent } from './orders/new-order/new-order.component';
 import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component'
@@ -35,7 +34,6 @@ import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.comp
     NavbarComponent,
     HomePageComponent,
     LoginPageComponent,
-    AboutPageComponent,
     RegisterPageComponent,
     EditPhotoPageComponent,
     UploadPhotoPageComponent,

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FileHandlerService } from '../services/file-handler.service';
-import { AuthService } from '../services/auth.service';
-import { UserFile } from '../models/user-file';
-import { Order, OrderItem } from '../models/order-models/order.model';
-import { environment } from '../../environments/environment';
+import { FileHandlerService } from '../../services/file-handler.service';
+import { AuthService } from '../../services/auth.service';
+import { UserFile } from '../../models/user-file';
+import { Order, OrderItem } from '../../models/order-models/order.model';
+import { environment } from '../../../environments/environment';
 import { BehaviorSubject } from 'rxjs';
-import { OrderService } from '../services/order.service';
+import { OrderService } from '../../services/order.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackBarUtil } from '../shared/snackbar-util';
+import { SnackBarUtil } from '../../shared/snackbar-util';
 
 @Component({
   selector: 'app-new-order',
