@@ -5,6 +5,9 @@ import { Order, OrderItem } from '../../models/order-models/order.model';
 import { FileHandlerService } from '../../services/file-handler.service';
 import { UserFile } from '../../models/user-file';
 import { UserFilesComponent } from '../../user-files/user-files.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-order-details',
@@ -14,18 +17,78 @@ import { UserFilesComponent } from '../../user-files/user-files.component';
 export class OrderDetailsComponent implements OnInit {
   order: Order | null = null;
   orderItems: OrderItem[] = [];
+  isAdmin: boolean = false; 
 
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
-    private fileService: FileHandlerService
+    private fileService: FileHandlerService,
+    private snackBar: MatSnackBar,
+    private auth: AuthService,
+    private userStore: UserStoreService
   ) { }
 
   ngOnInit(): void {
-    // Get the order ID from the URL parameters
     const orderId = Number(this.route.snapshot.paramMap.get('id'));
     if (orderId) {
       this.getOrderDetails(orderId);
+    }
+    this.userStore.getRoleFromStore().subscribe(role => {
+      if (role) {
+        this.isAdmin = role == 'Admin' ? true : false;
+      } else {
+        this.isAdmin = this.auth.getRoleFromToken() == 'Admin' ? true : false;
+      }
+    });
+  }
+
+  saveOrderChanges(): void {
+    if (this.order) {
+      this.orderService.updateOrder(this.order.id, this.order).subscribe(
+        () => {
+          this.snackBar.open('Order changes saved successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-success'
+          });
+        },
+        (error) => {
+          console.error('Error saving order changes:', error);
+          this.snackBar.open('Failed to save order changes!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-error'
+          });
+        }
+      );
+    }
+  }
+
+  markOrderAsPrepared(value: boolean): void {
+    if (this.order) {
+      this.order.isPreparedForCustomer = value;
+
+      this.orderService.updateOrder(this.order.id, this.order).subscribe(
+        () => {
+          this.snackBar.open('Order marked as done!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-success'
+          });
+        },
+        (error) => {
+          console.error('Error marking order as done:', error);
+          this.snackBar.open('Failed to mark order as done!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-error'
+          });
+        }
+      );
     }
   }
 
@@ -36,7 +99,6 @@ export class OrderDetailsComponent implements OnInit {
         this.orderService.getOrderItems(orderId).subscribe((items) => {
           this.orderItems = items;
 
-          // Extract the file IDs from order items
           const fileIds = items.map(item => item.userFileId);
 
         
@@ -73,4 +135,32 @@ export class OrderDetailsComponent implements OnInit {
       }
     );
   }
+
+  removeItem(item: OrderItem): void {
+    const confirmed = confirm(`Are you sure you want to remove ${item.userFile?.fileName || 'this item'}?`);
+    if (confirmed) {
+      // Call service to remove the item from the backend
+      this.orderService.removeOrderItem(item.id ?? 0).subscribe(
+        () => {
+          this.orderItems = this.orderItems.filter((i) => i.id !== item.id);
+          this.snackBar.open('Item removed successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-success'
+          });
+        },
+        (error) => {
+          console.error('Error removing item:', error);
+          this.snackBar.open('Item removing failed!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: 'app-notification-error'
+          });
+        }
+      );
+    }
+  }
+
 }

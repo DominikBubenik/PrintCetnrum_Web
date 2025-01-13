@@ -46,4 +46,9 @@ export class OrderService {
   deleteOrder(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}delete-order/${id}`);
   }
+
+  removeOrderItem(itemId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}delete-order-item/${itemId}`);
+  }
+
 }

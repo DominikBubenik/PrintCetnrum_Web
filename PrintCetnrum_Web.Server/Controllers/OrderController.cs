@@ -185,13 +185,34 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return NotFound($"Order with ID {id} not found.");
             }
 
-            // Fetch all order items related to the specified order
             var items = await _context.OrderItems
                 .Where(oi => oi.OrderId == id)
                 .ToListAsync();
-            
-            // Return the order items
+         
             return Ok(items);
         }
+
+        [HttpDelete("delete-order-item/{id}")]
+        public async Task<IActionResult> DeleteOrderItem(int id)
+        {
+            var orderItem = await _context.OrderItems.FindAsync(id);
+            if (orderItem == null)
+            {
+                return NotFound($"Order item with ID {id} not found.");
+            }
+
+            _context.OrderItems.Remove(orderItem);
+
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderItem.OrderId);
+            if (order != null)
+            {
+                order.TotalPrice -= orderItem.Count * orderItem.Price;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }

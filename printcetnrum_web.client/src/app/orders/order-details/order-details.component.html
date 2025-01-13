@@ -2,38 +2,72 @@
 
 <div *ngIf="order">
   <div class="order-info">
-    <p><strong>Order Name:</strong> {{ order.orderName }}</p>
-    <p><strong>Order Created:</strong> {{ order.orderCreated | date: 'short' }}</p>
-    <p><strong>Total Price:</strong> ${{ order.totalPrice | number: '1.2-2' }}</p>
-    <p>
+    <div class="info-item">
+      <strong>Order Name:</strong> {{ order.orderName }}
+    </div>
+    <div class="info-item">
+      <strong>Order Created:</strong> {{ order.orderCreated | date: 'short' }}
+    </div>
+    <div class="info-item">
+      <strong>Total Price:</strong> ${{ order.totalPrice | number: '1.2-2' }}
+    </div>
+    <div class="info-item">
       <strong>Prepared for Customer:</strong>
       <span class="{{ order.isPreparedForCustomer ? 'status-yes' : 'status-no' }}">
         {{ order.isPreparedForCustomer ? 'Yes' : 'No' }}
       </span>
-    </p>
-    <p>
+    </div>
+    <div class="info-item">
       <strong>Taken by Customer:</strong>
       <span class="{{ order.isTakenByCustomer ? 'status-yes' : 'status-no' }}">
         {{ order.isTakenByCustomer ? 'Yes' : 'No' }}
       </span>
-    </p>
+    </div>
+  </div>
+  <div class="text-end mt-3">
+    <button *ngIf="isAdmin" class="btn btn-primary" (click)="saveOrderChanges()">Save Changes</button>
+    <button *ngIf="isAdmin" class="btn btn-success" (click)="markOrderAsPrepared(true)">Mark as Done</button>
   </div>
 
   <div *ngIf="orderItems && orderItems.length > 0" class="order-items">
     <h4>Order Items</h4>
-    <ul>
-      <li *ngFor="let item of orderItems; let i = index" class="order-item">
-        <strong>{{ item.userFile?.fileName || 'No File' }}</strong><br>
-        <span><strong>Quantity:</strong> {{ item.count }}</span><br>
-        <span><strong>Color:</strong> {{ item.color }}</span><br>
-        <span><strong>Size:</strong> {{ item.size }}</span><br>
-        <span><strong>Paper Type:</strong> {{ item.paperType }}</span><br>
-        <span><strong>Description:</strong> {{ item.description }}</span><br>
-        <span><strong>Price:</strong> ${{ item.price | number: '1.2-2' }}</span><br>
-        <button class="btn btn-success mt-2" (click)="downloadFile(item)">Download</button>
-      </li>
-    </ul>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Color</th>
+            <th>Size</th>
+            <th>Paper Type</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of orderItems; let i = index">
+            <td>{{ item.userFile?.fileName || 'No File' }}</td>
+            <td>{{ item.description || 'No Description' }}</td>
+            <td>{{ item.count }}</td>
+            <td>{{ item.color }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.paperType }}</td>
+            <td>${{ item.price | number: '1.2-2' }}</td>
+            <td>
+              <button class="btn btn-success btn-sm" (click)="downloadFile(item)">Download</button>
+              <button *ngIf="isAdmin"
+                      class="btn btn-danger btn-sm"
+                      (click)="removeItem(item)">
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+
 </div>
 
 <div *ngIf="!order" class="alert alert-warning">

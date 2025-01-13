@@ -16,6 +16,7 @@ export interface Order {
 }
 
 export interface OrderItem {
+  id?: number;
   orderId: number;
   userFileId: number;
   userFile: UserFile;
