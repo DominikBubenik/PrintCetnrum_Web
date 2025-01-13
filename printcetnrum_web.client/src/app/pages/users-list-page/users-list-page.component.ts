@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { UserStoreService } from '../../services/user-store.service';
+import { SnackBarUtil } from '../../shared/snackbar-util';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users-list-page',
@@ -14,7 +16,11 @@ export class UsersListPageComponent {
   currentUser: User | null = null;
   isModalVisible: boolean = false;
 
-  constructor(private auth: AuthService, private userStore: UserStoreService) { }
+  constructor(
+    private auth: AuthService,
+    private userStore: UserStoreService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit() {
     this.loadUsers();
@@ -50,6 +56,10 @@ export class UsersListPageComponent {
     this.users.sort((a, b) => a.role.localeCompare(b.role));
   }
 
+  sortByUsername() {
+    this.users.sort((a, b) => a.userName.localeCompare(b.userName));
+  }
+
   onLogout() {
     this.auth.logOut();
   }
@@ -70,7 +80,7 @@ export class UsersListPageComponent {
 
       this.userStore.updateUser(this.currentUser.id, updatedUser).subscribe(
         () => {
-          alert('User updated successfully');
+          SnackBarUtil.showSnackBar(this.snackBar, 'User updated successfully', "success");
           this.loadUsers();
           this.closeModal();
         },
