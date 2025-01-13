@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { User } from '../models/user.model';
-import { AuthService } from '../services/auth.service';
-import { UserStoreService } from '../services/user-store.service';
+import { User } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-users-list-page',

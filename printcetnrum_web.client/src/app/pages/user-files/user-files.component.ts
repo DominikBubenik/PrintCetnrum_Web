@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { UserFile } from '../models/user-file';
-import { FileHandlerService } from '../services/file-handler.service';
-import { environment } from '../../environments/environment';
+import { UserFile } from '../../models/user-file';
+import { FileHandlerService } from '../../services/file-handler.service';
+import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

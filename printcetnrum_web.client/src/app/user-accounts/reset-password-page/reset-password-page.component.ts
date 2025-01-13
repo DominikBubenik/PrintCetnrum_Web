@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginPageComponent } from '../../login-page/login-page.component';
+import { LoginPageComponent } from '../../pages/login-page/login-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResetPassword } from '../../models/reset-password.model';
 import { ResetPasswordService } from '../../services/reset-password.service';

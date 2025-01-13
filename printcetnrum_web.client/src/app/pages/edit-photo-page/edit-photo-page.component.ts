@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FileHandlerService } from '../services/file-handler.service';
-import { UserFile } from '../models/user-file';
-import { environment } from '../../environments/environment';
+import { FileHandlerService } from '../../services/file-handler.service';
+import { UserFile } from '../../models/user-file';
+import { environment } from '../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackBarUtil } from '../shared/snackbar-util';
+import { SnackBarUtil } from '../../shared/snackbar-util';
 
 
 @Component({

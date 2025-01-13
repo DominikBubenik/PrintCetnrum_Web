@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserStoreService } from "../services/user-store.service";
+import { UserStoreService } from "../../services/user-store.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ResetPasswordService } from '../services/reset-password.service';
-import { SnackBarUtil } from '../shared/snackbar-util';
+import { ResetPasswordService } from '../../services/reset-password.service';
+import { SnackBarUtil } from '../../shared/snackbar-util';
 
 
 @Component({
