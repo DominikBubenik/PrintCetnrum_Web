@@ -1,10 +1,11 @@
 ﻿using PrintCetnrum_Web.Server.Models.OrderModels;
+using PrintCetnrum_Web.Server.Models.UserModels;
 
 namespace PrintCetnrum_Web.Server.Helpers
 {
     public static class EmailOrderReady
     {
-        public static string GenerateOrderReadyEmailBody(string userName, string orderName, decimal totalPrice, List<OrderItem> orderItems)
+        public static string GenerateOrderReadyEmailBody(string userName, string orderName, decimal totalPrice, List<OrderItem> orderItems, List<UserFile> orderFiles)
         {
             // Start constructing the email body
             string emailBody = $@"
@@ -60,7 +61,8 @@ namespace PrintCetnrum_Web.Server.Helpers
             // Add order items to the email body
             foreach (var item in orderItems)
             {
-                emailBody += $"<li>{item.Description} - {item.Count} x ${item.Price}</li>";
+                var file = orderFiles.FirstOrDefault(f => f.Id == item.UserFileId);
+                emailBody += $"<li>{file?.FileName} {item.Description} - {item.Count} x ${item.Price}</li>";
             }
 
             emailBody += $@"

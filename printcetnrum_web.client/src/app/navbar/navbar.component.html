@@ -21,7 +21,7 @@
             <li [routerLink]="['/upload']">Upload Files</li>
             <li [routerLink]="['/userFiles']">Your Files</li>
             <li *ngIf="isLoggedIn()" [routerLink]="['/allOrders']">Your Orders</li>
-            <li *ngIf="isLoggedIn()" [routerLink]="['/users']">Users</li>
+            <li *ngIf="isAdmin" [routerLink]="['/users']">Users</li>
             <li *ngIf="!isLoggedIn()" [routerLink]="['/login']">Log in</li>
             <li *ngIf="!isLoggedIn()" [routerLink]="['/register']">Register</li>
             <li *ngIf="isLoggedIn()" (click)="onLogout()">Logout</li>

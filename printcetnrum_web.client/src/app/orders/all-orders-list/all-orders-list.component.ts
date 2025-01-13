@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-all-orders-list',
@@ -13,13 +14,22 @@ import { Router } from '@angular/router';
 })
 export class AllOrdersListComponent {
   orders: Order[] = [];  
-
+  isAdmin: boolean = false;
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
+    private userStore: UserStoreService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.userStore.getRoleFromStore().subscribe(role => {
+      if (role) {
+        this.isAdmin = role == 'Admin' ? true : false;
+      } else {
+        this.isAdmin = this.authService.getRoleFromToken() == 'Admin' ? true : false;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.getAllOrders();
@@ -96,8 +106,6 @@ export class AllOrdersListComponent {
             panelClass: 'app-notification-error'
           });
         }
-      
-       
       });
     }
   }

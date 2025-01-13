@@ -6,6 +6,7 @@ using PrintCetnrum_Web.Server.Context;
 using PrintCetnrum_Web.Server.Helpers;
 using PrintCetnrum_Web.Server.Models;
 using PrintCetnrum_Web.Server.Models.OrderModels;
+using PrintCetnrum_Web.Server.Models.UserModels;
 using PrintCetnrum_Web.Server.UtilityService;
 
 namespace PrintCetnrum_Web.Server.Controllers
@@ -100,9 +101,21 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return NotFound("User with this email not found");
             }
             var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
+            var orderFiles = new List<UserFile>();
 
+            foreach (var item in orderItems)
+            {
+                var userFile = await _context.UserFiles
+                    .Where(f => f.Id == item.UserFileId)
+                    .FirstOrDefaultAsync(); 
 
-            string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems);
+                if (userFile != null) 
+                {
+                    orderFiles.Add(userFile); 
+                }
+            }
+
+            string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems, orderFiles);
 
 
             string subject = $"Your Order {order.OrderName} is Ready!";

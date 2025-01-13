@@ -18,11 +18,20 @@ export class NavbarComponent {
   menu_icon: string = 'bi bi-list';
   isLoggedIn = signal<boolean>(false);
   userNameSignal = signal<string>('');
+  isAdmin: boolean = false;
   private subscription?: Subscription;
   constructor(
     private router: Router,
     private http: HttpClient
-  ) { }
+  ) {
+    this.authStore.getRoleFromStore().subscribe(role => {
+      if (role) {
+        this.isAdmin = role == 'Admin' ? true : false;
+      } else {
+        this.isAdmin = this.auth.getRoleFromToken() == 'Admin' ? true : false;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.currentUrl = this.router.url;
