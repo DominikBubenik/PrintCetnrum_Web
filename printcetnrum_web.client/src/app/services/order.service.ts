@@ -23,16 +23,16 @@ export class OrderService {
     return this.http.post<void>(`${this.baseUrl}add-order-items?orderName=${orederName}`, orderItems);
   }
 
+  getOrderItems(id: number): Observable<OrderItem[]> {
+    return this.http.get<OrderItem[]>(`${this.baseUrl}get-order-items/${id}`);
+  }
+
   getOrderById(id: number): Observable<Order> {
     return this.http.get<Order>(`${this.baseUrl}get-order/${id}`);
   }
 
-  getAllOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}get-all-orders`);
-  }
-
-  getOrdersOfUser(userName: string): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}all-user-orders/${userName}`);
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.baseUrl}get-orders/${this.authService.getfullNameFromToken()}`);
   }
 
   updateOrder(id: number, order: Order): Observable<void> {
@@ -45,5 +45,13 @@ export class OrderService {
 
   deleteOrder(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}delete-order/${id}`);
+  }
+
+  removeOrderItem(itemId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}delete-order-item/${itemId}`);
+  }
+
+  sendOrderReadyEmail(orderId: number): Observable<any> {
+    return this.http.post<string>(`${this.baseUrl}send-order-ready-email/${orderId}`, {});
   }
 }

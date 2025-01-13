@@ -7,7 +7,7 @@ header.masthead {
   padding-bottom: 6rem;
   text-align: center;
   color: #fff;
-  background-image: url("../../assets/about-pictures/PrintCentrum_inside.jpg");
+  background-image: url("../../../assets/about-pictures/PrintCentrum_inside.jpg");
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
@@ -59,7 +59,7 @@ header.masthead {
 .btn {
   --bs-btn-padding-x: 0.75rem;
   --bs-btn-padding-y: 0.375rem;
-/*  --bs-btn-font-family:;*/
+  /*  --bs-btn-font-family:;*/
   --bs-btn-font-size: 1rem;
   --bs-btn-font-weight: 400;
   --bs-btn-line-height: 1.5;
@@ -127,6 +127,7 @@ header.masthead {
   .go-to-top:hover {
     opacity: 1;
   }
+
 @media (max-width: 576px) {
   .go-to-top {
     position: fixed;

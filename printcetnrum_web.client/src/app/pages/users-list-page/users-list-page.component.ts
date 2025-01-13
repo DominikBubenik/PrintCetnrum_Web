@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { User } from '../models/user.model';
-import { AuthService } from '../services/auth.service';
-import { UserStoreService } from '../services/user-store.service';
+import { User } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-users-list-page',
@@ -11,8 +11,8 @@ import { UserStoreService } from '../services/user-store.service';
 export class UsersListPageComponent {
   users: User[] = [];
   userName: string = "";
-  currentUser: User | null = null; // Store the current user for editing
-  isModalVisible: boolean = false; // Control modal visibility
+  currentUser: User | null = null;
+  isModalVisible: boolean = false;
 
   constructor(private auth: AuthService, private userStore: UserStoreService) { }
 
@@ -54,13 +54,11 @@ export class UsersListPageComponent {
     this.auth.logOut();
   }
 
-  // Open the modal and set the current user for editing
   onEdit(user: User) {
-    this.currentUser = { ...user }; // Set the current user for editing
-    this.isModalVisible = true; // Show the modal
+    this.currentUser = { ...user };
+    this.isModalVisible = true;
   }
 
-  // Save the changes to the user
   onSave() {
     if (this.currentUser) {
       const updatedUser: User = {
@@ -83,9 +81,8 @@ export class UsersListPageComponent {
     }
   }
 
-  // Close the modal after saving or canceling
   closeModal() {
-    this.isModalVisible = false; // Hide the modal
+    this.isModalVisible = false;
   }
 
   onDelete(userId: number) {

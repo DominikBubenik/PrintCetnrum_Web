@@ -1,4 +1,3 @@
-//import { TokenApiModel } from './../models/token-api.model';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './../services/auth.service';
@@ -20,10 +19,9 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const myToken = this.auth.getToken();
-    // this.start.load();
     if (myToken) {
       request = request.clone({
-        setHeaders: { Authorization: `Bearer ${myToken}` }  // "Bearer "+myToken
+        setHeaders: { Authorization: `Bearer ${myToken}` }  
       })
     }
 
@@ -36,7 +34,6 @@ export class TokenInterceptor implements HttpInterceptor {
               panelClass: ['warning-snackbar'], 
             });
             this.router.navigate(['login'])
-            //handle
            return this.handleUnAuthorizedError(request, next);
           }
         }
@@ -60,7 +57,6 @@ export class TokenInterceptor implements HttpInterceptor {
         }),
         catchError((err) => {
           return throwError(() => {
-            //this.toast.warning({ detail: "Warning", summary: "Token is expired, Please Login again" });
             this.router.navigate(['login'])
           })
         })

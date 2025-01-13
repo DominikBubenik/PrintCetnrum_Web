@@ -1,7 +1,6 @@
 import { UserFile } from "../user-file";
 import { User } from "../user.model";
 
-
 export interface Order {
   id: number;
   orderCreated: Date;
@@ -11,17 +10,19 @@ export interface Order {
   totalPrice: number;
   orderFinished?: Date;
   orderTakenTime?: Date;
+  orderItems: OrderItem[];
   userId: number;
 }
 
 export interface OrderItem {
+  id?: number;
   orderId: number;
   userFileId: number;
   userFile: UserFile;
   count: number;
-  color: string; //new
-  paperType: string; //new
-  size: string; //new
+  color: string; 
+  paperType: string; 
+  size: string; 
   price: number;
   description: string;
 }

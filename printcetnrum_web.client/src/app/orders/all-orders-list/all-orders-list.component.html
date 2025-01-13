@@ -25,8 +25,8 @@
       </p>
     </div>
     <div class="order-actions">
-      <button class="btn btn-primary">View Details</button>
-      <button class="btn btn-secondary">Mark as Completed</button>
+      <button class="btn btn-primary" (click)="viewOrderDetails(order.id)">View Details</button>
+      <button class="btn btn-secondary" *ngIf="isAdmin" (click)="markOrderAsCompleted(order.id)">Mark as Completed</button>
       <button class="btn btn-danger" (click)="deleteOrder(order.id)">Delete</button>
     </div>
   </div>

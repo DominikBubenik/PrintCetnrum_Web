@@ -1,0 +1,26 @@
+<div class="upload-container">
+  <h1 class="title">Upload Files</h1>
+
+  <div class="file-input">
+    <label for="file-upload" class="custom-file-upload">Select Files</label>
+    <input id="file-upload" type="file" (change)="onFilesSelected($event)" multiple />
+  </div>
+
+  <div *ngIf="selectedFiles" class="file-list">
+    <h5 class="file-list-title">Selected Files:</h5>
+    <ul>
+      <li *ngFor="let file of selectedFiles">
+        <i class="bi bi-file-earmark-text"></i>
+        {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)
+      </li>
+    </ul>
+  </div>
+
+  <div class="upload-button">
+    <button (click)="uploadFiles()" [disabled]="!selectedFiles || selectedFiles.length === 0">Upload</button>
+  </div>
+
+  <div class="error-message" *ngIf="!selectedFiles || selectedFiles.length === 0">
+    <p>Please select at least one file to upload.</p>
+  </div>
+</div>

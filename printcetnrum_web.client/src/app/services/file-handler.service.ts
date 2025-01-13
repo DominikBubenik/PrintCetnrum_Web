@@ -1,36 +1,43 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from './auth.service';
 import { UserFile } from '../models/user-file';
 import { ValueChangeEvent } from '@angular/forms';
+import { UserStoreService } from './user-store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileHandlerService {
+  private userStore = inject(UserStoreService);
   private baseUrl = 'https://localhost:7074/api/Upload/'
-  constructor(private http: HttpClient, private auth: AuthService) { }
 
-  uploadImage(file: File): Observable<{ filePath: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('userName', this.auth.getfullNameFromToken());
-    formData.append('shouldPrint', String(false));
-    formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`);
-    });
-    return this.http.post<any>(this.baseUrl + 'uploadImage', formData);
+  constructor(private http: HttpClient, private auth: AuthService) {
   }
 
+  uploadFiles(files: File[]): Observable<{ filePath: string }[]> {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('files', file); 
+    });
+    formData.append('userName', this.auth.getfullNameFromToken());
+    formData.append('shouldPrint', String(false));
+    return this.http.post<{ filePath: string }[]>(this.baseUrl + 'uploadFiles', formData);
+  }
 
   fetchFiles(): Observable<UserFile[]> {
-    return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken()}`);
+    return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken() }`);
   }
 
   markForPrint(id: number, shouldPrint: boolean): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, shouldPrint);
   }
+
+  getFilesWithId(listOfId: number[]): Observable<UserFile[]> {
+    return this.http.post<UserFile[]>(`${this.baseUrl}getFilesWithId`, listOfId);
+  }
+
 
   deleteFile(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}`);

@@ -43,6 +43,8 @@
   <ItemGroup>
     <Folder Include="Context\" />
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\UserData\" />
+    <Folder Include="wwwroot\UserData\Dominator\" />
   </ItemGroup>
 
 </Project>
