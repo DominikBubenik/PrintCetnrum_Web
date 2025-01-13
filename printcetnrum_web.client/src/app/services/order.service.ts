@@ -23,12 +23,12 @@ export class OrderService {
     return this.http.post<void>(`${this.baseUrl}add-order-items?orderName=${orederName}`, orderItems);
   }
 
-  getOrderById(id: number): Observable<Order> {
-    return this.http.get<Order>(`${this.baseUrl}get-order/${id}`);
+  getOrderItems(id: number): Observable<OrderItem[]> {
+    return this.http.get<OrderItem[]>(`${this.baseUrl}get-order-items/${id}`);
   }
 
-  getAllOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}get-all-orders`);
+  getOrderById(id: number): Observable<Order> {
+    return this.http.get<Order>(`${this.baseUrl}get-order/${id}`);
   }
 
   getOrders(): Observable<Order[]> {

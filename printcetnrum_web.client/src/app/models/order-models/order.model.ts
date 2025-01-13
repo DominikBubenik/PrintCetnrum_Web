@@ -11,6 +11,7 @@ export interface Order {
   totalPrice: number;
   orderFinished?: Date;
   orderTakenTime?: Date;
+  orderItems: OrderItem[];
   userId: number;
 }
 

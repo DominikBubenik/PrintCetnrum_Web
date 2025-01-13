@@ -24,7 +24,8 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
 import { UserFilesComponent } from './user-files/user-files.component';
 import { NewOrderComponent } from './new-order/new-order.component';
-import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component'
+import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
+import { OrderDetailsComponent } from './orders/order-details/order-details.component'
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list
     ResetPasswordPageComponent,
     UserFilesComponent,
     NewOrderComponent,
-    AllOrdersListComponent
+    AllOrdersListComponent,
+    OrderDetailsComponent
   ],
   imports: [
     BrowserModule,

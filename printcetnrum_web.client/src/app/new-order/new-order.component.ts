@@ -47,6 +47,7 @@ export class NewOrderComponent implements OnInit {
     this.order = {
       id: 0,
       orderCreated: new Date(),
+      orderItems: [],
       orderName: 'ff',
       isPreparedForCustomer: false,
       isTakenByCustomer: false,

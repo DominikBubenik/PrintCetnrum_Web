@@ -4,6 +4,7 @@ import { Order } from '../../models/order-models/order.model';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-orders-list',
@@ -16,6 +17,7 @@ export class AllOrdersListComponent {
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
+    private router: Router,
     private snackBar: MatSnackBar
   ) { }
 
@@ -55,5 +57,9 @@ export class AllOrdersListComponent {
         }
       );
     }
+  }
+
+  viewOrderDetails(orderId: number): void {
+    this.router.navigate(['/order-details', orderId]);  // Navigate to order details page
   }
 }

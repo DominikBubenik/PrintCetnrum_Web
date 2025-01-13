@@ -76,7 +76,9 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpGet("get-order/{id}")]
         public async Task<IActionResult> GetOrder(int id)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)  
+                .FirstOrDefaultAsync(o => o.Id == id);
 
             if (order == null)
             {
@@ -172,6 +174,24 @@ namespace PrintCetnrum_Web.Server.Controllers
 
                 return Ok(orders);
             }
+        }
+
+        [HttpGet("get-order-items/{id}")]
+        public async Task<IActionResult> GetOrderItems(int id)
+        {
+            var orderExists = await _context.Orders.AnyAsync(o => o.Id == id);
+            if (!orderExists)
+            {
+                return NotFound($"Order with ID {id} not found.");
+            }
+
+            // Fetch all order items related to the specified order
+            var items = await _context.OrderItems
+                .Where(oi => oi.OrderId == id)
+                .ToListAsync();
+            
+            // Return the order items
+            return Ok(items);
         }
     }
 }
