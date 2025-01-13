@@ -1,24 +1,37 @@
+/**
+ * inspired by this tutorial
+ * https://www.youtube.com/watch?v=R7s5I9H1H9s&list=PLc2Ziv7051bZhBeJlJaqq5lrQuVmBJL6A
+ */
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { TokenApiModel } from '../models/token-api.model';
+import { UserStoreService } from './user-store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private userStore = inject(UserStoreService);
   private baseUrl = 'https://localhost:7074/api/User/';
   private userPayload: any;
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   constructor(private http: HttpClient, private router: Router) {
     this.userPayload = this.decodedToken();
+
+    if (this.isLoggedIn()) {
+      console.log('ten idot si mysli ze je prihlaseny');
+      //this.isLoggedInSubject.next(true);
+    } else {
+      console.log('ten idot si mysli ze nie je prihlaseny');
+    }
   }
 
   loginUser(user: any) {
-    console.log(user.surname);
     return this.http.post<any>(this.baseUrl + 'authenticate', user);
   }
-
 
   registerUser(user: any) {
     return this.http.post<any>(this.baseUrl + 'register', user);
@@ -32,8 +45,16 @@ export class AuthService {
     localStorage.setItem('token', tokenValue)
   }
 
+  storeRefreshToken(tokenValue: string) {
+    localStorage.setItem('refreshToken', tokenValue)
+  }
+
   getToken() {
     return localStorage.getItem('token');
+  }
+
+  getRefreshToken() {
+    return localStorage.getItem('refreshToken')
   }
 
   isLoggedIn(): boolean {
@@ -42,6 +63,7 @@ export class AuthService {
 
   logOut() {
     localStorage.clear();
+    this.isLoggedInSubject.next(false); 
     this.router.navigate(['login'])
   }
 
@@ -53,6 +75,9 @@ export class AuthService {
   }
 
   getfullNameFromToken() {
+    if (this.userStore.getFullNameFromStore()) {
+      return this.userStore.getFullNameFromStore();
+    }
     if (this.userPayload)
       return this.userPayload.unique_name;
   }
@@ -62,7 +87,11 @@ export class AuthService {
       return this.userPayload.role;
   }
 
-  //renewToken(tokenApi: TokenApiModel) {
-  //  return this.http.post<any>(`${this.baseUrl}refresh`, tokenApi)
-  //}
+  renewToken(tokenApi: TokenApiModel) {
+    return this.http.post<any>(`${this.baseUrl}refresh`, tokenApi)
+  }
+
+  getLoginState(): Observable<boolean> {
+    return this.isLoggedInSubject.asObservable();
+  }
 }

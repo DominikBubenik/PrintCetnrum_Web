@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -20,10 +20,15 @@ export class UserStoreService {
   }
 
   public getFullNameFromStore() {
+    return this.fullName$.getValue();
+  }
+
+  getFullNameFromStoreObservable(): Observable<string> {
     return this.fullName$.asObservable();
   }
 
   public setFullNameForStore(fullname: string) {
+    console.log('setFullNameForStore', fullname);
     this.fullName$.next(fullname)
   }
 
@@ -31,7 +36,6 @@ export class UserStoreService {
     return this.http.put<any>(`${this.baseUrl}update/${id}`, user);
   }
 
-  // Backend: Delete user
   public deleteUser(id: number) {
     return this.http.delete<any>(`${this.baseUrl}delete/${id}`);
   }

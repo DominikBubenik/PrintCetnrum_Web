@@ -1,7 +1,6 @@
 <!--navbar is from
     https://github.com/chrisira/angular17-responsive-header
  -->
-
 <!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
@@ -18,14 +17,21 @@
         <div class="desktop_menu" [class.mobile_menu]="menuValue">
           <ul>
             <li [routerLink]="['/']">Home</li>
-            <li [routerLink]="['/about']">About</li>
-            <li *ngIf="isLoggedIn" [routerLink]="['/users']">Users</li>
-            <li (click)="closeMenu()">...</li>
-            <li [routerLink]="['/login']">Log in</li>
-            <li [routerLink]="['/register']">Register</li>
-            <li *ngIf="isLoggedIn" (click)="onLogout()">Logout</li>
+            <li [routerLink]="['/upload']">Upload Files</li>
+            <li [routerLink]="['/userFiles']">Your Files</li>
+            <li *ngIf="isLoggedIn()" [routerLink]="['/allOrders']">Your Orders</li>
+            <li *ngIf="isAdmin" [routerLink]="['/users']">Users</li>
+            <li *ngIf="!isLoggedIn()" [routerLink]="['/login']">Log in</li>
+            <li *ngIf="!isLoggedIn()" [routerLink]="['/register']">Register</li>
+            <li *ngIf="isLoggedIn()" (click)="onLogout()">Logout</li>
           </ul>
+          <div *ngIf="isLoggedIn()" class="user-name-mobile">
+            Welcome, {{ userNameSignal() }}!
+          </div>
         </div>
+      </div>
+      <div class="col-md-3 col-sm-3 col-3 text-right">
+        <span *ngIf="isLoggedIn()" class="user-name">Welcome, {{ userNameSignal() }}!</span>
       </div>
     </div>
   </div>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintCetnrum_Web.Server", "PrintCetnrum_Web.Server\PrintCetnrum_Web.Server.csproj", "{C07E6184-1114-4C3A-BB22-275E5E8DAC70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrintCetnrum_Web.Server", "PrintCetnrum_Web.Server\PrintCetnrum_Web.Server.csproj", "{C07E6184-1114-4C3A-BB22-275E5E8DAC70}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "printcetnrum_web.client", "printcetnrum_web.client\printcetnrum_web.client.esproj", "{B27F48B7-1775-4740-BD6B-2A43DE8E3BFF}"
 EndProject

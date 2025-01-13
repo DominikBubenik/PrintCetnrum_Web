@@ -1,0 +1,84 @@
+.order-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  background-color: white;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.order-info h4 {
+  margin: 0;
+  color: #333;
+}
+
+.order-info p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.status-yes {
+  color: green;
+  font-weight: bold;
+}
+
+.status-no {
+  color: red;
+  font-weight: bold;
+}
+
+.order-actions {
+  display: flex;
+  gap: 10px;
+}
+
+  .order-actions .btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s;
+  }
+
+  .order-actions .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+
+    .order-actions .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+  .order-actions .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+  }
+
+    .order-actions .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+@media (max-width: 800px) {
+  .order-row {
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  .order-actions {
+    justify-content: center;
+    margin-top: 10px;
+    width: 100%;
+  }
+}

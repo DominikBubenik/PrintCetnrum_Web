@@ -1,4 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿/**
+ * inspired by this tutorial
+ * https://www.youtube.com/watch?v=R7s5I9H1H9s&list=PLc2Ziv7051bZhBeJlJaqq5lrQuVmBJL6A
+ */
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,8 +11,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 using PrintCetnrum_Web.Server.Context;
+using PrintCetnrum_Web.Server.Helpers;
 using PrintCetnrum_Web.Server.Models;
+using PrintCetnrum_Web.Server.Models.UserModels;
+using PrintCetnrum_Web.Server.UtilityService;
 
 namespace PrintCetnrum_Web.Server.Controllers
 {
@@ -18,10 +26,14 @@ namespace PrintCetnrum_Web.Server.Controllers
     public class UserController : Controller
     {
         private readonly AppDbContext _authContext;
+        private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
-        public UserController(AppDbContext authContext)
+        public UserController(AppDbContext authContext, IConfiguration configuration, IEmailService emailService)
         {
             _authContext = authContext;
+            _configuration = configuration;
+            _emailService = emailService;
         }
 
         [HttpPost("authenticate")]
@@ -31,9 +43,8 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return BadRequest();
 
             var user = await _authContext.Users
-                .SingleOrDefaultAsync(x => x.UserName == userParam.UserName);
+                .FirstOrDefaultAsync(x => x.UserName == userParam.UserName || x.Email == userParam.UserName);
 
-            System.Console.WriteLine("toto je meno " + userParam.UserName);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
 
@@ -45,16 +56,17 @@ namespace PrintCetnrum_Web.Server.Controllers
             user.Token = CreateJwt(user);
             var newAccessToken = user.Token;
             var newRefreshToken = CreateRefreshToken();
-            //user.RefreshToken = newRefreshToken;
-            //user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
             await _authContext.SaveChangesAsync();
 
-            return Ok(new
+            return Ok(new TokenApiDto()
             {
-                Token = user.Token,
-                message = "Login success"
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
             });
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User userParam)
@@ -134,6 +146,24 @@ namespace PrintCetnrum_Web.Server.Controllers
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
 
+            var userOrders = await _authContext.Orders.Where(a => a.UserId == id).ToListAsync();
+
+            foreach (var order in userOrders)
+            {
+                var orderItems = await _authContext.OrderItems.Where(a => a.OrderId == order.Id).ToListAsync();
+                foreach (var orderItem in orderItems)
+                {
+                    _authContext.OrderItems.Remove(orderItem);
+                }
+
+                _authContext.Orders.Remove(order);
+            }
+            UploadController uploadController = new UploadController(_authContext);
+            var userFiles = await _authContext.UserFiles.Where(a => a.UserId == id).ToListAsync();
+            foreach (var file in userFiles)
+            {
+                await uploadController.DeleteFile(file.Id);
+            }
             _authContext.Users.Remove(user);
             await _authContext.SaveChangesAsync();
 
@@ -174,7 +204,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddDays(100),
+                Expires = DateTime.Now.AddDays(10),
                 SigningCredentials = credentials
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
@@ -186,11 +216,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var refreshToken = Convert.ToBase64String(tokenBytes);
 
-            //var tokenInUser = _authContext.Users.Any(a => a.RefreshToken == refreshToken);
-            //if (tokenInUser)
-            //{
-            //    return CreateRefreshToken();
-            //}
+            var tokenInUser = _authContext.Users.Any(a => a.RefreshToken == refreshToken);
+            if (tokenInUser)
+            {
+                return CreateRefreshToken();
+            }
             return refreshToken;
         }
 
@@ -215,28 +245,89 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         }
 
-        //[HttpPost("refresh")]
-        //public async Task<IActionResult> Refresh([FromBody] TokenApiDto tokenApiDto)
-        //{
-        //    if (tokenApiDto is null)
-        //        return BadRequest("Invalid Client Request");
-        //    string accessToken = tokenApiDto.AccessToken;
-        //    string refreshToken = tokenApiDto.RefreshToken;
-        //    var principal = GetPrincipleFromExpiredToken(accessToken);
-        //    var username = principal.Identity.Name;
-        //    var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
-        //    if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-        //        return BadRequest("Invalid Request");
-        //    var newAccessToken = CreateJwt(user);
-        //    var newRefreshToken = CreateRefreshToken();
-        //    user.RefreshToken = newRefreshToken;
-        //    await _authContext.SaveChangesAsync();
-        //    return Ok(new TokenApiDto()
-        //    {
-        //        AccessToken = newAccessToken,
-        //        RefreshToken = newRefreshToken,
-        //    });
-        //}
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] TokenApiDto tokenApiDto)
+        {
+            if (tokenApiDto is null)
+                return BadRequest("Invalid Client Request");
+            string accessToken = tokenApiDto.AccessToken;
+            string refreshToken = tokenApiDto.RefreshToken;
+            var principal = GetPrincipleFromExpiredToken(accessToken);
+            var username = principal.Identity.Name;
+            var user = await _authContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                return BadRequest("Invalid Request");
+            var newAccessToken = CreateJwt(user);
+            var newRefreshToken = CreateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            await _authContext.SaveChangesAsync();
+            return Ok(new TokenApiDto()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+            });
+        }
 
+        [HttpPost("send-reset-email/{email}")]
+        public async Task<IActionResult> SendEmail(string email)
+        {
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Email == email);
+            if (user is null)
+            {
+                return NotFound(new { StatusCode = 404, Message = "email Does Not Exist" });
+            }
+
+            var tokenBytes = RandomNumberGenerator.GetBytes(64);
+            var emailToken = Convert.ToBase64String(tokenBytes);
+            user.ResetPasswordToken = emailToken;
+            user.ResetPasswordExpiry = DateTime.Now.AddDays(1);
+            string from = _configuration["EmailSettings:From"];
+            var emailModel = new EmailModel(email, "Reset Password", 
+                EmailBody.EmailStringBody(email, emailToken));
+            _emailService.SendEmail(emailModel);
+            _authContext.Entry(user).State = EntityState.Modified;
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "Email Sent!"
+            });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
+            var user = await _authContext.Users.AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
+            if (user is null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "email Does Not Exist"
+                });
+            }
+
+            var tokenCode = user.ResetPasswordToken;
+            DateTime emailTokenExpiry = user.ResetPasswordExpiry;
+            if (tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
+            {
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = "Invalid Reset Link"
+                });
+            }
+
+            user.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
+            _authContext.Entry(user).State = EntityState.Modified;
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "Password Reset Successful"
+            });
+        }
     }
 }

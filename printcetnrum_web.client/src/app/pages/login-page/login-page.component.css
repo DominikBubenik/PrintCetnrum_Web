@@ -1,0 +1,103 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+#inner {
+  max-width: 900px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: 2px solid #007bff; 
+  border-radius: 5px;
+  background-color: transparent;
+  color: #007bff;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+  .btn:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+.custom-btn {
+  border: 2px solid #6c757d;
+  background-color: transparent;
+  color: #6c757d;
+}
+
+  .custom-btn:hover {
+    background-color: #6c757d;
+    color: #fff;
+  }
+
+.text-danger {
+  color: red;
+}
+
+@media (max-width: 768px) {
+  #inner {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .btn {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  #inner {
+    width: 90%;
+  }
+
+  .form-control {
+    font-size: 14px;
+  }
+}

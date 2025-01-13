@@ -1,4 +1,3 @@
-//import { TokenApiModel } from './../models/token-api.model';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './../services/auth.service';
@@ -11,6 +10,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { TokenApiModel } from '../models/token-api.model';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -19,10 +19,9 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const myToken = this.auth.getToken();
-    // this.start.load();
     if (myToken) {
       request = request.clone({
-        setHeaders: { Authorization: `Bearer ${myToken}` }  // "Bearer "+myToken
+        setHeaders: { Authorization: `Bearer ${myToken}` }  
       })
     }
 
@@ -35,34 +34,32 @@ export class TokenInterceptor implements HttpInterceptor {
               panelClass: ['warning-snackbar'], 
             });
             this.router.navigate(['login'])
-            //handle
-           //return this.handleUnAuthorizedError(request, next);
+           return this.handleUnAuthorizedError(request, next);
           }
         }
         return throwError(() => err)
       })
     );
   }
-  //handleUnAuthorizedError(req: HttpRequest<any>, next: HttpHandler) {
-  //  let tokeApiModel = new TokenApiModel();
-  //  tokeApiModel.accessToken = this.auth.getToken()!;
-  //  tokeApiModel.refreshToken = this.auth.getRefreshToken()!;
-  //  return this.auth.renewToken(tokeApiModel)
-  //    .pipe(
-  //      switchMap((data: TokenApiModel) => {
-  //        this.auth.storeRefreshToken(data.refreshToken);
-  //        this.auth.storeToken(data.accessToken);
-  //        req = req.clone({
-  //          setHeaders: { Authorization: `Bearer ${data.accessToken}` }  // "Bearer "+myToken
-  //        })
-  //        return next.handle(req);
-  //      }),
-  //      catchError((err) => {
-  //        return throwError(() => {
-  //          this.toast.warning({ detail: "Warning", summary: "Token is expired, Please Login again" });
-  //          this.router.navigate(['login'])
-  //        })
-  //      })
-  //    )
-  //}
+  handleUnAuthorizedError(req: HttpRequest<any>, next: HttpHandler) {
+    let tokeApiModel = new TokenApiModel();
+    tokeApiModel.accessToken = this.auth.getToken()!;
+    tokeApiModel.refreshToken = this.auth.getRefreshToken()!;
+    return this.auth.renewToken(tokeApiModel)
+      .pipe(
+        switchMap((data: TokenApiModel) => {
+          this.auth.storeRefreshToken(data.refreshToken);
+          this.auth.storeToken(data.accessToken);
+          req = req.clone({
+            setHeaders: { Authorization: `Bearer ${data.accessToken}` }  // "Bearer "+myToken
+          })
+          return next.handle(req);
+        }),
+        catchError((err) => {
+          return throwError(() => {
+            this.router.navigate(['login'])
+          })
+        })
+      )
+  }
 }

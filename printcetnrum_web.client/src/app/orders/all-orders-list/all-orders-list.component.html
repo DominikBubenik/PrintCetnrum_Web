@@ -1,0 +1,36 @@
+<header></header>
+<body>
+<h2 class="text-center">All Orders</h2>
+
+<div *ngIf="orders.length === 0" class="alert alert-info text-center">
+  No orders found.
+</div>
+
+<div class="order-container">
+  <div *ngFor="let order of orders; let orderIndex = index"
+       class="order-row">
+    <div class="order-info">
+      <h4>Order - {{ order.orderName }}</h4>
+      <p>Order Created: {{ order.orderCreated | date: 'short' }}</p>
+      <p>Total Price: ${{ order.totalPrice | number: '1.2-2' }}</p>
+      <p>
+        Prepared for customer:
+        <span class="{{ order.isPreparedForCustomer ? 'status-yes' : 'status-no' }}">
+          {{ order.isPreparedForCustomer ? 'Yes' : 'No' }}
+        </span>
+      </p>
+      <p>
+        Taken by customer:
+        <span class="{{ order.isTakenByCustomer ? 'status-yes' : 'status-no' }}">
+          {{ order.isTakenByCustomer ? 'Yes' : 'No' }}
+        </span>
+      </p>
+    </div>
+    <div class="order-actions">
+      <button class="btn btn-primary" (click)="viewOrderDetails(order.id)">View Details</button>
+      <button class="btn btn-secondary" *ngIf="isAdmin" (click)="markOrderAsCompleted(order.id)">Mark as Completed</button>
+      <button class="btn btn-danger" (click)="deleteOrder(order.id)">Delete</button>
+    </div>
+  </div>
+</div>
+</body>

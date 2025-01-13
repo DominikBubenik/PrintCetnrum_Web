@@ -6,3 +6,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 :root {
   --printcentrum-blue: #3B62D9;
 }
+
+.mat-mdc-snack-bar-container {
+  --mat-mdc-snack-bar-button-color: #ffffff;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  &.app-notification-error
+
+{
+  --mdc-snackbar-container-color: #f23a2f;
+}
+
+&.app-notification-success {
+  --mdc-snackbar-container-color: #43a446;
+}
+}
+body {
+  padding-top: 35px;
+}

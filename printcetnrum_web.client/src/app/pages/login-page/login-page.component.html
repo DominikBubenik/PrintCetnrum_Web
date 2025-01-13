@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  
+</head>
+<body>
+  <div class="container-fluid h-100">
+    <div id="inner" class="text-center d-flex flex-column align-items-center justify-content-center">
+      <div class="row w-100">
+        <!-- Login Form Section -->
+        <div class="col-md-6 col-sm-12 mb-4">
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <h2 class="text-primary mb-4">Log In</h2>
+            <div class="form-group">
+              <input formControlName="username" type="text" class="form-control mb-3" placeholder="Enter your name/email">
+              <small *ngIf="loginForm.controls['username'].dirty && loginForm.controls['username'].hasError('required')" class="text-danger">*Username is required*</small>
+            </div>
+            <div class="form-group position-relative">
+              <input [type]="isPasswordVisible ? 'text' : 'password'" formControlName="password" class="form-control" placeholder="Enter your password">
+              <button type="button" class="btn toggle-password" (click)="togglePasswordVisibility()">
+                <i [ngClass]="isPasswordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </button>
+            </div>
+            <small *ngIf="loginForm.controls['password'].dirty && loginForm.controls['password'].hasError('required')" class="text-danger">*Password is required*</small>
+
+            <p><a href="#" (click)="open(forgotModal); $event.preventDefault()">Forgot Password?</a></p>
+            <button class="btn custom-btn btn-lg">Log In</button>
+          </form>
+        </div>
+
+        <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center justify-content-center">
+          <h2 class="text-primary mb-4">Register</h2>
+          <p class="text-muted">Don't have an account? Create a new one!</p>
+          <button class="btn custom-btn btn-lg" [routerLink]="['/register']">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #forgotModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Forgot Password</h5>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <p>Please provide your email address to reset your password.</p>
+      <small *ngIf="!forgotEmail" class="text-danger">*Email is required*</small>
+      <small *ngIf="!isValidEmail" class="text-danger">*Invalid Email*</small>
+      <input type="email" class="form-control" [(ngModel)]="forgotEmail" placeholder="Email">
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
+      <button type="button" class="btn btn-primary" (click)="sendResetLink()">Send Reset Link</button>
+    </div>
+  </ng-template>
+</body>
+</html>
