@@ -32,6 +32,7 @@ export class OrderDetailsComponent implements OnInit {
     const orderId = Number(this.route.snapshot.paramMap.get('id'));
     if (orderId) {
       this.getOrderDetails(orderId);
+      this.calculateOrderTotalPrice();
     }
     this.userStore.getRoleFromStore().subscribe(role => {
       if (role) {
@@ -43,6 +44,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   saveOrderChanges(): void {
+    this.calculateOrderTotalPrice();
     if (this.order) {
       this.orderService.updateOrder(this.order.id, this.order).subscribe(
         () => {
@@ -120,6 +122,7 @@ export class OrderDetailsComponent implements OnInit {
       this.orderService.removeOrderItem(item.id ?? 0).subscribe(
         () => {
           this.orderItems = this.orderItems.filter((i) => i.id !== item.id);
+          this.calculateOrderTotalPrice();
           SnackBarUtil.showSnackBar(this.snackBar, 'Item removed successfully!', 'success');
         },
         (error) => {
@@ -141,4 +144,33 @@ export class OrderDetailsComponent implements OnInit {
       }
     );
   }
+
+  calculateOrderTotalPrice(): void {
+    if (this.order) {
+      let total = 0;
+      this.orderItems.forEach(item => {
+        total += item.price * item.count;
+      });
+      this.order.totalPrice = total;
+    }
+  }
+
+  updateItemPrice(item: OrderItem): void {
+    if (item.price < 0) {
+      SnackBarUtil.showSnackBar(this.snackBar, 'Price cannot be negative!', 'error');
+      return;
+    }
+
+    this.orderService.updateOrderItemPrice(item.id ?? 0, item.price).subscribe(
+      () => {
+        SnackBarUtil.showSnackBar(this.snackBar, 'Price updated successfully!', 'success');
+        this.calculateOrderTotalPrice();
+      },
+      (error) => {
+        console.error('Error updating price:', error);
+        SnackBarUtil.showSnackBar(this.snackBar, 'Failed to update price!', 'error');
+      }
+    );
+  }
+
 }

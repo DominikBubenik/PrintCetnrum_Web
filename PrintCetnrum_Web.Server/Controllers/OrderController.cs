@@ -43,9 +43,8 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             string timeStamp = DateTime.Now.ToString("yyMMddHHmmss");
             order.OrderName = $"{timeStamp}{order.UserId}";
-            decimal totalPrice = 0;
 
-            order.TotalPrice = 5;
+            order.TotalPrice = order.TotalPrice;
             order.OrderCreated = DateTime.UtcNow;
 
             _context.Orders.Add(order);
@@ -155,9 +154,8 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 return NotFound();
             }
-
-            decimal totalPrice = order.OrderItems?.Sum(item => item.Count * item.Price) ?? 0;
-            existingOrder.TotalPrice = totalPrice;
+            
+            existingOrder.TotalPrice = order.TotalPrice;
             existingOrder.IsPreparedForCustomer = order.IsPreparedForCustomer;
             existingOrder.IsTakenByCustomer = order.IsTakenByCustomer;
             existingOrder.OrderFinished = order.OrderFinished;
@@ -267,5 +265,33 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
+        [HttpPatch("update-order-item-price/{itemId}")]
+        public async Task<IActionResult> UpdateOrderItemPrice(int itemId, [FromBody] decimal newPrice)
+        {
+            if (newPrice < 0)
+            {
+                return BadRequest("Price cannot be negative.");
+            }
+
+            var orderItem = await _context.OrderItems.FindAsync(itemId);
+            if (orderItem == null)
+            {
+                return NotFound($"Order item with ID {itemId} not found.");
+            }
+
+            var order = await _context.Orders.FindAsync(orderItem.OrderId);
+            if (order == null)
+            {
+                return NotFound($"Order associated with item ID {itemId} not found.");
+            }
+
+            order.TotalPrice -= orderItem.Price * orderItem.Count; 
+            orderItem.Price = newPrice; 
+            order.TotalPrice += newPrice * orderItem.Count;
+            _context.Entry(order).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

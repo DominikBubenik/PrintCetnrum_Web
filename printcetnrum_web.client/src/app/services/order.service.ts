@@ -43,6 +43,10 @@ export class OrderService {
     return this.http.patch<void>(`${this.baseUrl}update-price/${id}`, newPrice);
   }
 
+  updateOrderItemPrice(itemId: number, newPrice: number): Observable<void> {
+    return this.http.patch<void>(`${this.baseUrl}update-order-item-price/${itemId}`, newPrice);
+  }
+
   deleteOrder(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}delete-order/${id}`);
   }

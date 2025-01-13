@@ -49,7 +49,7 @@ export class ResetPasswordPageComponent implements OnInit {
       this.resetService.resetPassword(this.resetPasswordObject).subscribe({
         next: (res) => {
           this.resetForm.reset();
-          this.router.navigate(['/']);
+          this.router.navigate(['/login']);
           SnackBarUtil.showSnackBar(this.snackBar, 'Password Changed Successfully!', 'success');
         },
         error: (err) => {
