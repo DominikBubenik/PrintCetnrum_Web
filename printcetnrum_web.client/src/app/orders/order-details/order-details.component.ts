@@ -58,14 +58,19 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   downloadFile(orderItem: OrderItem): void {
-    const fileUrl = orderItem.userFile?.filePath;
-    if (fileUrl) {
-      const link = document.createElement('a');
-      link.href = fileUrl;
-      link.download = orderItem.userFile.fileName || 'download';
-      link.click();
-    } else {
-      alert('File not available for download.');
-    }
+    this.fileService.downloadFile(orderItem.userFileId).subscribe(
+      (fileBlob) => {
+        const downloadUrl = window.URL.createObjectURL(fileBlob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = orderItem.userFile.fileName;
+        link.click();
+        window.URL.revokeObjectURL(downloadUrl);  // Clean up the URL object
+      },
+      (error) => {
+        console.error('Error downloading file:', error);
+        alert('File could not be downloaded.');
+      }
+    );
   }
 }

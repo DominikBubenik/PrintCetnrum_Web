@@ -257,8 +257,44 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             var fileName = Path.GetFileName(fullPath);
             var fileBytes = await System.IO.File.ReadAllBytesAsync(fullPath);
+            var mimeType = GetMimeType(file.Extension);
 
-            return File(fileBytes, "image/" + file.Extension, fileName);
+            return File(fileBytes, mimeType, fileName);
+        }
+
+        private string GetMimeType(string fileExtension)
+        {
+            // You can customize the MIME types as needed
+            switch (fileExtension.ToLower())
+            {
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+                case ".png":
+                    return "image/png";
+                case ".gif":
+                    return "image/gif";
+                case ".pdf":
+                    return "application/pdf";
+                case ".doc":
+                case ".docx":
+                    return "application/msword";
+                case ".xls":
+                case ".xlsx":
+                    return "application/vnd.ms-excel";
+                case ".txt":
+                    return "text/plain";
+                case ".csv":
+                    return "text/csv";
+                case ".zip":
+                    return "application/zip";
+                case ".mp3":
+                    return "audio/mpeg";
+                case ".mp4":
+                    return "video/mp4";
+                default:
+                    return "application/octet-stream"; // Fallback for unknown types
+            }
         }
 
         [HttpPost("getFilesWithId")]
