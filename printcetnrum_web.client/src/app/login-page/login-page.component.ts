@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
@@ -6,11 +6,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserStoreService } from "../services/user-store.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordService } from '../services/reset-password.service';
+import { SnackBarUtil } from '../shared/snackbar-util';
 
 
-/** TODO make the form look better
- * add option to log in via Google
- */
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
@@ -34,7 +32,7 @@ export class LoginPageComponent {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]], // Validators.email
+      username: ['', [Validators.required]],
       password: ['', Validators.required],
     });
   }
@@ -44,9 +42,7 @@ export class LoginPageComponent {
   }
 
   onLogin() {
-    //console.log(this.loginForm.value);
     if (this.loginForm.valid) {
-      //console.log('Form submitted', this.loginForm.value);
       this.authService.loginUser(this.loginForm.value).subscribe({
         next: (res) => {
           this.authService.storeToken(res.accessToken);
@@ -54,27 +50,15 @@ export class LoginPageComponent {
           const tokenPayload = this.authService.decodedToken();
           this.userStore.setFullNameForStore(tokenPayload.unique_name);
           this.userStore.setRoleForStore(tokenPayload.role);
-          this.snackBar.open('Login successful!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-success'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Login successful!', 'success');
           this.loginForm.reset();
           this.router.navigate(['']);
         },
-        error: (err) => {
-          this.snackBar.open('Login failed. Please try again.', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error',
-          });
-          console.log(err);
+        error: () => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'Login failed. Please try again.', 'error');
         },
       });
     } else {
-      console.log('Form not valid');
       LoginPageComponent.validateAllFormFields(this.loginForm);
     }
   }
@@ -91,44 +75,26 @@ export class LoginPageComponent {
   }
 
   open(forgotModal: any) {
-    this.modalService.open(forgotModal); // Open the modal using template reference
+    this.modalService.open(forgotModal);
   }
 
-  // Handle reset link logic
   sendResetLink() {
     if (this.checkValidEmail(this.forgotEmail ?? '')) {
-      console.log('Reset link sent to', this.forgotEmail);
       this.resetService.sendResetPasswordLink(this.forgotEmail!).subscribe({
-        next: (res) => {
+        next: () => {
           this.forgotEmail = '';
           this.modalService.dismissAll();
-          this.snackBar.open('Link Send', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-success'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Reset link sent successfully.', 'success');
         },
-        error: (err) => {
-          this.snackBar.open('Sth failed. Please try again.', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error',
-          });
-      }
-      })
-    
+        error: () => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'Something went wrong. Please try again.', 'error');
+        }
+      });
     }
   }
-  
 
-  checkValidEmail(event: string) {
-    const value = event;
-    this.isValidEmail = value.includes('@') && value.includes('.');
+  checkValidEmail(event: string): boolean {
+    this.isValidEmail = event.includes('@') && event.includes('.');
     return this.isValidEmail;
   }
-
-    
-  //}
 }

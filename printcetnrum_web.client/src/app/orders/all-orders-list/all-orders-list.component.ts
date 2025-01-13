@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { OrderService } from '../../services/order.service';
 import { Order } from '../../models/order-models/order.model';
-import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserStoreService } from '../../services/user-store.service';
+import { SnackBarUtil } from '../../shared/snackbar-util';
+
 
 @Component({
   selector: 'app-all-orders-list',
@@ -13,8 +14,9 @@ import { UserStoreService } from '../../services/user-store.service';
   styleUrl: './all-orders-list.component.css'
 })
 export class AllOrdersListComponent {
-  orders: Order[] = [];  
+  orders: Order[] = [];
   isAdmin: boolean = false;
+
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
@@ -24,9 +26,9 @@ export class AllOrdersListComponent {
   ) {
     this.userStore.getRoleFromStore().subscribe(role => {
       if (role) {
-        this.isAdmin = role == 'Admin' ? true : false;
+        this.isAdmin = role === 'Admin';
       } else {
-        this.isAdmin = this.authService.getRoleFromToken() == 'Admin' ? true : false;
+        this.isAdmin = this.authService.getRoleFromToken() === 'Admin';
       }
     });
   }
@@ -38,10 +40,11 @@ export class AllOrdersListComponent {
   getAllOrders(): void {
     this.orderService.getOrders().subscribe(
       (orders) => {
-        this.orders = orders; 
+        this.orders = orders;
       },
       (error) => {
         console.error('Error fetching orders:', error);
+        SnackBarUtil.showSnackBar(this.snackBar, 'Error fetching orders. Please try again.', 'error');
       }
     );
   }
@@ -50,27 +53,18 @@ export class AllOrdersListComponent {
     if (confirm('Are you sure you want to delete this order?')) {
       this.orderService.deleteOrder(id).subscribe(
         () => {
-          this.snackBar.open('Order removed successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-success'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Order removed successfully!', 'success');
           this.getAllOrders();
-        }, (error) => {
-          this.snackBar.open('Something went wrong!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error'
-          });
+        },
+        () => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'Something went wrong!', 'error');
         }
       );
     }
   }
 
   viewOrderDetails(orderId: number): void {
-    this.router.navigate(['/order-details', orderId]);  // Navigate to order details page
+    this.router.navigate(['/order-details', orderId]);
   }
 
   markOrderAsCompleted(orderId: number): void {
@@ -80,31 +74,16 @@ export class AllOrdersListComponent {
           order.isTakenByCustomer = true;
           this.orderService.updateOrder(orderId, order).subscribe(
             () => {
-              this.snackBar.open('Order marked as completed!', 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'top',
-                panelClass: 'app-notification-success'
-              });
+              SnackBarUtil.showSnackBar(this.snackBar, 'Order marked as completed!', 'success');
               this.getAllOrders();
             },
             (error) => {
               console.error('Error marking order as completed:', error);
-              this.snackBar.open('Failed to mark order as completed!', 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'top',
-                panelClass: 'app-notification-error'
-              });
+              SnackBarUtil.showSnackBar(this.snackBar, 'Failed to mark order as completed!', 'error');
             }
           );
         } else {
-          this.snackBar.open('Order is not prepared!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Order is not prepared!', 'error');
         }
       });
     }

@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../services/order.service';
 import { Order, OrderItem } from '../../models/order-models/order.model';
 import { FileHandlerService } from '../../services/file-handler.service';
-import { UserFile } from '../../models/user-file';
-import { UserFilesComponent } from '../../user-files/user-files.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { UserStoreService } from '../../services/user-store.service';
+import { SnackBarUtil } from '../../shared/snackbar-util';
+
 
 @Component({
   selector: 'app-order-details',
@@ -17,7 +17,7 @@ import { UserStoreService } from '../../services/user-store.service';
 export class OrderDetailsComponent implements OnInit {
   order: Order | null = null;
   orderItems: OrderItem[] = [];
-  isAdmin: boolean = false; 
+  isAdmin: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,9 +35,9 @@ export class OrderDetailsComponent implements OnInit {
     }
     this.userStore.getRoleFromStore().subscribe(role => {
       if (role) {
-        this.isAdmin = role == 'Admin' ? true : false;
+        this.isAdmin = role === 'Admin';
       } else {
-        this.isAdmin = this.auth.getRoleFromToken() == 'Admin' ? true : false;
+        this.isAdmin = this.auth.getRoleFromToken() === 'Admin';
       }
     });
   }
@@ -46,21 +46,11 @@ export class OrderDetailsComponent implements OnInit {
     if (this.order) {
       this.orderService.updateOrder(this.order.id, this.order).subscribe(
         () => {
-          this.snackBar.open('Order changes saved successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-success'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Order changes saved successfully!', 'success');
         },
         (error) => {
           console.error('Error saving order changes:', error);
-          this.snackBar.open('Failed to save order changes!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Failed to save order changes!', 'error');
         }
       );
     }
@@ -69,25 +59,15 @@ export class OrderDetailsComponent implements OnInit {
   markOrderAsPrepared(value: boolean): void {
     if (this.order) {
       this.order.isPreparedForCustomer = value;
- 
+
       this.orderService.updateOrder(this.order.id, this.order).subscribe(
         () => {
-          this.snackBar.open('Order marked as done!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-success'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Order marked as done!', 'success');
           this.sendOrderReadyNotification();
         },
         (error) => {
           console.error('Error marking order as done:', error);
-          this.snackBar.open('Failed to mark order as done!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Failed to mark order as done!', 'error');
         }
       );
     }
@@ -102,15 +82,12 @@ export class OrderDetailsComponent implements OnInit {
 
           const fileIds = items.map(item => item.userFileId);
 
-        
           this.fileService.getFilesWithId(fileIds).subscribe((files) => {
-           
             this.orderItems.forEach(item => {
               if (files) {
                 item.userFile = files.find(file => file?.id === item.userFileId) ?? { id: 0, fileName: '', fileUinique: '', shouldPrint: false, uploadDate: new Date, filePath: '', extension: '' };
               }
             });
-            console.log('Order items with files:', this.orderItems);
           });
         });
       },
@@ -128,11 +105,11 @@ export class OrderDetailsComponent implements OnInit {
         link.href = downloadUrl;
         link.download = orderItem.userFile.fileName;
         link.click();
-        window.URL.revokeObjectURL(downloadUrl);  // Clean up the URL object
+        window.URL.revokeObjectURL(downloadUrl);
       },
       (error) => {
         console.error('Error downloading file:', error);
-        alert('File could not be downloaded.');
+        SnackBarUtil.showSnackBar(this.snackBar, 'File could not be downloaded.', 'error');
       }
     );
   }
@@ -143,46 +120,25 @@ export class OrderDetailsComponent implements OnInit {
       this.orderService.removeOrderItem(item.id ?? 0).subscribe(
         () => {
           this.orderItems = this.orderItems.filter((i) => i.id !== item.id);
-          this.snackBar.open('Item removed successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-success'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Item removed successfully!', 'success');
         },
         (error) => {
           console.error('Error removing item:', error);
-          this.snackBar.open('Item removing failed!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error'
-          });
+          SnackBarUtil.showSnackBar(this.snackBar, 'Item removing failed!', 'error');
         }
       );
     }
   }
 
-  sendOrderReadyNotification() {
+  sendOrderReadyNotification(): void {
     this.orderService.sendOrderReadyEmail(this.order?.id ?? 0).subscribe(
-      (response) => {
-        this.snackBar.open('Email Send Successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: 'app-notification-success'
-        });
+      () => {
+        SnackBarUtil.showSnackBar(this.snackBar, 'Email sent successfully!', 'success');
       },
       (error) => {
         console.error('Error sending email:', error);
-        this.snackBar.open('Email Was Not Send!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: 'app-notification-error'
-        });
+        SnackBarUtil.showSnackBar(this.snackBar, 'Email was not sent!', 'error');
       }
     );
   }
-
 }

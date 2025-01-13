@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FileHandlerService } from '../services/file-handler.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { SnackBarUtil } from '../shared/snackbar-util';
 
 @Component({
   selector: 'app-upload-photo-page',
@@ -22,34 +23,28 @@ export class UploadPhotoPageComponent {
   }
 
   uploadFiles(): void {
-    if (this.selectedFiles && this.selectedFiles.length > 0) {
-      this.fileHandlerService.uploadFiles(this.selectedFiles).subscribe(
-        (response) => {
-          this.snackBar.open('Upload successful!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-success'
-          });
-          this.router.navigate(['/userFiles']);
-        },
-        (error) => {
-          console.error('File upload failed:', error);
-          this.snackBar.open('Upload failed. Please try again.', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: 'app-notification-error'
-          });
-        }
-      );
-    } else {
-      this.snackBar.open('No files selected for upload.', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-        panelClass: 'app-notification-warning'
-      });
+    if (!this.hasFilesToUpload()) {
+      SnackBarUtil.showSnackBar(this.snackBar, 'No files selected for upload.', 'warning');
+      return;
     }
+
+    this.fileHandlerService.uploadFiles(this.selectedFiles).subscribe({
+      next: () => this.handleUploadSuccess(),
+      error: (err) => this.handleUploadError(err),
+    });
+  }
+
+  private hasFilesToUpload(): boolean {
+    return this.selectedFiles && this.selectedFiles.length > 0;
+  }
+
+  private handleUploadSuccess(): void {
+    SnackBarUtil.showSnackBar(this.snackBar, 'Upload successful!', 'success');
+    this.router.navigate(['/userFiles']);
+  }
+
+  private handleUploadError(error: any): void {
+    console.error('File upload failed:', error);
+    SnackBarUtil.showSnackBar(this.snackBar, 'Upload failed. Please try again.', 'error');
   }
 }

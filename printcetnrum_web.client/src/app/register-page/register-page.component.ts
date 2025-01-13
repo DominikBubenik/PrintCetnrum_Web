@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginPageComponent } from '../login-page/login-page.component';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { SnackBarUtil } from '../shared/snackbar-util';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register-page',
@@ -15,9 +17,9 @@ export class RegisterPageComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private auth: AuthService,
+    private snackBar: MatSnackBar,
     private router: Router
   ) {
-    // Initialize the form group with validators
     this.registerForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -37,7 +39,7 @@ export class RegisterPageComponent implements OnInit {
 
       this.auth.registerUser(this.registerForm.value).subscribe({
         next: (res) => {
-          console.log(res.message);
+          SnackBarUtil.showSnackBar( this.snackBar,'Registration successful!', 'success');
           this.registerForm.reset();
           this.router.navigate(['login']);
         },

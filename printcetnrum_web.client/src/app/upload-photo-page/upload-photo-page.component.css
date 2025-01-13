@@ -94,10 +94,3 @@
   color: #d9534f;
   font-size: 14px;
 }
-
-.app-notification-success {
-  background-color: green !important; /* Green background */
-  color: white !important; /* White text */
-  font-weight: bold; /* Optional: makes the text bold */
-}
-

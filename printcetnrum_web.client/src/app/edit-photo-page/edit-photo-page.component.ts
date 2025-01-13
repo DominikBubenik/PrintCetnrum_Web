@@ -4,6 +4,8 @@ import { FileHandlerService } from '../services/file-handler.service';
 import { UserFile } from '../models/user-file';
 import { environment } from '../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarUtil } from '../shared/snackbar-util';
+
 
 @Component({
   selector: 'app-edit-photo-page',
@@ -11,10 +13,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./edit-photo-page.component.css']
 })
 export class EditPhotoPageComponent implements OnInit {
-  file: UserFile | null = null; 
-  brightness: number = 100; 
+  file: UserFile | null = null;
+  brightness: number = 100;
   brightnessStyle: string = `brightness(${this.brightness}%)`;
-  imageUrl: string = '';  
+  imageUrl: string = '';
   baseUrl = environment.apiUrl;
 
   constructor(
@@ -24,9 +26,9 @@ export class EditPhotoPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const fileId = this.route.snapshot.paramMap.get('id'); 
+    const fileId = this.route.snapshot.paramMap.get('id');
     if (fileId) {
-      this.loadFile(parseInt(fileId)); 
+      this.loadFile(parseInt(fileId));
       this.fileHandlerService.getFile(parseInt(fileId)).subscribe(file => {
         this.file = file;
       });
@@ -40,14 +42,13 @@ export class EditPhotoPageComponent implements OnInit {
     });
   }
 
-
   updateBrightness(): void {
-    this.brightnessStyle = `brightness(${this.brightness}%)`; 
+    this.brightnessStyle = `brightness(${this.brightness}%)`;
   }
 
   revertChanges(): void {
     this.brightness = 100;
-    this.brightnessStyle = `brightness(100%)`;  
+    this.brightnessStyle = `brightness(100%)`;
   }
 
   download(): void {
@@ -60,16 +61,15 @@ export class EditPhotoPageComponent implements OnInit {
     const ctx = canvas.getContext('2d');
 
     if (ctx) {
-      ctx.filter = `brightness(${this.brightness}%)`; 
+      ctx.filter = `brightness(${this.brightness}%)`;
       ctx.drawImage(img, 0, 0, img.width, img.height);
 
       const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png'); 
-      link.download = 'modified-image.png'; 
-      link.click(); 
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'modified-image.png';
+      link.click();
     }
   }
-  
 
   saveChanges(): void {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -85,35 +85,23 @@ export class EditPhotoPageComponent implements OnInit {
       ctx.drawImage(img, 0, 0, img.width, img.height);
 
       canvas.toBlob((blob) => {
-        if (blob) {      
+        if (blob) {
           const file = new File([blob], this.file?.fileName ?? "no_name", { type: blob.type });
           const fileId = this.file?.id;
           if (fileId) {
             this.fileHandlerService.saveChanges(fileId, file).subscribe({
               next: (newFileId) => {
                 this.loadFile(newFileId);
-                this.snackBar.open('Chages saved!!', 'Close', {
-                  duration: 3000,
-                  horizontalPosition: 'center',
-                  verticalPosition: 'top',
-                  panelClass: 'app-notification-success'
-                });
+                SnackBarUtil.showSnackBar(this.snackBar, 'Changes saved successfully!', 'success');
               },
               error: (err) => {
                 console.error(err);
-                this.snackBar.open('Saving Failed!!', 'Close', {
-                  duration: 3000,
-                  horizontalPosition: 'center',
-                  verticalPosition: 'top',
-                  panelClass: 'app-notification-error'
-                });
+                SnackBarUtil.showSnackBar(this.snackBar, 'Saving failed. Please try again.', 'error');
               },
             });
           }
         }
-      }, 'image/' + this.file?.extension); 
+      }, 'image/' + this.file?.extension);
     }
   }
-
-
 }

@@ -9,11 +9,6 @@ import { Component } from '@angular/core';
 export class HomePageComponent {
   showTopButton = false;
 
-  //@HostListener('window:scroll')
-  //onWindowScroll() {
-  //  this.showTopButton = window.scrollY > 350;
-  //}
-
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
