@@ -25,7 +25,8 @@ import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/
 import { UserFilesComponent } from './user-files/user-files.component';
 import { NewOrderComponent } from './new-order/new-order.component';
 import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
-import { OrderDetailsComponent } from './orders/order-details/order-details.component'
+import { OrderDetailsComponent } from './orders/order-details/order-details.component';
+import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component'
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { OrderDetailsComponent } from './orders/order-details/order-details.comp
     UserFilesComponent,
     NewOrderComponent,
     AllOrdersListComponent,
-    OrderDetailsComponent
+    OrderDetailsComponent,
+    ConfirmModalComponent
   ],
   imports: [
     BrowserModule,

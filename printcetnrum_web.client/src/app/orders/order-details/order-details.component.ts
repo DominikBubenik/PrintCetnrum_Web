@@ -69,7 +69,7 @@ export class OrderDetailsComponent implements OnInit {
   markOrderAsPrepared(value: boolean): void {
     if (this.order) {
       this.order.isPreparedForCustomer = value;
-
+ 
       this.orderService.updateOrder(this.order.id, this.order).subscribe(
         () => {
           this.snackBar.open('Order marked as done!', 'Close', {
@@ -78,6 +78,7 @@ export class OrderDetailsComponent implements OnInit {
             verticalPosition: 'top',
             panelClass: 'app-notification-success'
           });
+          this.sendOrderReadyNotification();
         },
         (error) => {
           console.error('Error marking order as done:', error);
@@ -139,7 +140,6 @@ export class OrderDetailsComponent implements OnInit {
   removeItem(item: OrderItem): void {
     const confirmed = confirm(`Are you sure you want to remove ${item.userFile?.fileName || 'this item'}?`);
     if (confirmed) {
-      // Call service to remove the item from the backend
       this.orderService.removeOrderItem(item.id ?? 0).subscribe(
         () => {
           this.orderItems = this.orderItems.filter((i) => i.id !== item.id);
@@ -161,6 +161,28 @@ export class OrderDetailsComponent implements OnInit {
         }
       );
     }
+  }
+
+  sendOrderReadyNotification() {
+    this.orderService.sendOrderReadyEmail(this.order?.id ?? 0).subscribe(
+      (response) => {
+        this.snackBar.open('Email Send Successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: 'app-notification-success'
+        });
+      },
+      (error) => {
+        console.error('Error sending email:', error);
+        this.snackBar.open('Email Was Not Send!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: 'app-notification-error'
+        });
+      }
+    );
   }
 
 }

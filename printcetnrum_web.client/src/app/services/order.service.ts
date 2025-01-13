@@ -51,4 +51,7 @@ export class OrderService {
     return this.http.delete<void>(`${this.baseUrl}delete-order-item/${itemId}`);
   }
 
+  sendOrderReadyEmail(orderId: number): Observable<any> {
+    return this.http.post<string>(`${this.baseUrl}send-order-ready-email/${orderId}`, {});
+  }
 }

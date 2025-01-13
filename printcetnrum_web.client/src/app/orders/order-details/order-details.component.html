@@ -26,7 +26,8 @@
   </div>
   <div class="text-end mt-3">
     <button *ngIf="isAdmin" class="btn btn-primary" (click)="saveOrderChanges()">Save Changes</button>
-    <button *ngIf="isAdmin" class="btn btn-success" (click)="markOrderAsPrepared(true)">Mark as Done</button>
+    <button *ngIf="isAdmin && !order.isPreparedForCustomer" class="btn btn-success" (click)="markOrderAsPrepared(true)">Mark as Done</button>
+    <button *ngIf="isAdmin && order.isPreparedForCustomer" class="btn btn-success" disabled>Email Send</button>
   </div>
 
   <div *ngIf="orderItems && orderItems.length > 0" class="order-items">

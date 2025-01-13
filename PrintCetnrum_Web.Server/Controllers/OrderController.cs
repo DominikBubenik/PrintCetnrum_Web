@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PrintCetnrum_Web.Server.Context;
+using PrintCetnrum_Web.Server.Helpers;
+using PrintCetnrum_Web.Server.Models;
 using PrintCetnrum_Web.Server.Models.OrderModels;
+using PrintCetnrum_Web.Server.UtilityService;
 
 namespace PrintCetnrum_Web.Server.Controllers
 {
@@ -11,10 +15,14 @@ namespace PrintCetnrum_Web.Server.Controllers
     public class OrderController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
 
-        public OrderController(AppDbContext context)
+        public OrderController(AppDbContext context, IEmailService emailService, IConfiguration configuration)
         {
             _context = context;
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
         [HttpPost("create-order")]
@@ -70,6 +78,38 @@ namespace PrintCetnrum_Web.Server.Controllers
             
             return Ok();
 
+        }
+
+        [HttpPost("send-order-ready-email/{orderId}")]
+        public async Task<IActionResult> SendOrderReadyEmail(int orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null)
+            {
+                return NotFound("Order not found");
+            }
+
+            if (!order.IsPreparedForCustomer)
+            {
+                return BadRequest("Order is not marked as prepared for the customer yet");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == order.UserId);
+            if (user == null)
+            {
+                return NotFound("User with this email not found");
+            }
+            var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
+
+
+            string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems);
+
+
+            string subject = $"Your Order {order.OrderName} is Ready!";
+            var emailModel = new EmailModel(user.Email, subject, emailBody);
+            _emailService.SendEmail(emailModel);
+
+            return NoContent();
         }
 
 
