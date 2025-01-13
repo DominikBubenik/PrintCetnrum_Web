@@ -39,9 +39,8 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return BadRequest();
 
             var user = await _authContext.Users
-                .SingleOrDefaultAsync(x => x.UserName == userParam.UserName);
+                .FirstOrDefaultAsync(x => x.UserName == userParam.UserName || x.Email == userParam.UserName);
 
-            System.Console.WriteLine("toto je meno " + userParam.UserName);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
 
@@ -63,6 +62,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 RefreshToken = newRefreshToken
             });
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User userParam)
