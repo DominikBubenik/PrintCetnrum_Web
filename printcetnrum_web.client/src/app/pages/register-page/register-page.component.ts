@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class RegisterPageComponent implements OnInit {
   registerForm: FormGroup;
+  isPasswordVisible: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,6 +51,10 @@ export class RegisterPageComponent implements OnInit {
     } else {
       LoginPageComponent.validateAllFormFields(this.registerForm);
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
   }
 }
 

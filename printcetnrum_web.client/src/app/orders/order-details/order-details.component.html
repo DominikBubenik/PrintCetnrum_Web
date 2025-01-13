@@ -1,3 +1,4 @@
+<body>
 <h2 class="text-center">Order Details</h2>
 
 <div *ngIf="order">
@@ -54,7 +55,14 @@
             <td>{{ item.color }}</td>
             <td>{{ item.size }}</td>
             <td>{{ item.paperType }}</td>
-            <td>${{ item.price | number: '1.2-2' }}</td>
+            <td>
+              <input *ngIf="isAdmin"
+                     type="number"
+                     class="form-control"
+                     [(ngModel)]="item.price"
+                     (blur)="updateItemPrice(item)" />
+              <span *ngIf="!isAdmin">${{ item.price | number: '1.2-2' }}</span>
+            </td>
             <td>
               <button class="btn btn-success btn-sm" (click)="downloadFile(item)">Download</button>
               <button *ngIf="isAdmin"
@@ -66,6 +74,7 @@
           </tr>
         </tbody>
       </table>
+
     </div>
   </div>
 
@@ -74,3 +83,4 @@
 <div *ngIf="!order" class="alert alert-warning">
   Loading order details...
 </div>
+</body>

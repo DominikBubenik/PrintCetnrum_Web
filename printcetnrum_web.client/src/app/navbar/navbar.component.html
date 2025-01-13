@@ -1,7 +1,6 @@
 <!--navbar is from
     https://github.com/chrisira/angular17-responsive-header
  -->
-
 <!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
@@ -26,11 +25,15 @@
             <li *ngIf="!isLoggedIn()" [routerLink]="['/register']">Register</li>
             <li *ngIf="isLoggedIn()" (click)="onLogout()">Logout</li>
           </ul>
+          <div *ngIf="isLoggedIn()" class="user-name-mobile">
+            Welcome, {{ userNameSignal() }}!
+          </div>
         </div>
       </div>
       <div class="col-md-3 col-sm-3 col-3 text-right">
-        <span *ngIf="isLoggedIn()">Welcome, {{ userNameSignal() }}!</span>
+        <span *ngIf="isLoggedIn()" class="user-name">Welcome, {{ userNameSignal() }}!</span>
       </div>
     </div>
   </div>
 </header>
+

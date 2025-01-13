@@ -1,4 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿/**
+ * inspired by this tutorial
+ * https://www.youtube.com/watch?v=R7s5I9H1H9s&list=PLc2Ziv7051bZhBeJlJaqq5lrQuVmBJL6A
+ */
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,9 +43,8 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return BadRequest();
 
             var user = await _authContext.Users
-                .SingleOrDefaultAsync(x => x.UserName == userParam.UserName);
+                .FirstOrDefaultAsync(x => x.UserName == userParam.UserName || x.Email == userParam.UserName);
 
-            System.Console.WriteLine("toto je meno " + userParam.UserName);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
 
@@ -63,6 +66,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 RefreshToken = newRefreshToken
             });
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User userParam)

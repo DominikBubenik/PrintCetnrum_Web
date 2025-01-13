@@ -4,6 +4,10 @@
 header {
   padding: 10px;
   background: var(--printcentrum-blue);
+  position: fixed; 
+  width: 100%; 
+  top: 0; 
+  z-index: 1000; 
 }
 
 .logo {
@@ -14,37 +18,40 @@ header {
     cursor: pointer;
   }
 
+.desktop_menu:not(.mobile_menu) .user-name-mobile {
+  display: none;
+}
+
 .desktop_menu {
   margin-top: 24px;
 }
 
-.desktop_menu ul {
-  padding: 0;
-  margin: 0;
-  text-align: left;
-}
+  .desktop_menu ul {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+  }
 
-.desktop_menu ul li {
-  list-style-type: none;
-  color: white;
-  display: inline-block;
-  font-size: 18px;
-  margin-left: 26px;
-}
+    .desktop_menu ul li {
+      list-style-type: none;
+      color: white;
+      display: inline-block;
+      font-size: 18px;
+      margin-left: 26px;
+    }
 
-.desktop_menu ul li:hover {
-  font-size: 19px;
-  font-weight: bold;
-  cursor: pointer;
-  color: yellow;
-  transition: 0.3s ease-in-out;
-}
+      .desktop_menu ul li:hover {
+        font-size: 19px;
+        font-weight: bold;
+        cursor: pointer;
+        color: yellow;
+        transition: 0.3s ease-in-out;
+      }
 
 .menu-icon {
   display: none;
   padding-right: 10px;
 }
-
 
 @media screen and (min-width: 128px) and (max-width: 900px) {
   header {
@@ -61,26 +68,59 @@ header {
     height: 100%;
   }
 
-  .desktop_menu ul li {
-    display: block;
-    text-align: left;
-    margin: 0;
-    padding: 10px 0 10px 26px;
-    border-bottom: 1px solid grey;
-  }
+    .desktop_menu ul li {
+      display: block;
+      text-align: left;
+      margin: 0;
+      padding: 10px 0 10px 26px;
+      border-bottom: 1px solid grey;
+    }
 
   .menu-icon {
-    display: block; 
-    color: white; 
-    font-size: 40px; 
-    padding: 10px; 
-    position: absolute; 
-    right: 10px; 
-    top: 10px; 
+    display: block;
+    color: white;
+    font-size: 40px;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
   }
 
   .mobile_menu {
     right: 0;
     transition: 0.4s ease-in-out;
   }
+
+
+  .user-name-mobile {
+    margin-top: 20px; 
+    color: white;
+    padding: 10px 20px;
+    text-align: left; 
+    background-color: #2c4a8c;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .user-name {
+    display: none;
+  }
 }
+
+body {
+  padding-top: 200px;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3B62D9;
+  padding: 8px 15px;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+  .user-name:hover {
+    background-color: #2c4a8c;
+  }

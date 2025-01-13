@@ -56,7 +56,7 @@ export class NewOrderComponent implements OnInit {
       id: 0,
       orderCreated: new Date(),
       orderItems: [],
-      orderName: 'ff',
+      orderName: 'new',
       isPreparedForCustomer: false,
       isTakenByCustomer: false,
       totalPrice: 0,
@@ -75,7 +75,7 @@ export class NewOrderComponent implements OnInit {
       color: 'black',
       paperType: 'regular',
       size: 'A4',
-      price: 5,
+      price: 0,
       description: ''
     }));
   }
@@ -90,11 +90,14 @@ export class NewOrderComponent implements OnInit {
   }
 
   submitOrder(): void {
+    console.log('ideeem');
     if (!this.order) {
       return;
     }
+    console.log('ideeem');
     this.orderService.createOrder(this.order).subscribe(
       (createdOrder) => {
+        console.log('vytvaram objednavku');
         this.orderService.addOrderItems(createdOrder.orderName, this.orderItems).subscribe(
           () => {
             this.order = undefined;

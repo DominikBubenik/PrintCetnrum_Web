@@ -20,3 +20,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --mdc-snackbar-container-color: #43a446;
 }
 }
+body {
+  padding-top: 35px;
+}
