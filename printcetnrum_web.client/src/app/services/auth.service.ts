@@ -20,13 +20,6 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   constructor(private http: HttpClient, private router: Router) {
     this.userPayload = this.decodedToken();
-
-    if (this.isLoggedIn()) {
-      console.log('ten idot si mysli ze je prihlaseny');
-      //this.isLoggedInSubject.next(true);
-    } else {
-      console.log('ten idot si mysli ze nie je prihlaseny');
-    }
   }
 
   loginUser(user: any) {

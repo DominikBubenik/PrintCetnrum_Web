@@ -49,18 +49,14 @@ export class FileHandlerService {
 
   saveChanges(id: number, file: File): Observable<number> {
     const formData = new FormData();
-    formData.append('newFile', file); // Append the file to the FormData object
-    console.log(formData.forEach((value, key) => {
-      console.log('this is value' + value);
-    }
-    ));
+    formData.append('newFile', file);
     return this.http.put<number>(`${this.baseUrl}replaceFile/${id}`, formData);
   }
 
 
   downloadFile(fileId: number) {
     return this.http.get(`${this.baseUrl}downloadFile/${fileId}`, {
-      responseType: 'blob', // Binary response
+      responseType: 'blob',
     });
   }
 }

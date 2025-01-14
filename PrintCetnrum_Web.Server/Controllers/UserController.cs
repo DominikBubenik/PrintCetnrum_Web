@@ -74,18 +74,16 @@ namespace PrintCetnrum_Web.Server.Controllers
             if (userParam == null)
                 return BadRequest();
             
-            // check email
             if (await CheckEmailExistAsync(userParam.Email))
                 return BadRequest(new { Message = "Email Already Exist" });
 
-            //check username
             if (await CheckUsernameExistAsync(userParam.UserName))
                 return BadRequest(new { Message = "Username Already Exist" });
 
             //psawword strength checking
-            //var passMessage = CheckPasswordStrength(userParam.Password);
-            //if (!string.IsNullOrEmpty(passMessage))
-            //    return BadRequest(new { Message = passMessage.ToString() });
+            var passMessage = CheckPasswordStrength(userParam.Password);
+            if (!string.IsNullOrEmpty(passMessage))
+                return BadRequest(new { Message = passMessage.ToString() });
 
             userParam.Password = PasswordHasher.HashPassword(userParam.Password);
             userParam.Role = "User";
@@ -308,6 +306,10 @@ namespace PrintCetnrum_Web.Server.Controllers
                     Message = "email Does Not Exist"
                 });
             }
+
+            var passMessage = CheckPasswordStrength(resetPasswordDto.NewPassword);
+            if (!string.IsNullOrEmpty(passMessage))
+                return BadRequest(new { StatusCode = 400 ,Message = passMessage.ToString() });
 
             var tokenCode = user.ResetPasswordToken;
             DateTime emailTokenExpiry = user.ResetPasswordExpiry;

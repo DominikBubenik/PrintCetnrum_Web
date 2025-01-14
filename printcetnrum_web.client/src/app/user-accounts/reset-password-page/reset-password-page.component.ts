@@ -52,8 +52,8 @@ export class ResetPasswordPageComponent implements OnInit {
           this.router.navigate(['/login']);
           SnackBarUtil.showSnackBar(this.snackBar, 'Password Changed Successfully!', 'success');
         },
-        error: (err) => {
-          SnackBarUtil.showSnackBar(this.snackBar, 'Password Reset Failed. Please try again.', 'error');
+        error: (error) => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'Password Reset Failed. ' + error?.error?.message, 'error');
         }
       });
     } else {
