@@ -214,7 +214,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 await newFile.CopyToAsync(stream);
             }
-
             var userFile = new UserFile
             {
                 FileName = fileName,
@@ -230,7 +229,8 @@ namespace PrintCetnrum_Web.Server.Controllers
             _dbContext.UserFiles.Add(userFile);
             await _dbContext.SaveChangesAsync();
 
-            var oldFilePath = Path.Combine(_uploadsFolder, currentFile.FilePath);
+            var relativePath = currentFile.FilePath.TrimStart('/');
+            var oldFilePath = Path.Combine(_uploadsFolder, relativePath);
             if (System.IO.File.Exists(oldFilePath))
             {
                 System.IO.File.Delete(oldFilePath);
