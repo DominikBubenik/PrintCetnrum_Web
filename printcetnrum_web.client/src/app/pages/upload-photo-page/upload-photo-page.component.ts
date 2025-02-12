@@ -30,7 +30,9 @@ export class UploadPhotoPageComponent {
 
     this.fileHandlerService.uploadFiles(this.selectedFiles).subscribe({
       next: () => this.handleUploadSuccess(),
-      error: (err) => this.handleUploadError(err),
+      error: (err) => {
+        this.handleUploadError(err.error);
+      },
     });
   }
 
@@ -43,8 +45,8 @@ export class UploadPhotoPageComponent {
     this.router.navigate(['/userFiles']);
   }
 
-  private handleUploadError(error: any): void {
+  private handleUploadError(error: string): void {
     console.error('File upload failed:', error);
-    SnackBarUtil.showSnackBar(this.snackBar, 'Upload failed. Please try again.', 'error');
+    SnackBarUtil.showSnackBar(this.snackBar, error, 'error');
   }
 }

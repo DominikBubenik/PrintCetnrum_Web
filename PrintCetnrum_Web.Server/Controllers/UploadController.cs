@@ -30,8 +30,20 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 return BadRequest("No files uploaded.");
             }
+            if (files.Count > 10)
+            {
+                return BadRequest("Select max 10 files");
+            }
             var maxFilesSize = 15 * 1024 * 1024; // 15MB per file
-            
+            int currentSize = 0;
+            foreach (var file in files)
+            {
+                currentSize += (int)file.Length;
+                if (currentSize > maxFilesSize)
+                {
+                    return BadRequest($"Files are too large. Maximum size allowed is 15MB.");
+                }
+            }
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);
             if (user == null)
             {
@@ -45,17 +57,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
 
             var uploadedFiles = new List<object>();
-            int currentSize = 0;
             foreach (var file in files)
             {
                 if (file.Length == 0)
                 {
-                    continue; // Skip empty files
-                }
-                currentSize += (int)file.Length;
-                if (currentSize > maxFilesSize)
-                {
-                    return BadRequest($"Files are too large. Maximum size allowed is 15MB.");
+                    continue;
                 }
                 var fileName = Path.GetFileName(file.FileName);
                 var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
@@ -89,7 +95,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return Ok(uploadedFiles);
         }
-
 
         [Authorize]
         [HttpGet("getUserFiles")]
