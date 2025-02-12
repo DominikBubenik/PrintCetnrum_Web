@@ -7,7 +7,6 @@
       <button class="btn btn-primary" (click)="download()">Download Image</button>
       <p>{{ this.brightness }}</p>
 
-      <!-- Displaying the image inside a square frame -->
       <div class="image-frame">
         <img [style.filter]="brightnessStyle"
              [src]="imageUrl"
