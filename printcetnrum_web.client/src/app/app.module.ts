@@ -25,7 +25,8 @@ import { UserFilesComponent } from './pages/user-files/user-files.component';
 import { NewOrderComponent } from './orders/new-order/new-order.component';
 import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
-import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component'
+import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component';
+import { StampPageComponent } from './pages/stamp-page/stamp-page.component'
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.comp
     NewOrderComponent,
     AllOrdersListComponent,
     OrderDetailsComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    StampPageComponent
   ],
   imports: [
     BrowserModule,

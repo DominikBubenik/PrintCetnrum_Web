@@ -12,6 +12,7 @@ import { UserFilesComponent } from './pages/user-files/user-files.component';
 import { NewOrderComponent } from './orders/new-order/new-order.component';
 import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
+import {StampPageComponent} from "./pages/stamp-page/stamp-page.component";
 
 
 
@@ -54,6 +55,11 @@ const routes: Routes = [
     path: 'newOrder',
     component: NewOrderComponent,
     title: 'New Order',
+    pathMatch: 'full'
+  },{
+    path: 'newStamp',
+    component: StampPageComponent,
+    title: 'New Stamp',
     pathMatch: 'full'
   },{
     path: 'allOrders',

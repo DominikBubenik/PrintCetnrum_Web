@@ -1,0 +1,52 @@
+:host {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.stamp-container {
+  width: 400px;
+  height: 200px;
+  border: 2px solid black;
+  position: relative;
+  overflow: hidden;
+  background-color: white;
+}
+
+.text-box {
+  position: absolute;
+  cursor: move;
+  background: transparent;
+  border: none;
+  padding: 5px;
+  min-width: 50px;
+  outline: none;
+  white-space: nowrap;
+}
+
+/* Show border when editing */
+.text-box:focus {
+  border: 1px dashed gray;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Highlight selected text box */
+.text-box.selected {
+  border: 1px solid blue;
+}
+
+.add-text-btn {
+  margin-top: 20px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+}
+
+.add-text-btn:hover {
+  background-color: #0056b3;
+}
