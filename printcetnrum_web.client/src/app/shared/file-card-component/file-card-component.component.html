@@ -12,7 +12,7 @@
       </div>
       <div class="file-details">
         <h4 class="file-title">{{ file.fileName }}</h4>
-        <p class="file-date">Uploaded: {{ file.uploadDate  }}</p>
+        <p class="file-date">Uploaded: {{ file.uploadDate | date:'yyyy:MM:dd HH:mm' }}</p>
       </div>
       <div class="file-actions">
         <button class="btn btn-primary" (click)="markFile(file)">

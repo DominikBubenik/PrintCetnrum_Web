@@ -1,0 +1,19 @@
+.file-actions-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+  .file-actions-row .btn {
+    margin-right: 10px;
+  }
+
+.custom-color {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+  .custom-color:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+  }

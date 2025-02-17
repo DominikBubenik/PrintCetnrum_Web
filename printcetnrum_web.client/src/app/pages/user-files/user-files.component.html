@@ -2,10 +2,9 @@
 <body>
   <div class="file-actions-row">
     <button class="btn btn-primary" [routerLink]="['/upload']">Upload New File</button>
-    <button class="btn btn-primary" [routerLink]="['/newOrder']">Create New Order</button>
     <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
+    <button class="btn btn-primary custom-color" [routerLink]="['/newOrder']">Create New Order</button>
   </div>
-
   <app-file-card title="Marked for Printing"
                  [files]="markedFiles"
                  [baseUrl]="baseUrl"
@@ -13,7 +12,6 @@
                  (editFile)="editFile($event)"
                  (openDeleteModal)="openDeleteModal($event, deleteModal)">
   </app-file-card>
-
   <app-file-card title="Other Files"
                  [files]="unmarkedFiles"
                  [baseUrl]="baseUrl"
@@ -21,7 +19,6 @@
                  (editFile)="editFile($event)"
                  (openDeleteModal)="openDeleteModal($event, deleteModal)">
   </app-file-card>
-
   <ng-template #deleteModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Confirm Deletion</h5>
