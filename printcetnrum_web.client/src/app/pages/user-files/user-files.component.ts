@@ -21,6 +21,7 @@ export class UserFilesComponent implements OnInit {
   unmarkedFiles: UserFile[] = [];
   baseUrl = environment.apiUrl;
   fileIdToDelete: number | null = null;
+  criteria: string = 'date';
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -63,5 +64,13 @@ export class UserFilesComponent implements OnInit {
   editFile(id: number) {
     this.router.navigate(['/edit', id]);
   }
-}
 
+  sortFiles(criteria: string): void {
+    if (criteria === 'date') {
+      this.files.sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()).reverse;
+    } else if (criteria === 'type') {
+      this.files.sort((a, b) => a.extension.localeCompare(b.extension));
+    }
+    this.updateFileLists();
+  }
+}

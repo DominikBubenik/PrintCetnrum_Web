@@ -5,6 +5,12 @@
     <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
     <button class="btn btn-primary custom-color" [routerLink]="['/newOrder']">Create New Order</button>
   </div>
+  <div class="sorting-options col-1">
+    <select id="sortSelect" [(ngModel)]="criteria" (change)="sortFiles(criteria)" class="form-select">
+      <option value="type">Type</option>
+      <option value="date">Date</option>
+    </select>
+  </div>
   <app-file-card title="Marked for Printing"
                  [files]="markedFiles"
                  [baseUrl]="baseUrl"

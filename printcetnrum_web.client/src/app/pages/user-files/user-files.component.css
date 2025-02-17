@@ -17,3 +17,26 @@
     background-color: #218838;
     border-color: #1e7e34;
   }
+
+.sorting-options {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-content: center;
+  position: absolute;
+  margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .sorting-options {
+    position: initial;
+    justify-content: center;
+  }
+    .sorting-options select {
+      min-width: 150px; /* Increase width */
+      font-size: 1.2rem; /* Increase font size */
+      padding: 8px; /* Increase padding for better touch */
+    }
+}
+
+
