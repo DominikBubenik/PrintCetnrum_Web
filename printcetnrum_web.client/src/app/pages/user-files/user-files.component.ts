@@ -1,9 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { UserFile } from '../../models/user-file';
 import { FileHandlerService } from '../../services/file-handler.service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -14,14 +13,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class UserFilesComponent implements OnInit {
   private authService = inject(AuthService);
+  private fileHandlerService = inject(FileHandlerService);
+  private modalService = inject(NgbModal);
+  private router = inject(Router);
   files: UserFile[] = [];
+  markedFiles: UserFile[] = [];
+  unmarkedFiles: UserFile[] = [];
   baseUrl = environment.apiUrl;
   fileIdToDelete: number | null = null;
-  constructor(
-    private fileHandlerService: FileHandlerService,
-    private modalService: NgbModal,
-    private router: Router
-  ) { }
+  criteria: string = 'date';
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -32,16 +32,18 @@ export class UserFilesComponent implements OnInit {
   fetchFiles(): void {
     this.fileHandlerService.fetchFiles().subscribe(data => {
       this.files = data;
+      this.updateFileLists();
     });
   }
 
-  isImage(extension: string): boolean {
-    return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'].includes(extension.toLowerCase());
+  updateFileLists(): void {
+    this.markedFiles = this.files.filter(file => file.shouldPrint);
+    this.unmarkedFiles = this.files.filter(file => !file.shouldPrint);
   }
 
-  markForPrint(id: number, shouldPrint: boolean): void {
-    this.fileHandlerService.markForPrint(id, shouldPrint).subscribe(() => {
-      this.fetchFiles(); 
+  markForPrint(event: { id: number, shouldPrint: boolean }): void {
+    this.fileHandlerService.markForPrint(event.id, event.shouldPrint).subscribe(() => {
+      this.fetchFiles();
     });
   }
 
@@ -62,5 +64,13 @@ export class UserFilesComponent implements OnInit {
   editFile(id: number) {
     this.router.navigate(['/edit', id]);
   }
-}
 
+  sortFiles(criteria: string): void {
+    if (criteria === 'date') {
+      this.files.sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()).reverse;
+    } else if (criteria === 'type') {
+      this.files.sort((a, b) => a.extension.localeCompare(b.extension));
+    }
+    this.updateFileLists();
+  }
+}

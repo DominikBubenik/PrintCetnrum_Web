@@ -1,0 +1,27 @@
+<div *ngIf="files.length > 0">
+  <h3 class="section-title">{{ title }}</h3>
+  <div class="file-grid">
+    <div class="file-card" *ngFor="let file of files">
+      <div class="file-image-wrapper">
+        <img *ngIf="isImage(file.extension)" [src]="baseUrl + file.filePath" alt="{{ file.fileName }}" class="file-image" />
+        <img *ngIf="file.extension === '.pdf'" src="assets/icon-pictures/pdf-icon.png" alt="PDF File" class="file-image" />
+        <img *ngIf="file.extension === '.doc' || file.extension === '.docx'" src="assets/icon-pictures/docx-icon.png" alt="Word File" class="file-image" />
+        <div *ngIf="!isImage(file.extension)" class="file-placeholder">
+          <i class="fas fa-file-alt"></i>
+        </div>
+      </div>
+      <div class="file-details">
+        <h4 class="file-title">{{ file.fileName }}</h4>
+        <p class="file-date">Uploaded: {{ file.uploadDate | date:'yyyy:MM:dd HH:mm' }}</p>
+      </div>
+      <div class="file-actions">
+        <button class="btn btn-primary" (click)="markFile(file)">
+          <i class="bi bi-printer"></i>
+          {{ file.shouldPrint ? 'Unmark' : 'Mark for Print' }}
+        </button>
+        <button *ngIf="isImage(file.extension)" class="btn btn-secondary" (click)="editFile.emit(file.id)">Edit</button>
+        <button class="btn btn-danger" (click)="openDeleteModal.emit(file.id)">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
