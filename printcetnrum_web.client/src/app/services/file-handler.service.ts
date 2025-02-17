@@ -49,7 +49,7 @@ export class FileHandlerService {
 
   saveChanges(id: number, file: File): Observable<number> {
     const formData = new FormData();
-    formData.append('newFile', file); // Append the file to the FormData object
+    formData.append('newFile', file);
     console.log(formData.forEach((value, key) => {
       console.log('this is value' + value);
     }

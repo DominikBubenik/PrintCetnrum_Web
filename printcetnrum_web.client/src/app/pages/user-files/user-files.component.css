@@ -14,7 +14,7 @@
   padding: 0.5rem;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .file-grid {
     grid-template-columns: repeat(3, 1fr); /* Maximum 3 cards next to each other */
   }
@@ -30,6 +30,10 @@
   .file-grid {
     grid-template-columns: repeat(1, 1fr); /* Maximum 1 card per row */
   }
+  .file-card {
+    width: 400px; /* Maximum width */
+    max-height: 700px;
+  }
 }
 
 /* Individual file card */
@@ -37,8 +41,8 @@
   border: 1px solid #d0d0d0;
   border-radius: 6px; /* Smaller border radius */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  max-width: 500px; /* Maximum width */
-  max-height: 800px;
+  max-width: 400px; /* Maximum width */
+  max-height: 700px;
   padding: 1rem; /* Reduced padding */
   background-color: #fff;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -55,7 +59,8 @@
 /* File image wrapper */
 .file-image-wrapper {
   position: relative;
-  width: 90%; /* Adjusted width */
+  width: 100%; /* Adjusted width */
+  height: 90%;
   padding-top: 90%; /* Adjusted aspect ratio */
   overflow: hidden;
   border-radius: 6px; /* Matches card's border radius */

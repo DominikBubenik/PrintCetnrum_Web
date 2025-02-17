@@ -15,18 +15,14 @@ import { UserStoreService } from './user-store.service';
 })
 export class AuthService {
   private userStore = inject(UserStoreService);
+  private http = inject(HttpClient);
+  private router = inject(Router);
   private baseUrl = 'https://localhost:7074/api/User/';
   private userPayload: any;
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
-  constructor(private http: HttpClient, private router: Router) {
-    this.userPayload = this.decodedToken();
 
-    if (this.isLoggedIn()) {
-      console.log('ten idot si mysli ze je prihlaseny');
-      //this.isLoggedInSubject.next(true);
-    } else {
-      console.log('ten idot si mysli ze nie je prihlaseny');
-    }
+  constructor() {
+    this.userPayload = this.decodedToken();
   }
 
   loginUser(user: any) {
