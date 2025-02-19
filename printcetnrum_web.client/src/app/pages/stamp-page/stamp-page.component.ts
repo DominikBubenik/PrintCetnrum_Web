@@ -1,13 +1,14 @@
-import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-stamp-page',
   templateUrl: './stamp-page.component.html',
   styleUrl: './stamp-page.component.css'
 })
-export class StampPageComponent {
-  textBoxes: { text: string; x: number; y: number; fontSize: number }[] = [];
+export class StampPageComponent implements AfterViewInit {
+  textBoxes: { text: string; x: number; y: number; fontSize: number; width: number; height: number }[] = [];
   isDragging = false;
+  isResizing = false;
   activeIndex: number | null = null;
   selectedIndex: number | null = null;
   startX = 0;
@@ -28,6 +29,8 @@ export class StampPageComponent {
       x: 50,
       y: 50,
       fontSize: 20,
+      width: 100,
+      height: 40
     });
   }
 
@@ -39,7 +42,7 @@ export class StampPageComponent {
   }
 
   selectTextBox(event: MouseEvent, index: number) {
-    event.stopPropagation(); // Prevents deselection when clicking inside the text box
+    event.stopPropagation();
     this.selectedIndex = index;
   }
 
@@ -52,7 +55,7 @@ export class StampPageComponent {
   startDrag(event: MouseEvent, index: number) {
     this.isDragging = true;
     this.activeIndex = index;
-    this.selectedIndex = index; // Selects the text box when dragging
+    this.selectedIndex = index;
     this.startX = event.clientX - this.textBoxes[index].x;
     this.startY = event.clientY - this.textBoxes[index].y;
     document.addEventListener('mousemove', this.onDrag);
@@ -64,14 +67,13 @@ export class StampPageComponent {
 
     let newX = event.clientX - this.startX;
     let newY = event.clientY - this.startY;
-    const textBoxWidth = 100;
-    const textBoxHeight = 30;
+    const textBox = this.textBoxes[this.activeIndex];
 
-    newX = Math.max(0, Math.min(this.containerWidth - textBoxWidth, newX));
-    newY = Math.max(0, Math.min(this.containerHeight - textBoxHeight, newY));
+    newX = Math.max(0, Math.min(this.containerWidth - textBox.width, newX));
+    newY = Math.max(0, Math.min(this.containerHeight - textBox.height, newY));
 
-    this.textBoxes[this.activeIndex].x = newX;
-    this.textBoxes[this.activeIndex].y = newY;
+    textBox.x = newX;
+    textBox.y = newY;
   };
 
   stopDrag = () => {
@@ -79,6 +81,42 @@ export class StampPageComponent {
     this.activeIndex = null;
     document.removeEventListener('mousemove', this.onDrag);
     document.removeEventListener('mouseup', this.stopDrag);
+  };
+
+  startResize(event: MouseEvent, index: number) {
+    event.stopPropagation();
+    this.isResizing = true;
+    this.activeIndex = index;
+    this.startX = event.clientX;
+    this.startY = event.clientY;
+    document.addEventListener('mousemove', this.onResize);
+    document.addEventListener('mouseup', this.stopResize);
+  }
+
+  onResize = (event: MouseEvent) => {
+    if (!this.isResizing || this.activeIndex === null) return;
+
+    const textBox = this.textBoxes[this.activeIndex];
+
+    let newWidth = textBox.width + (event.clientX - this.startX);
+    let newHeight = textBox.height + (event.clientY - this.startY);
+
+    // Prevent shrinking too much
+    newWidth = Math.max(50, Math.min(this.containerWidth - textBox.x, newWidth));
+    newHeight = Math.max(20, Math.min(this.containerHeight - textBox.y, newHeight));
+
+    textBox.width = newWidth;
+    textBox.height = newHeight;
+
+    this.startX = event.clientX;
+    this.startY = event.clientY;
+  };
+
+  stopResize = () => {
+    this.isResizing = false;
+    this.activeIndex = null;
+    document.removeEventListener('mousemove', this.onResize);
+    document.removeEventListener('mouseup', this.stopResize);
   };
 
   @HostListener('document:keydown', ['$event'])

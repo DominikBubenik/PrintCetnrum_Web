@@ -18,23 +18,37 @@
   position: absolute;
   cursor: move;
   background: transparent;
-  border: none;
   padding: 5px;
   min-width: 50px;
+  min-height: 20px;
   outline: none;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  resize: none;
 }
 
-/* Show border when editing */
 .text-box:focus {
   border: 1px dashed gray;
   background: rgba(255, 255, 255, 0.8);
+  .resize-handle {
+    width: 10px;
+    height: 10px;
+    background: gray;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+  }
 }
 
-/* Highlight selected text box */
 .text-box.selected {
   border: 1px solid blue;
 }
+
+
+
 
 .add-text-btn {
   margin-top: 20px;
