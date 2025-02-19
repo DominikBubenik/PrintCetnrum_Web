@@ -1,5 +1,5 @@
 <header></header>
-<body (click)="deselectTextBox($event)">
+<body (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
 <div class="stamp-container" #stampContainer>
   <div
     *ngFor="let box of textBoxes; let i = index"
@@ -11,7 +11,9 @@
     [style.fontSize.px]="box.fontSize"
     (mousedown)="startDrag($event, i)"
     (click)="selectTextBox($event, i)"
+    (keydown)="null"
     contenteditable="true"
+    (input)="adjustSize(i)"
   >
     {{ box.text }}
     <span class="resize-handle" (mousedown)="startResize($event, i)"></span>

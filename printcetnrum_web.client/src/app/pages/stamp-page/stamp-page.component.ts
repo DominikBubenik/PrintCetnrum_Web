@@ -52,6 +52,16 @@ export class StampPageComponent implements AfterViewInit {
     }
   }
 
+  adjustSize(index: number) {
+    setTimeout(() => {  // Wait for DOM update
+      const textBoxElement = document.querySelectorAll('.text-box')[index] as HTMLElement;
+      if (textBoxElement) {
+        this.textBoxes[index].width = textBoxElement.scrollWidth;
+        this.textBoxes[index].height = textBoxElement.scrollHeight;
+      }
+    }, 0);
+  }
+
   startDrag(event: MouseEvent, index: number) {
     this.isDragging = true;
     this.activeIndex = index;
