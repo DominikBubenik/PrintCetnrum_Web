@@ -46,7 +46,7 @@ import { FileCardComponentComponent } from './shared/file-card-component/file-ca
     AllOrdersListComponent,
     OrderDetailsComponent,
     ConfirmModalComponent,
-    StampPageComponent
+    StampPageComponent,
     FileCardComponentComponent
   ],
   imports: [
