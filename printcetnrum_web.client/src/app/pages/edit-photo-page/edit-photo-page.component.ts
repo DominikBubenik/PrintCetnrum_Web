@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileHandlerService } from '../../services/file-handler.service';
 import { UserFile } from '../../models/user-file';
@@ -12,6 +12,9 @@ import { SnackBarUtil } from '../../shared/snackbar-util';
   styleUrls: ['./edit-photo-page.component.css']
 })
 export class EditPhotoPageComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private fileHandlerService = inject(FileHandlerService);
+  private snackBar = inject(MatSnackBar);
   file: UserFile | null = null;
   brightness: number = 100;
   brightnessStyle: string = `brightness(${this.brightness}%)`;
@@ -22,12 +25,6 @@ export class EditPhotoPageComponent implements OnInit {
   cropX: number = 50;      
   cropY: number = 50;      
   imgElement: HTMLImageElement | null = null;
-
-  constructor(
-    private route: ActivatedRoute,
-    private fileHandlerService: FileHandlerService,
-    private snackBar: MatSnackBar
-  ) { }
 
   ngOnInit(): void {
     const fileId = this.route.snapshot.paramMap.get('id');

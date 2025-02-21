@@ -27,6 +27,7 @@ import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component';
 import { StampPageComponent } from './pages/stamp-page/stamp-page.component'
+import { FileCardComponentComponent } from './shared/file-card-component/file-card-component.component'
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { StampPageComponent } from './pages/stamp-page/stamp-page.component'
     OrderDetailsComponent,
     ConfirmModalComponent,
     StampPageComponent
+    FileCardComponentComponent
   ],
   imports: [
     BrowserModule,

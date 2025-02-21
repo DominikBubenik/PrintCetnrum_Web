@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -8,27 +8,23 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordService } from '../../services/reset-password.service';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 
-
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  private userStore = inject(UserStoreService);
+  private modalService = inject(NgbModal);
+  private resetService = inject(ResetPasswordService);
   isPasswordVisible: boolean = false;
   loginForm!: FormGroup;
   forgotEmail?: string;
   isValidEmail: boolean = false;
-
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private userStore: UserStoreService,
-    private modalService: NgbModal,
-    private resetService: ResetPasswordService
-  ) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
