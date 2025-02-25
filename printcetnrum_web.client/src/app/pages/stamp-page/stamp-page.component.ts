@@ -150,7 +150,7 @@ export class StampPageComponent implements AfterViewInit {
     event.stopPropagation();
     if (this.selectedIndex !== null) {
       this.textBoxes[this.selectedIndex].fontSize += 2;
-      this.adjustSize(this.selectedIndex);
+      //this.adjustSize(this.selectedIndex);
     }
   }
 
@@ -158,7 +158,7 @@ export class StampPageComponent implements AfterViewInit {
     event.stopPropagation();
     if (this.selectedIndex !== null && this.textBoxes[this.selectedIndex].fontSize > 2) {
       this.textBoxes[this.selectedIndex].fontSize -= 2;
-      this.adjustSize(this.selectedIndex);
+      //this.adjustSize(this.selectedIndex);
     }
   }
 
