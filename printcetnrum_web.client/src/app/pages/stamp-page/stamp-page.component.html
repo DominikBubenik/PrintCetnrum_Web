@@ -9,8 +9,8 @@
          [style.height.px]="box.height"
          [style.fontSize.px]="box.fontSize"
          (mousedown)="startDrag($event, i)"
+         (mousemove)="updateCursor($event, i)"
          (click)="selectTextBox($event, i)"
-         (keydown)="null"
          contenteditable="true">
       {{ box.text }}
       <span class="resize-handle" (mousedown)="startResize($event, i)"></span>

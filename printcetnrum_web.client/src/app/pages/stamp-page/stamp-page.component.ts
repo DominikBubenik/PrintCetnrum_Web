@@ -29,7 +29,7 @@ export class StampPageComponent implements AfterViewInit {
       x: 50,
       y: 50,
       fontSize: 20,
-      width: 100,
+      width: 150,
       height: 40
     });
   }
@@ -58,7 +58,7 @@ export class StampPageComponent implements AfterViewInit {
       const range = document.createRange();
       range.selectNodeContents(textBoxElement);
       const rect = range.getBoundingClientRect();
-      this.textBoxes[index].width = rect.width + 10; // Add some padding
+      this.textBoxes[index].width =  rect.width + 10; // Add some padding
       this.textBoxes[index].height = rect.height + 10; // Add some padding
     }
   }
@@ -160,5 +160,19 @@ export class StampPageComponent implements AfterViewInit {
       this.textBoxes[this.selectedIndex].fontSize -= 2;
       this.adjustSize(this.selectedIndex);
     }
+  }
+
+  updateCursor(event: MouseEvent, index: number) {
+    const element = event.target as HTMLElement;
+    const rect = element.getBoundingClientRect();
+    const edgeMargin = 10; // Distance from the edge to trigger move cursor
+
+    const isNearEdge =
+      event.clientX < rect.left + edgeMargin ||
+      event.clientX > rect.right - edgeMargin ||
+      event.clientY < rect.top + edgeMargin ||
+      event.clientY > rect.bottom - edgeMargin;
+
+    element.style.cursor = isNearEdge ? 'move' : 'default';
   }
 }
