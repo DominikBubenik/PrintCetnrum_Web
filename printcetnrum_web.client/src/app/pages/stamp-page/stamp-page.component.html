@@ -1,23 +1,24 @@
 <header></header>
 <body (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
-<div class="stamp-container" #stampContainer>
-  <div
-    *ngFor="let box of textBoxes; let i = index"
-    class="text-box"
-    [style.left.px]="box.x"
-    [style.top.px]="box.y"
-    [style.width.px]="box.width"
-    [style.height.px]="box.height"
-    [style.fontSize.px]="box.fontSize"
-    (mousedown)="startDrag($event, i)"
-    (click)="selectTextBox($event, i)"
-    (keydown)="null"
-    contenteditable="true"
-    (input)="adjustSize(i)"
-  >
-    {{ box.text }}
-    <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
+  <div class="stamp-container" #stampContainer>
+    <div *ngFor="let box of textBoxes; let i = index"
+         class="text-box"
+         [style.left.px]="box.x"
+         [style.top.px]="box.y"
+         [style.width.px]="box.width"
+         [style.height.px]="box.height"
+         [style.fontSize.px]="box.fontSize"
+         (mousedown)="startDrag($event, i)"
+         (click)="selectTextBox($event, i)"
+         (keydown)="null"
+         contenteditable="true">
+      {{ box.text }}
+      <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
+    </div>
   </div>
-</div>
-<button class="add-text-btn" (click)="addTextBox()">Add Text</button>
+  <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
+  <div class="font-size-controls">
+    <button class="font-size-btn" (click)="increaseFontSize($event)">Increase Font Size</button>
+    <button class="font-size-btn" (click)="decreaseFontSize($event)">Decrease Font Size</button>
+  </div>
 </body>

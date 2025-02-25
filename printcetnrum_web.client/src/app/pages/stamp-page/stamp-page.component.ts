@@ -3,7 +3,7 @@ import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from '@
 @Component({
   selector: 'app-stamp-page',
   templateUrl: './stamp-page.component.html',
-  styleUrl: './stamp-page.component.css'
+  styleUrls: ['./stamp-page.component.css']
 })
 export class StampPageComponent implements AfterViewInit {
   textBoxes: { text: string; x: number; y: number; fontSize: number; width: number; height: number }[] = [];
@@ -53,13 +53,14 @@ export class StampPageComponent implements AfterViewInit {
   }
 
   adjustSize(index: number) {
-    setTimeout(() => {  // Wait for DOM update
-      const textBoxElement = document.querySelectorAll('.text-box')[index] as HTMLElement;
-      if (textBoxElement) {
-        this.textBoxes[index].width = textBoxElement.scrollWidth;
-        this.textBoxes[index].height = textBoxElement.scrollHeight;
-      }
-    }, 0);
+    const textBoxElement = document.querySelectorAll('.text-box')[index] as HTMLElement;
+    if (textBoxElement) {
+      const range = document.createRange();
+      range.selectNodeContents(textBoxElement);
+      const rect = range.getBoundingClientRect();
+      this.textBoxes[index].width = rect.width + 10; // Add some padding
+      this.textBoxes[index].height = rect.height + 10; // Add some padding
+    }
   }
 
   startDrag(event: MouseEvent, index: number) {
@@ -133,6 +134,31 @@ export class StampPageComponent implements AfterViewInit {
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Delete') {
       this.deleteSelectedTextBox();
+    }
+  }
+
+  @HostListener('input', ['$event'])
+  onInput(event: Event) {
+    const target = event.target as HTMLElement;
+    const index = Array.from(document.querySelectorAll('.text-box')).indexOf(target);
+    if (index !== -1) {
+      this.adjustSize(index);
+    }
+  }
+
+  increaseFontSize(event: Event) {
+    event.stopPropagation();
+    if (this.selectedIndex !== null) {
+      this.textBoxes[this.selectedIndex].fontSize += 2;
+      this.adjustSize(this.selectedIndex);
+    }
+  }
+
+  decreaseFontSize(event: Event) {
+    event.stopPropagation();
+    if (this.selectedIndex !== null && this.textBoxes[this.selectedIndex].fontSize > 2) {
+      this.textBoxes[this.selectedIndex].fontSize -= 2;
+      this.adjustSize(this.selectedIndex);
     }
   }
 }
