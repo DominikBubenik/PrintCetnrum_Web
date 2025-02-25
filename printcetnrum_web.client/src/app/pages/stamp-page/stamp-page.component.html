@@ -19,6 +19,7 @@
   <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
   <div class="font-size-controls">
     <button class="font-size-btn bi bi-dash" (click)="decreaseFontSize($event)"></button>
+    <input type="number" class="font-size-input" [(ngModel)]="currentSize" (change)="setFontSize($event)" />
     <button class="font-size-btn bi bi-plus" (click)="increaseFontSize($event)"></button>
   </div>
 </body>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal } from '@angular/core';
 
 @Component({
   selector: 'app-stamp-page',
@@ -15,6 +15,7 @@ export class StampPageComponent implements AfterViewInit {
   startY = 0;
   containerWidth = 400;
   containerHeight = 200;
+  currentSize = signal<number>(20);
 
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
 
@@ -28,7 +29,7 @@ export class StampPageComponent implements AfterViewInit {
       text: 'New Text',
       x: 50,
       y: 50,
-      fontSize: 20,
+      fontSize: this.currentSize(),
       width: 150,
       height: 40
     });
@@ -44,6 +45,7 @@ export class StampPageComponent implements AfterViewInit {
   selectTextBox(event: MouseEvent, index: number) {
     event.stopPropagation();
     this.selectedIndex = index;
+    this.currentSize.set(this.textBoxes[index].fontSize);
   }
 
   deselectTextBox(event: MouseEvent) {
@@ -149,23 +151,23 @@ export class StampPageComponent implements AfterViewInit {
   increaseFontSize(event: Event) {
     event.stopPropagation();
     if (this.selectedIndex !== null) {
-      this.textBoxes[this.selectedIndex].fontSize += 2;
-      //this.adjustSize(this.selectedIndex);
+      this.currentSize.update(value => value += 2);
+      this.textBoxes[this.selectedIndex].fontSize = this.currentSize();
     }
   }
 
   decreaseFontSize(event: Event) {
     event.stopPropagation();
     if (this.selectedIndex !== null && this.textBoxes[this.selectedIndex].fontSize > 2) {
-      this.textBoxes[this.selectedIndex].fontSize -= 2;
-      //this.adjustSize(this.selectedIndex);
+      this.currentSize.update(value => value -= 2);
+      this.textBoxes[this.selectedIndex].fontSize = this.currentSize();
     }
   }
 
   updateCursor(event: MouseEvent, index: number) {
     const element = event.target as HTMLElement;
     const rect = element.getBoundingClientRect();
-    const edgeMargin = 10; // Distance from the edge to trigger move cursor
+    const edgeMargin = 10; 
 
     const isNearEdge =
       event.clientX < rect.left + edgeMargin ||
@@ -174,5 +176,16 @@ export class StampPageComponent implements AfterViewInit {
       event.clientY > rect.bottom - edgeMargin;
 
     element.style.cursor = isNearEdge ? 'move' : 'default';
+  }
+
+  setFontSize(event: Event) {
+    event.stopPropagation();
+    const inputValue = (event.target as HTMLInputElement).valueAsNumber;
+    if (inputValue > 2) {
+      this.currentSize.set(inputValue); // Update currentSize signal
+      if (this.selectedIndex !== null) {
+        this.textBoxes[this.selectedIndex].fontSize = this.currentSize(); // Update selected text box
+      }
+    }
   }
 }
