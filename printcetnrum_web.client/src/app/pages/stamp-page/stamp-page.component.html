@@ -23,9 +23,11 @@
          (mousemove)="updateCursor($event, i)"
          (click)="selectTextBox($event, i)"
          contenteditable="true">
-      <div *ngIf="!box.image" contenteditable="true">{{ box.text }}</div>
+      <div *ngIf="!box.image" contenteditable="true" (input)="onInput($event)">{{ box.text }}</div>
       <img *ngIf="box.image" [src]="box.image" [style.width.%]="100" [style.height.%]="100" />
       <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
     </div>
   </div>
+  <button (click)="saveStamp()">Save Stamp</button>
+  <input type="file" (change)="loadStamp($event)" accept=".json" />
 </body>

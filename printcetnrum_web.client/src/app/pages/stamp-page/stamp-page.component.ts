@@ -145,6 +145,12 @@ export class StampPageComponent implements AfterViewInit {
   onInput(event: Event) {
     const target = event.target as HTMLElement;
     const index = Array.from(document.querySelectorAll('.text-box')).indexOf(target);
+    console.log('savingggg ' + target.innerText);
+    //if (index !== -1) {
+    //  this.textBoxes[index].text = target.innerText;
+    //  this.updateCursor(event as MouseEvent, index);
+    //  console.log('savingggg ' + target.innerText);
+    //}
   }
 
   increaseFontSize(event: Event) {
@@ -215,6 +221,43 @@ export class StampPageComponent implements AfterViewInit {
       };
 
       reader.readAsDataURL(file);
+    }
+  }
+
+  saveStamp() {
+    const stampData = JSON.stringify(this.textBoxes);
+    const blob = new Blob([stampData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'stamp.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  loadStamp(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result as string);
+          if (Array.isArray(data)) {
+            this.textBoxes = data;
+          } else {
+            alert('Invalid file format');
+          }
+        } catch (error) {
+          alert('Error loading file');
+        }
+      };
+
+      reader.readAsText(file);
     }
   }
 
