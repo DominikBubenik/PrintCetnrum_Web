@@ -6,7 +6,7 @@ import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal }
   styleUrls: ['./stamp-page.component.css']
 })
 export class StampPageComponent implements AfterViewInit {
-  textBoxes: { text: string; x: number; y: number; fontSize: number; width: number; height: number, isBold: boolean }[] = [];
+  textBoxes: { text: string; image: string | null; x: number; y: number; fontSize: number; width: number; height: number, isBold: boolean }[] = [];
   isDragging = false;
   isResizing = false;
   activeIndex: number | null = null;
@@ -27,6 +27,7 @@ export class StampPageComponent implements AfterViewInit {
   addTextBox() {
     this.textBoxes.push({
       text: 'New Text',
+      image: null,
       x: 50,
       y: 50,
       fontSize: this.currentSize(),
@@ -193,4 +194,28 @@ export class StampPageComponent implements AfterViewInit {
       this.textBoxes[this.selectedIndex].isBold = !this.textBoxes[this.selectedIndex].isBold;
     }
   }
+
+  addImage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.textBoxes.push({
+          text: '',
+          image: reader.result as string, // Store Base64 string
+          x: 50,
+          y: 50,
+          fontSize: 20,
+          width: 100,
+          height: 100,
+          isBold: false
+        });
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
 }
