@@ -6,7 +6,7 @@ import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal }
   styleUrls: ['./stamp-page.component.css']
 })
 export class StampPageComponent implements AfterViewInit {
-  textBoxes: { text: string; x: number; y: number; fontSize: number; width: number; height: number }[] = [];
+  textBoxes: { text: string; x: number; y: number; fontSize: number; width: number; height: number, isBold: boolean }[] = [];
   isDragging = false;
   isResizing = false;
   activeIndex: number | null = null;
@@ -31,7 +31,8 @@ export class StampPageComponent implements AfterViewInit {
       y: 50,
       fontSize: this.currentSize(),
       width: 150,
-      height: 40
+      height: 40,
+      isBold: false
     });
   }
 
@@ -60,12 +61,13 @@ export class StampPageComponent implements AfterViewInit {
       const range = document.createRange();
       range.selectNodeContents(textBoxElement);
       const rect = range.getBoundingClientRect();
-      this.textBoxes[index].width =  rect.width + 10; // Add some padding
-      this.textBoxes[index].height = rect.height + 10; // Add some padding
+      this.textBoxes[index].width =  rect.width + 10; 
+      this.textBoxes[index].height = rect.height + 10; 
     }
   }
 
   startDrag(event: MouseEvent, index: number) {
+    if (!this.isNearEdge(event)) return;
     this.isDragging = true;
     this.activeIndex = index;
     this.selectedIndex = index;
@@ -114,7 +116,6 @@ export class StampPageComponent implements AfterViewInit {
     let newWidth = textBox.width + (event.clientX - this.startX);
     let newHeight = textBox.height + (event.clientY - this.startY);
 
-    // Prevent shrinking too much
     newWidth = Math.max(50, Math.min(this.containerWidth - textBox.x, newWidth));
     newHeight = Math.max(20, Math.min(this.containerHeight - textBox.y, newHeight));
 
@@ -143,9 +144,6 @@ export class StampPageComponent implements AfterViewInit {
   onInput(event: Event) {
     const target = event.target as HTMLElement;
     const index = Array.from(document.querySelectorAll('.text-box')).indexOf(target);
-    if (index !== -1) {
-      this.adjustSize(index);
-    }
   }
 
   increaseFontSize(event: Event) {
@@ -164,28 +162,35 @@ export class StampPageComponent implements AfterViewInit {
     }
   }
 
-  updateCursor(event: MouseEvent, index: number) {
+  isNearEdge(event: MouseEvent): boolean {
     const element = event.target as HTMLElement;
     const rect = element.getBoundingClientRect();
-    const edgeMargin = 10; 
+    const edgeMargin = 10;
 
-    const isNearEdge =
-      event.clientX < rect.left + edgeMargin ||
+    return event.clientX < rect.left + edgeMargin ||
       event.clientX > rect.right - edgeMargin ||
       event.clientY < rect.top + edgeMargin ||
       event.clientY > rect.bottom - edgeMargin;
+  }
 
-    element.style.cursor = isNearEdge ? 'move' : 'default';
+  updateCursor(event: MouseEvent, index: number) {
+    const element = event.target as HTMLElement;
+    element.style.cursor = this.isNearEdge(event) ? 'move' : 'default';
   }
 
   setFontSize(event: Event) {
     event.stopPropagation();
     const inputValue = (event.target as HTMLInputElement).valueAsNumber;
-    if (inputValue > 2) {
-      this.currentSize.set(inputValue); // Update currentSize signal
-      if (this.selectedIndex !== null) {
-        this.textBoxes[this.selectedIndex].fontSize = this.currentSize(); // Update selected text box
-      }
+    if (inputValue > 2 && this.selectedIndex !== null) {
+      this.currentSize.set(inputValue);
+      this.textBoxes[this.selectedIndex].fontSize = inputValue;
+    }
+  }
+
+  toggleBold(event: Event) {
+    event.stopPropagation();
+    if (this.selectedIndex !== null) {
+      this.textBoxes[this.selectedIndex].isBold = !this.textBoxes[this.selectedIndex].isBold;
     }
   }
 }
