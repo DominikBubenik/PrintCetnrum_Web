@@ -1,6 +1,6 @@
 <header></header>
 <body (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
-  <div class="controls-container">
+  <div class="controls-container" (click)="$event.stopPropagation()">
     <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
 
     <div class="font-size-controls">

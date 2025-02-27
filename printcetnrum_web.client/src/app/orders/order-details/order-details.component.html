@@ -49,7 +49,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of orderItems; let i = index">
-            <td>{{ item.userFile?.fileName || 'No File' }}</td>
+            <td>{{ item.userFile.fileName || 'No File' }}</td>
             <td>{{ item.description || 'No Description' }}</td>
             <td>{{ item.count }}</td>
             <td>{{ item.color }}</td>
