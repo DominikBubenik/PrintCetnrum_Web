@@ -1,4 +1,6 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal, inject } from '@angular/core';
+import { Stamp } from '../../models/stamp';
+import { StampService } from '../../services/stamp.service';
 
 @Component({
   selector: 'app-stamp-page',
@@ -6,7 +8,8 @@ import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal }
   styleUrls: ['./stamp-page.component.css']
 })
 export class StampPageComponent implements AfterViewInit {
-  textBoxes: { text: string; image: string | null; x: number; y: number; fontSize: number; width: number; height: number, isBold: boolean }[] = [];
+  private stampService = inject(StampService);
+  textBoxes: Stamp[] = [];
   isDragging = false;
   isResizing = false;
   activeIndex: number | null = null;
@@ -144,13 +147,6 @@ export class StampPageComponent implements AfterViewInit {
   @HostListener('input', ['$event'])
   onInput(event: Event) {
     const target = event.target as HTMLElement;
-    const index = Array.from(document.querySelectorAll('.text-box')).indexOf(target);
-    console.log('savingggg ' + target.innerText);
-    //if (index !== -1) {
-    //  this.textBoxes[index].text = target.innerText;
-    //  this.updateCursor(event as MouseEvent, index);
-    //  console.log('savingggg ' + target.innerText);
-    //}
   }
 
   increaseFontSize(event: Event) {
@@ -210,7 +206,7 @@ export class StampPageComponent implements AfterViewInit {
       reader.onload = () => {
         this.textBoxes.push({
           text: '',
-          image: reader.result as string, // Store Base64 string
+          image: reader.result as string, 
           x: 50,
           y: 50,
           fontSize: 20,
@@ -224,7 +220,7 @@ export class StampPageComponent implements AfterViewInit {
     }
   }
   
-  saveStamp() {
+  downloadStamp() {
     const listOfBoxes = Array.from(document.querySelectorAll('.text-box'));
     listOfBoxes.forEach((box, index) => {
       this.textBoxes[index].text = box.textContent as string
@@ -241,6 +237,27 @@ export class StampPageComponent implements AfterViewInit {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
+
+  saveStamp() {
+    Array.from(document.querySelectorAll('.text-box')).forEach((box, index) => {
+      this.textBoxes[index].text = box.textContent as string
+    });
+    const stampData = JSON.stringify(this.textBoxes);
+    const blob = new Blob([stampData], { type: 'application/json' });
+    const file = new File([blob], 'stamp.json', { type: 'application/json' });
+
+    const stampName = 'New Stamp';
+
+    this.stampService.uploadStamp(file, stampName).subscribe(
+      response => {
+        console.log('Stamp saved successfully', response);
+      },
+      error => {
+        console.error('Error saving stamp', error);
+      }
+    );
+  }
+
 
   loadStamp(event: Event) {
     const input = event.target as HTMLInputElement;
