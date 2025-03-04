@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal, inject } from '@angular/core';
 import { Stamp } from '../../models/stamp';
 import { StampService } from '../../services/stamp.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-stamp-page',
@@ -9,6 +10,7 @@ import { StampService } from '../../services/stamp.service';
 })
 export class StampPageComponent implements AfterViewInit {
   private stampService = inject(StampService);
+  private route = inject(ActivatedRoute);
   textBoxes: Stamp[] = [];
   isDragging = false;
   isResizing = false;
@@ -19,8 +21,18 @@ export class StampPageComponent implements AfterViewInit {
   containerWidth = 400;
   containerHeight = 200;
   currentSize = signal<number>(20);
+  stampId: number | null = null;
 
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
+
+  ngOnInit() {
+    this.stampId = Number(this.route.snapshot.paramMap.get('id'));
+    if (this.stampId) {
+      this.stampService.getStampsById(this.stampId).subscribe(data =>
+        this.parseJson(data)
+      );
+    }
+  }
 
   ngAfterViewInit() {
     this.containerWidth = this.stampContainer.nativeElement.clientWidth;
@@ -248,7 +260,7 @@ export class StampPageComponent implements AfterViewInit {
 
     const stampName = 'New Stamp';
 
-    this.stampService.uploadStamp(file, stampName).subscribe(
+    this.stampService.uploadStamp(file, stampName, this.stampId ?? -1).subscribe(
       response => {
         console.log('Stamp saved successfully', response);
       },
@@ -258,27 +270,28 @@ export class StampPageComponent implements AfterViewInit {
     );
   }
 
+  parseJson(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string);
+        if (Array.isArray(data)) {
+          this.textBoxes = data;
+        } else {
+          alert('Invalid file format');
+        }
+      } catch (error) {
+        alert('Error loading file');
+      }
+    };
+    reader.readAsText(file);
+  }
 
   loadStamp(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result as string);
-          if (Array.isArray(data)) {
-            this.textBoxes = data;
-          } else {
-            alert('Invalid file format');
-          }
-        } catch (error) {
-          alert('Error loading file');
-        }
-      };
-
-      reader.readAsText(file);
+      this.parseJson(file);
     }
   }
 

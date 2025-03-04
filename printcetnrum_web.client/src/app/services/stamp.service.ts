@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { UserStoreService } from './user-store.service';
+import { Stamp } from '../models/stamp';
+import { UserFile } from '../models/user-file';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +14,16 @@ export class StampService {
   private auth = inject(AuthService);
   private baseUrl = 'https://localhost:7074/api/Stamp'
 
-  uploadStamp(file: File, stampName: string): Observable<any> {
+  uploadStamp(file: File, stampName: string, stampId: number): Observable<any> {
     const formData = new FormData();
     formData.append('stampFile', file);
     formData.append('userName', this.auth.getfullNameFromToken());
     formData.append('stampName', stampName);
+    formData.append('stampId', stampId.toString());
     return this.http.post(`${this.baseUrl}/uploadStamp`, formData);
    }
 
-  getUserStamps(): Observable<any[]> {
+  getUserStamps(): Observable<UserFile[]> {
     const userName = this.auth.getfullNameFromToken();
     return this.http.get<any[]>(`${this.baseUrl}/getUserStamps?userName=${userName}`);
   }
@@ -33,8 +36,8 @@ export class StampService {
     return this.http.get(`${this.baseUrl}/downloadStamp/${id}`, { responseType: 'blob' });
   }
 
-  getStampsById(listOfId: number[]): Observable<any[]> {
-    return this.http.post<any[]>(`${this.baseUrl}/getStampsWithId`, listOfId);
+  getStampsById(stampId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/getStampWithId`, stampId, { responseType: 'blob' });
   }
 
   updateStamp(id: number, newFile?: File, newStampName?: string): Observable<any> {

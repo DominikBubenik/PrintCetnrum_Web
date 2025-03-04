@@ -4,7 +4,7 @@
     <button class="btn btn-primary" [routerLink]="['/upload']">Upload New File</button>
     <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
     <button class="btn btn-primary custom-color" [routerLink]="['/newOrder']">Create New Order</button>
-    <button class="btn btn-primary" [routerLink]="['/newStamp']">New Stamp</button>
+    <button class="btn btn-primary" [routerLink]="['/editStamp', null]">New Stamp</button>
   </div>
   <div class="sorting-options col-1">
     <select id="sortSelect" [(ngModel)]="criteria" (change)="sortFiles(criteria)" class="form-select">
@@ -21,6 +21,13 @@
   </app-file-card>
   <app-file-card title="Other Files"
                  [files]="unmarkedFiles"
+                 [baseUrl]="baseUrl"
+                 (markForPrint)="markForPrint($event)"
+                 (editFile)="editFile($event)"
+                 (openDeleteModal)="openDeleteModal($event, deleteModal)">
+  </app-file-card>
+  <app-file-card title="Stamps"
+                 [files]="stamps"
                  [baseUrl]="baseUrl"
                  (markForPrint)="markForPrint($event)"
                  (editFile)="editFile($event)"

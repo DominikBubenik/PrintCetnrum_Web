@@ -5,6 +5,8 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StampService } from '../../services/stamp.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-user-files',
@@ -13,10 +15,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class UserFilesComponent implements OnInit {
   private authService = inject(AuthService);
+  private stampService = inject(StampService);
   private fileHandlerService = inject(FileHandlerService);
   private modalService = inject(NgbModal);
   private router = inject(Router);
   files: UserFile[] = [];
+  stamps: UserFile[] = [];
   markedFiles: UserFile[] = [];
   unmarkedFiles: UserFile[] = [];
   baseUrl = environment.apiUrl;
@@ -33,6 +37,20 @@ export class UserFilesComponent implements OnInit {
     this.fileHandlerService.fetchFiles().subscribe(data => {
       this.files = data;
       this.updateFileLists();
+    });
+    this.stampService.getUserStamps().pipe(
+      map((stamps: any[]) => stamps.map(stamp => ({
+        id: stamp.id,
+        fileName: stamp.stampName,
+        fileUinique: stamp.uniqueName,
+        filePath: stamp.stampPath,
+        extension: '.json', 
+        uploadDate: new Date(stamp.dateCreated),
+        shouldPrint: false,
+        isStamp: true
+      })))
+    ).subscribe(mappedStamps => {
+      this.stamps = mappedStamps;
     });
   }
 
@@ -54,16 +72,24 @@ export class UserFilesComponent implements OnInit {
 
   confirmDelete(): void {
     if (this.fileIdToDelete) {
-      this.fileHandlerService.deleteFile(this.fileIdToDelete).subscribe(() => {
-        this.fetchFiles();
-        this.modalService.dismissAll();
-      });
+      if (this.stamps.filter(stamp => stamp.id === this.fileIdToDelete)) {
+        this.stampService.deleteStamp(this.fileIdToDelete).subscribe(() => {
+          this.fetchFiles();
+          this.modalService.dismissAll();
+        });
+      } else {
+        this.fileHandlerService.deleteFile(this.fileIdToDelete).subscribe(() => {
+          this.fetchFiles();
+          this.modalService.dismissAll();
+        });
+      }
     }
   }
 
   editFile(id: number) {
     this.router.navigate(['/edit', id]);
   }
+
 
   sortFiles(criteria: string): void {
     if (criteria === 'date') {

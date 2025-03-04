@@ -57,9 +57,9 @@ const routes: Routes = [
     title: 'New Order',
     pathMatch: 'full'
   },{
-    path: 'newStamp',
+    path: 'editStamp/:id',
     component: StampPageComponent,
-    title: 'New Stamp',
+    title: 'edit Stamp',
     pathMatch: 'full'
   },{
     path: 'allOrders',
