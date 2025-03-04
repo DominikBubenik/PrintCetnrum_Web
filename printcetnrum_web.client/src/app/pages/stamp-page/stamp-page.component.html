@@ -28,6 +28,6 @@
       <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
     </div>
   </div>
-  <button (click)="saveStamp()">Save Stamp</button>
-  <input type="file" (change)="loadStamp($event)" accept=".json" />
+  <button class="font-size-btn bi bi-download" (click)="saveStamp()">Save Stamp</button>
+  <input class="font-size-btn bi bi-upload" type="file" (change)="loadStamp($event)" accept=".json" />
 </body>

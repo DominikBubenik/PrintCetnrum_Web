@@ -223,8 +223,12 @@ export class StampPageComponent implements AfterViewInit {
       reader.readAsDataURL(file);
     }
   }
-
+  
   saveStamp() {
+    const listOfBoxes = Array.from(document.querySelectorAll('.text-box'));
+    listOfBoxes.forEach((box, index) => {
+      this.textBoxes[index].text = box.textContent as string
+    });
     const stampData = JSON.stringify(this.textBoxes);
     const blob = new Blob([stampData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
