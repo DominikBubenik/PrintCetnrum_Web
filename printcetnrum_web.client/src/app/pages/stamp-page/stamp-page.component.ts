@@ -78,7 +78,6 @@ export class StampPageComponent implements AfterViewInit {
   }
 
   saveToHistory() {
-
     if (this.history.length > 10) {
       this.history.shift();
     }
@@ -176,19 +175,10 @@ export class StampPageComponent implements AfterViewInit {
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    event.stopPropagation();
-    //if (event.key === ' ' && this.spaceCounter < 1) { 
-    //  this.spaceCounter++;
-    //  this.saveToHistory();
-    //}
-    if (event.key !== ' ') this.spaceCounter = 0;
-  }
-
   increaseFontSize(event: Event) {
     event.stopPropagation();
     if (this.selectedIndex !== null) {
+      this.saveToHistory();
       this.currentSize.update(value => value += 2);
       this.textBoxes[this.selectedIndex].fontSize = this.currentSize();
     }
@@ -197,6 +187,7 @@ export class StampPageComponent implements AfterViewInit {
   decreaseFontSize(event: Event) {
     event.stopPropagation();
     if (this.selectedIndex !== null && this.textBoxes[this.selectedIndex].fontSize > 2) {
+      this.saveToHistory();
       this.currentSize.update(value => value -= 2);
       this.textBoxes[this.selectedIndex].fontSize = this.currentSize();
     }
@@ -230,6 +221,7 @@ export class StampPageComponent implements AfterViewInit {
   toggleBold(event: Event) {
     event.stopPropagation();
     if (this.selectedIndex !== null) {
+      this.saveToHistory();
       this.textBoxes[this.selectedIndex].isBold = !this.textBoxes[this.selectedIndex].isBold;
     }
   }
@@ -243,6 +235,7 @@ export class StampPageComponent implements AfterViewInit {
   }
 
   addImage(event: Event) {
+    this.saveToHistory();
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
