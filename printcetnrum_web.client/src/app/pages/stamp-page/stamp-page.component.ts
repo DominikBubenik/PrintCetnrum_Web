@@ -93,8 +93,9 @@ export class StampPageComponent implements AfterViewInit {
       const range = document.createRange();
       range.selectNodeContents(textBoxElement);
       const rect = range.getBoundingClientRect();
-      this.textBoxes[index].width =  rect.width + 10; 
-      this.textBoxes[index].height = rect.height + 10; 
+      console.log(range);
+      //this.textBoxes[index].width =  rect.width + 10; 
+      //this.textBoxes[index].height = rect.height + 10; 
     }
   }
 
@@ -305,6 +306,7 @@ export class StampPageComponent implements AfterViewInit {
         const data = JSON.parse(reader.result as string);
         if (Array.isArray(data)) {
           this.textBoxes = data;
+          this.saveToHistory();
         } else {
           alert('Invalid file format');
         }

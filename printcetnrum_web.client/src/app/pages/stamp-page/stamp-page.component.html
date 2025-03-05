@@ -2,7 +2,7 @@
 <body (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
   <div class="controls-container" (click)="$event.stopPropagation()">
     <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
-    <button class="font-size-btn" (click)="undo()" >Undo</button>
+    <button class="font-size-btn bi bi-arrow-left" (click)="undo()" [disabled]="history.length <= 1"></button>
     <input type="file" (change)="addImage($event)" accept="image/*" />
     <div class="font-size-controls">
       <button class="font-size-btn bi bi-dash" (click)="decreaseFontSize($event)"></button>
