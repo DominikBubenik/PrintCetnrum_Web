@@ -59,18 +59,21 @@ namespace PrintCetnrum_Web.Server.Controllers
                 UserId = user.Id
             };
 
-            if (!string.IsNullOrEmpty(stampId))
+            if (!string.IsNullOrEmpty(stampId) && int.TryParse(stampId, out var parsedId))
             {
-                userStamp.Id = int.Parse(stampId);
-                var existingStamp = await _dbContext.UserStamps.FindAsync(userStamp.Id);
-                if (existingStamp != null)
+                if (parsedId > 0)
                 {
-                    var existingStampPath = Path.Combine(_stampsFolder, existingStamp.StampPath.TrimStart('/'));
-                    if (System.IO.File.Exists(existingStampPath))
+                    userStamp.Id = parsedId;
+                    var existingStamp = await _dbContext.UserStamps.FindAsync(userStamp.Id);
+                    if (existingStamp != null)
                     {
-                        System.IO.File.Delete(existingStampPath);
-                    }
-                    _dbContext.UserStamps.Remove(existingStamp);
+                        var existingStampPath = Path.Combine(_stampsFolder, existingStamp.StampPath.TrimStart('/'));
+                        if (System.IO.File.Exists(existingStampPath))
+                        {
+                            System.IO.File.Delete(existingStampPath);
+                        }
+                        _dbContext.UserStamps.Remove(existingStamp);
+                    }   
                 }
             }
 

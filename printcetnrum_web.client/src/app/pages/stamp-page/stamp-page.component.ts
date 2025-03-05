@@ -23,18 +23,19 @@ export class StampPageComponent implements AfterViewInit {
   containerWidth = 400;
   containerHeight = 200;
   currentSize = signal<number>(20);
-  stampId: number | null = null;
+  stampId = 0;
   spaceCounter = 0;
 
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
 
   ngOnInit() {
     this.stampId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.stampId) {
+    if (this.stampId !== -1) {
       this.stampService.getStampsById(this.stampId).subscribe(data =>
         this.parseJson(data)
       );
     }
+    console.log('this is it ' + this.stampId);
     this.history.push([...this.textBoxes]);
   }
 
@@ -286,8 +287,8 @@ export class StampPageComponent implements AfterViewInit {
     const file = new File([blob], 'stamp.json', { type: 'application/json' });
 
     const stampName = 'New Stamp';
-
-    this.stampService.uploadStamp(file, stampName, this.stampId ?? -1).subscribe(
+      
+    this.stampService.uploadStamp(file, stampName, this.stampId).subscribe(
       response => {
         console.log('Stamp saved successfully', response);
       },

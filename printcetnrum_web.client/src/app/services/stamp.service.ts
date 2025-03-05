@@ -2,8 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { UserStoreService } from './user-store.service';
-import { Stamp } from '../models/stamp';
 import { UserFile } from '../models/user-file';
 
 @Injectable({
