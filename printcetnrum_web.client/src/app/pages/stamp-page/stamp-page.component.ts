@@ -16,12 +16,15 @@ export class StampPageComponent implements AfterViewInit {
   isResizing = false;
   activeIndex: number | null = null;
   selectedIndex: number | null = null;
+  history: Stamp[][] = [];
   startX = 0;
   startY = 0;
+  isMoved = false;
   containerWidth = 400;
   containerHeight = 200;
   currentSize = signal<number>(20);
   stampId: number | null = null;
+  spaceCounter = 0;
 
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
 
@@ -32,6 +35,7 @@ export class StampPageComponent implements AfterViewInit {
         this.parseJson(data)
       );
     }
+    this.history.push([...this.textBoxes]);
   }
 
   ngAfterViewInit() {
@@ -40,6 +44,7 @@ export class StampPageComponent implements AfterViewInit {
   }
 
   addTextBox() {
+    this.saveToHistory();
     this.textBoxes.push({
       text: 'New Text',
       image: null,
@@ -54,6 +59,7 @@ export class StampPageComponent implements AfterViewInit {
 
   deleteSelectedTextBox() {
     if (this.selectedIndex !== null) {
+      this.saveToHistory();
       this.textBoxes.splice(this.selectedIndex, 1);
       this.selectedIndex = null;
     }
@@ -69,6 +75,16 @@ export class StampPageComponent implements AfterViewInit {
     if (!(event.target as HTMLElement).classList.contains('text-box')) {
       this.selectedIndex = null;
     }
+  }
+
+  saveToHistory() {
+
+    if (this.history.length > 10) {
+      this.history.shift();
+    }
+    this.saveText();
+    this.history.push(JSON.parse(JSON.stringify(this.textBoxes)));
+    console.log(this.history);
   }
 
   adjustSize(index: number) {
@@ -102,7 +118,7 @@ export class StampPageComponent implements AfterViewInit {
 
     newX = Math.max(0, Math.min(this.containerWidth - textBox.width, newX));
     newY = Math.max(0, Math.min(this.containerHeight - textBox.height, newY));
-
+    if (newX !== textBox.x || newY !== textBox.y) this.isMoved = true;
     textBox.x = newX;
     textBox.y = newY;
   };
@@ -112,6 +128,10 @@ export class StampPageComponent implements AfterViewInit {
     this.activeIndex = null;
     document.removeEventListener('mousemove', this.onDrag);
     document.removeEventListener('mouseup', this.stopDrag);
+    if (this.isMoved) {
+      this.saveToHistory();
+      this.isMoved = false;
+    }
   };
 
   startResize(event: MouseEvent, index: number) {
@@ -156,9 +176,14 @@ export class StampPageComponent implements AfterViewInit {
     }
   }
 
-  @HostListener('input', ['$event'])
-  onInput(event: Event) {
-    const target = event.target as HTMLElement;
+  @HostListener('keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    event.stopPropagation();
+    //if (event.key === ' ' && this.spaceCounter < 1) { 
+    //  this.spaceCounter++;
+    //  this.saveToHistory();
+    //}
+    if (event.key !== ' ') this.spaceCounter = 0;
   }
 
   increaseFontSize(event: Event) {
@@ -209,6 +234,14 @@ export class StampPageComponent implements AfterViewInit {
     }
   }
 
+  undo() {
+    var state = this.history.pop();
+    if (state) {
+      this.textBoxes = state;
+    }
+    console.log(this.textBoxes);
+  }
+
   addImage(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -231,12 +264,15 @@ export class StampPageComponent implements AfterViewInit {
       reader.readAsDataURL(file);
     }
   }
-  
-  downloadStamp() {
-    const listOfBoxes = Array.from(document.querySelectorAll('.text-box'));
-    listOfBoxes.forEach((box, index) => {
+
+  saveText() {
+    Array.from(document.querySelectorAll('.text-box')).forEach((box, index) => {
       this.textBoxes[index].text = box.textContent as string
     });
+  }
+  
+  downloadStamp() {
+    this.saveText();
     const stampData = JSON.stringify(this.textBoxes);
     const blob = new Blob([stampData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -251,9 +287,7 @@ export class StampPageComponent implements AfterViewInit {
   }
 
   saveStamp() {
-    Array.from(document.querySelectorAll('.text-box')).forEach((box, index) => {
-      this.textBoxes[index].text = box.textContent as string
-    });
+    this.saveText();
     const stampData = JSON.stringify(this.textBoxes);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'stamp.json', { type: 'application/json' });

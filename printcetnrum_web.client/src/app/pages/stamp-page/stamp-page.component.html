@@ -2,6 +2,7 @@
 <body (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
   <div class="controls-container" (click)="$event.stopPropagation()">
     <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
+    <button class="font-size-btn" (click)="undo()" >Undo</button>
     <input type="file" (change)="addImage($event)" accept="image/*" />
     <div class="font-size-controls">
       <button class="font-size-btn bi bi-dash" (click)="decreaseFontSize($event)"></button>
@@ -28,7 +29,7 @@
            (mousemove)="updateCursor($event, i)"
            (click)="selectTextBox($event, i)"
            contenteditable="true">
-        <div *ngIf="!box.image" contenteditable="true" (input)="onInput($event)">{{ box.text }}</div>
+        <div *ngIf="!box.image" contenteditable="true">{{ box.text }}</div>
         <img *ngIf="box.image" [src]="box.image" [style.width.%]="100" [style.height.%]="100" />
         <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
       </div>
