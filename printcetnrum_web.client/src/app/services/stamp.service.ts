@@ -12,11 +12,12 @@ export class StampService {
   private auth = inject(AuthService);
   private baseUrl = 'https://localhost:7074/api/Stamp'
 
-  uploadStamp(file: File, stampName: string, stampId: number): Observable<any> {
+  uploadStamp(file: File, stampName: string, stampType: string, stampId: number): Observable<any> {
     const formData = new FormData();
     formData.append('stampFile', file);
     formData.append('userName', this.auth.getfullNameFromToken());
     formData.append('stampName', stampName);
+    formData.append('type', stampType);
     formData.append('stampId', stampId.toString());
     return this.http.post(`${this.baseUrl}/uploadStamp`, formData);
    }
@@ -36,17 +37,6 @@ export class StampService {
 
   getStampsById(stampId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/getStampWithId`, stampId, { responseType: 'blob' });
-  }
-
-  updateStamp(id: number, newFile?: File, newStampName?: string): Observable<any> {
-    const formData = new FormData();
-    if (newFile) {
-      formData.append('newStampFile', newFile);
-    }
-    if (newStampName) {
-      formData.append('newStampName', newStampName);
-    }
-
-    return this.http.put(`${this.baseUrl}/updateStamp/${id}`, formData);
+    //return this.http.post(`${this.baseUrl}/getStampWithId`, stampId);
   }
 }

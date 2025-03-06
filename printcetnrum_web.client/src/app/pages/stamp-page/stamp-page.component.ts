@@ -25,17 +25,21 @@ export class StampPageComponent implements AfterViewInit {
   currentSize = signal<number>(20);
   stampId = 0;
   spaceCounter = 0;
+  stampName = 'New Stamp';
+  stampType = 'default';
+  stampDescription = '';
 
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
 
   ngOnInit() {
     this.stampId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.stampId !== -1) {
-      this.stampService.getStampsById(this.stampId).subscribe(data =>
-        this.parseJson(data)
+      this.stampService.getStampsById(this.stampId).subscribe(data => {
+        //this.stampName = data.StampName;
+        this.parseJson(data);
+        }
       );
     }
-    console.log('this is it ' + this.stampId);
     this.history.push([...this.textBoxes]);
   }
 
@@ -94,6 +98,7 @@ export class StampPageComponent implements AfterViewInit {
       range.selectNodeContents(textBoxElement);
       const rect = range.getBoundingClientRect();
       console.log(range);
+      this.textBoxes[index].height = rect.height + 10;
       //this.textBoxes[index].width =  rect.width + 10; 
       //this.textBoxes[index].height = rect.height + 10; 
     }
@@ -168,6 +173,7 @@ export class StampPageComponent implements AfterViewInit {
     this.activeIndex = null;
     document.removeEventListener('mousemove', this.onResize);
     document.removeEventListener('mouseup', this.stopResize);
+    this.saveToHistory();
   };
 
   @HostListener('document:keydown', ['$event'])
@@ -286,10 +292,8 @@ export class StampPageComponent implements AfterViewInit {
     const stampData = JSON.stringify(this.textBoxes);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'stamp.json', { type: 'application/json' });
-
-    const stampName = 'New Stamp';
-      
-    this.stampService.uploadStamp(file, stampName, this.stampId).subscribe(
+    const finalType = this.stampType === 'other' ? this.stampDescription : this.stampType;
+    this.stampService.uploadStamp(file, this.stampName, finalType, this.stampId).subscribe(
       response => {
         console.log('Stamp saved successfully', response);
       },

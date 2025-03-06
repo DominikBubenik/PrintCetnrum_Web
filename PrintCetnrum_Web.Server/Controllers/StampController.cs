@@ -24,7 +24,7 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         [Authorize]
         [HttpPost("uploadStamp")]
-        public async Task<IActionResult> UploadStamp([FromForm] IFormFile stampFile, [FromForm] string userName, [FromForm] string stampName, [FromForm] string stampId)
+        public async Task<IActionResult> UploadStamp([FromForm] IFormFile stampFile, [FromForm] string userName, [FromForm] string stampName, [FromForm] string type,[FromForm] string stampId)
         {
             if (stampFile == null || stampFile.Length == 0)
             {
@@ -56,6 +56,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 StampName = stampName,
                 UniqueName = uniqueName,
                 StampPath = $"{user.UserName}/Stamps/{uniqueName}",
+                StampType = type,
                 UserId = user.Id
             };
 
@@ -72,15 +73,22 @@ namespace PrintCetnrum_Web.Server.Controllers
                         {
                             System.IO.File.Delete(existingStampPath);
                         }
-                        _dbContext.UserStamps.Remove(existingStamp);
+                        existingStamp.StampName = userStamp.StampName;
+                        existingStamp.StampPath = userStamp.StampPath;
+                        existingStamp.StampType = userStamp.StampType;
+                        existingStamp.UserId = user.Id;
+                        existingStamp.UniqueName = userStamp.UniqueName;
+                        _dbContext.UserStamps.Update(existingStamp);
                     }   
                 }
+                else
+                {
+                    _dbContext.UserStamps.Add(userStamp);
+                }
             }
-
-            _dbContext.UserStamps.Add(userStamp);
             await _dbContext.SaveChangesAsync();
 
-            return Ok(new { userStamp.Id, userStamp.StampName, userStamp.StampPath });
+            return Ok(new { userStamp.Id, userStamp.StampName, userStamp.StampPath, userStamp.StampType });
         }
 
         [Authorize]
@@ -164,7 +172,15 @@ namespace PrintCetnrum_Web.Server.Controllers
             var fileName = Path.GetFileName(fullPath);
             var fileBytes = await System.IO.File.ReadAllBytesAsync(fullPath);
 
+            var response = new
+            {
+                stamp.StampName,
+                stamp.StampType,
+                StampFile = File(fileBytes, "application/json", fileName)
+            };
+
             return File(fileBytes, "application/json", fileName);
+            return Ok(response);
         }
     }
 }

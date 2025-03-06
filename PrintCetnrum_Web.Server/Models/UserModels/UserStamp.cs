@@ -16,6 +16,8 @@ namespace PrintCetnrum_Web.Server.Models.UserModels
         [Required]
         public string StampPath { get; set; }
         [Required]
+        public string StampType { get; set; }
+        [Required]
         public DateTime DateCreated { get; set; }
 
         [ForeignKey("User")]
