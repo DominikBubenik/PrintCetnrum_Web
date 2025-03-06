@@ -35,7 +35,6 @@ export class StampPageComponent implements AfterViewInit {
     this.stampId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.stampId !== -1) {
       this.stampService.getStampsById(this.stampId).subscribe(data => {
-        //this.stampName = data.StampName;
         this.parseJson(data);
         }
       );
@@ -289,10 +288,12 @@ export class StampPageComponent implements AfterViewInit {
 
   saveStamp() {
     this.saveText();
-    const stampData = JSON.stringify(this.textBoxes);
+    const finalType = this.stampType === 'other' ? this.stampDescription : this.stampType;
+    const data = { stampName: this.stampName, stampType: finalType, textBoxes: this.textBoxes };
+    const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'stamp.json', { type: 'application/json' });
-    const finalType = this.stampType === 'other' ? this.stampDescription : this.stampType;
+    console.log(finalType);
     this.stampService.uploadStamp(file, this.stampName, finalType, this.stampId).subscribe(
       response => {
         console.log('Stamp saved successfully', response);
@@ -308,8 +309,11 @@ export class StampPageComponent implements AfterViewInit {
     reader.onload = () => {
       try {
         const data = JSON.parse(reader.result as string);
-        if (Array.isArray(data)) {
-          this.textBoxes = data;
+        if (data && data.textBoxes && Array.isArray(data.textBoxes)) {
+          this.stampName = data.stampName || 'Unknown Name'; 
+          this.stampDescription = data.stampType.toLowerCase().startsWith('modico') ? '' : data.stampType;
+          this.stampType = this.stampDescription === '' ? data.stampType :  'other'; 
+          this.textBoxes = data.textBoxes;
           this.saveToHistory();
         } else {
           alert('Invalid file format');
@@ -328,5 +332,4 @@ export class StampPageComponent implements AfterViewInit {
       this.parseJson(file);
     }
   }
-
 }
