@@ -2,6 +2,8 @@ import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal, 
 import { Stamp } from '../../models/stamp';
 import { StampService } from '../../services/stamp.service';
 import { ActivatedRoute } from '@angular/router';
+import { SnackBarUtil } from '../../shared/snackbar-util';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-stamp-page',
@@ -11,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class StampPageComponent implements AfterViewInit {
   private stampService = inject(StampService);
   private route = inject(ActivatedRoute);
+  private snackBar = inject(MatSnackBar);
   textBoxes: Stamp[] = [];
   isDragging = false;
   isResizing = false;
@@ -96,10 +99,7 @@ export class StampPageComponent implements AfterViewInit {
       const range = document.createRange();
       range.selectNodeContents(textBoxElement);
       const rect = range.getBoundingClientRect();
-      console.log(range);
       this.textBoxes[index].height = rect.height + 10;
-      //this.textBoxes[index].width =  rect.width + 10; 
-      //this.textBoxes[index].height = rect.height + 10; 
     }
   }
 
@@ -260,7 +260,6 @@ export class StampPageComponent implements AfterViewInit {
           isBold: false
         });
       };
-
       reader.readAsDataURL(file);
     }
   }
@@ -281,7 +280,7 @@ export class StampPageComponent implements AfterViewInit {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'stamp.json';
+    a.download = this.stampName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -295,13 +294,12 @@ export class StampPageComponent implements AfterViewInit {
     const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'stamp.json', { type: 'application/json' });
-    console.log(finalType);
     this.stampService.uploadStamp(file, this.stampName, finalType, this.stampId).subscribe(
       response => {
-        console.log('Stamp saved successfully', response);
+        SnackBarUtil.showSnackBar(this.snackBar, 'Stamp saved successfully!', 'success');
       },
       error => {
-        console.error('Error saving stamp', error);
+        SnackBarUtil.showSnackBar(this.snackBar, error, 'error');
       }
     );
   }

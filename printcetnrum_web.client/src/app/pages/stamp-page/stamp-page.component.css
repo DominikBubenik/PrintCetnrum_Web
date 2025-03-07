@@ -34,15 +34,15 @@
     background: rgba(255, 255, 255, 0.8);
   }
 
-.text-box:focus .resize-handle {
-  width: 10px;
-  height: 10px;
-  background: gray;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  cursor: se-resize;
-}
+    .text-box:focus .resize-handle {
+      width: 10px;
+      height: 10px;
+      background: gray;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      cursor: se-resize;
+    }
 
   .text-box.selected {
     border: 1px solid blue;
@@ -58,9 +58,10 @@
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
 }
 
-.add-text-btn {
+.add-text-btn, .font-size-btn {
   padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
@@ -71,29 +72,14 @@
   transition: 0.3s;
 }
 
-.add-text-btn:hover {
-  background-color: #0056b3;
-}
+  .add-text-btn:hover, .font-size-btn:hover {
+    background-color: #0056b3;
+  }
 
 .font-size-controls {
   display: flex;
   align-items: center;
   gap: 5px;
-}
-
-.font-size-btn {
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  background-color: #28a745;
-  color: white;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.font-size-btn:hover {
-  background-color: #218838;
 }
 
 .font-size-input {
@@ -112,7 +98,6 @@
   object-fit: contain;
   display: block;
 }
-
 
 .upload-input {
   display: none;

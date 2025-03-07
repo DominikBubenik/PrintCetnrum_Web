@@ -22,4 +22,8 @@ export class FileCardComponentComponent {
   markFile(file: UserFile) {
     this.markForPrint.emit({ id: file.id, shouldPrint: !file.shouldPrint });
   }
+
+  isUnknownType(extension: string): boolean {
+    return !['.pdf', '.doc', '.docx'].includes(extension.toLowerCase()) || !this.isImage(extension);
+  }
 }

@@ -3,12 +3,15 @@
   <div class="file-grid">
     <div class="file-card" *ngFor="let file of files">
       <div class="file-image-wrapper">
-        <img *ngIf="isImage(file.extension)" [src]="baseUrl + file.filePath" alt="{{ file.fileName }}" class="file-image" />
-        <img *ngIf="file.extension === '.pdf'" src="assets/icon-pictures/pdf-icon.png" alt="PDF File" class="file-image" />
-        <img *ngIf="file.extension === '.doc' || file.extension === '.docx'" src="assets/icon-pictures/docx-icon.png" alt="Word File" class="file-image" />
-        <div *ngIf="!isImage(file.extension)" class="file-placeholder">
-          <i class="fas fa-file-alt"></i>
-        </div>
+        @if (isImage(file.extension)) {
+          <img [src]="baseUrl + file.filePath" alt="{{ file.fileName }}" class="file-image" />
+        } @else if (file.extension === '.pdf') {
+          <img src="assets/icon-pictures/pdf-icon.png" alt="PDF File" class="file-image" />
+        } @else if (file.extension === '.doc' || file.extension === '.docx') {
+          <img src="assets/icon-pictures/docx-icon.png" alt="Word File" class="file-image" />
+        } @else {
+          <img src="assets/icon-pictures/file-icon.png" alt="Other File" class="file-image" />
+        }
       </div>
       <div class="file-details">
         <h4 class="file-title">{{ file.fileName }}</h4>

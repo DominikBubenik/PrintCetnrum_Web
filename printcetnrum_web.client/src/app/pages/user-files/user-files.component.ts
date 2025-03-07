@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserFile } from '../../models/user-file';
 import { FileHandlerService } from '../../services/file-handler.service';
 import { environment } from '../../../environments/environment';
