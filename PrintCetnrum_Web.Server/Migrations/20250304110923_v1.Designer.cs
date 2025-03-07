@@ -12,8 +12,8 @@ using PrintCetnrum_Web.Server.Context;
 namespace PrintCetnrum_Web.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250111221403_ChangeUserFileId")]
-    partial class ChangeUserFileId
+    [Migration("20250304110923_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -219,6 +219,39 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.ToTable("user_files", (string)null);
                 });
 
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserStamp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StampName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StampPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("user_stamps", (string)null);
+                });
+
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.OrderModels.Order", b =>
                 {
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
@@ -242,6 +275,17 @@ namespace PrintCetnrum_Web.Server.Migrations
                 });
 
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserFile", b =>
+                {
+                    b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserStamp", b =>
                 {
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
                         .WithMany()

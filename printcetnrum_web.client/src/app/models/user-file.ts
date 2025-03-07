@@ -7,4 +7,5 @@ export interface UserFile {
   extension: string;
   uploadDate: Date;
   shouldPrint: boolean;
+  isStamp: boolean;
 }

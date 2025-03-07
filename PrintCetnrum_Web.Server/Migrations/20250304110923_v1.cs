@@ -55,6 +55,7 @@ namespace PrintCetnrum_Web.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPreparedForCustomer = table.Column<bool>(type: "bit", nullable: false),
                     IsTakenByCustomer = table.Column<bool>(type: "bit", nullable: false),
@@ -101,6 +102,29 @@ namespace PrintCetnrum_Web.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "user_stamps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StampName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UniqueName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StampPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user_stamps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_user_stamps_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "order_items",
                 columns: table => new
                 {
@@ -124,23 +148,12 @@ namespace PrintCetnrum_Web.Server.Migrations
                         principalTable: "orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_order_items_user_files_UserFileId",
-                        column: x => x.UserFileId,
-                        principalTable: "user_files",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_order_items_OrderId",
                 table: "order_items",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_order_items_UserFileId",
-                table: "order_items",
-                column: "UserFileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orders_UserId",
@@ -157,6 +170,11 @@ namespace PrintCetnrum_Web.Server.Migrations
                 name: "IX_user_files_UserId",
                 table: "user_files",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_user_stamps_UserId",
+                table: "user_stamps",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -169,10 +187,13 @@ namespace PrintCetnrum_Web.Server.Migrations
                 name: "prize_lists");
 
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "user_files");
 
             migrationBuilder.DropTable(
-                name: "user_files");
+                name: "user_stamps");
+
+            migrationBuilder.DropTable(
+                name: "orders");
 
             migrationBuilder.DropTable(
                 name: "users");
