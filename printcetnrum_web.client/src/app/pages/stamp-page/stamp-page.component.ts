@@ -273,7 +273,9 @@ export class StampPageComponent implements AfterViewInit {
   
   downloadStamp() {
     this.saveText();
-    const stampData = JSON.stringify(this.textBoxes);
+    const finalType = this.stampType === 'other' ? this.stampDescription : this.stampType;
+    const data = { stampName: this.stampName, stampType: finalType, textBoxes: this.textBoxes };
+    const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
