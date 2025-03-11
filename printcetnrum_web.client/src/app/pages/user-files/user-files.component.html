@@ -5,6 +5,7 @@
     <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
     <button class="btn btn-primary custom-color" [routerLink]="['/newOrder']">Create New Order</button>
     <button class="btn btn-primary" [routerLink]="['/editStamp', -1]">New Stamp</button>
+    <button class="btn btn-primary" [routerLink]="['/editDiploma', -1]">New Diploma</button>
   </div>
   <div class="sorting-options col-1">
     <select id="sortSelect" [(ngModel)]="criteria" (change)="sortFiles(criteria)" class="form-select">

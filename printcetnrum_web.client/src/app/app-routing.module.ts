@@ -13,6 +13,7 @@ import { NewOrderComponent } from './orders/new-order/new-order.component';
 import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 import {StampPageComponent} from "./pages/stamp-page/stamp-page.component";
+import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
 
 
 
@@ -77,6 +78,13 @@ const routes: Routes = [
     path: 'users',
     component: UsersListPageComponent,
     title: 'Users list',
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'editDiploma/:id',
+    component: DiplomaPageComponent,
+    title: 'Diploma',
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },
