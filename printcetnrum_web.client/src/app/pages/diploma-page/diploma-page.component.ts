@@ -227,7 +227,7 @@ export class DiplomaPageComponent {
 
   downloadDiploma() {
     this.saveText();
-    const data = { stampName: this.diplomaName, textColor: this.textColor, boardColor: this.boardColor, textBoxes: this.textBoxes };
+    const data = { diplomaName: this.diplomaName, textColor: this.textColor, boardColor: this.boardColor, textBoxes: this.textBoxes };
     const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -243,7 +243,8 @@ export class DiplomaPageComponent {
 
   saveDiploma() {
     this.saveText();
-    const data = { stampName: this.diplomaName, textColor: this.textColor, boardColor: this.boardColor, textBoxes: this.textBoxes };
+    const data = { diplomaName: this.diplomaName, textColor: this.textColor, boardColor: this.boardColor, textBoxes: this.textBoxes };
+    console.log(data);
     const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'diploma.json', { type: 'application/json' });

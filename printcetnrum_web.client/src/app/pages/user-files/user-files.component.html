@@ -34,6 +34,13 @@
                  (editFile)="editFile($event)"
                  (openDeleteModal)="openDeleteModal($event, deleteModal)">
   </app-file-card>
+  <app-file-card title="Diplomas"
+                 [files]="diplomas"
+                 [baseUrl]="baseUrl"
+                 (markForPrint)="markForPrint($event)"
+                 (editFile)="editFile($event)"
+                 (openDeleteModal)="openDeleteModal($event, deleteModal)">
+  </app-file-card>
   <ng-template #deleteModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Confirm Deletion</h5>

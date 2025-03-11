@@ -150,5 +150,28 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             return File(fileBytes, "application/json", fileName);
         }
+
+        [HttpPost("getDiplomaWithId")]
+        public async Task<IActionResult> GetStampWithId([FromBody] int id)
+        {
+            var diploma = await _dbContext.UserDiplomas.FirstOrDefaultAsync(us => us.Id == id);
+
+            if (diploma == null)
+            {
+                return NotFound("No stamps found for the provided IDs.");
+            }
+
+            var relativePath = diploma.DiplomaPath.TrimStart('/');
+            var fullPath = Path.Combine(_diplomasFolder, relativePath);
+            if (!System.IO.File.Exists(fullPath))
+            {
+                return NotFound("File does not exist on the server.");
+            }
+
+            var fileName = Path.GetFileName(fullPath);
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(fullPath);
+
+            return File(fileBytes, "application/json", fileName);
+        }
     }
 }

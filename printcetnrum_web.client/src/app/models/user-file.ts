@@ -8,4 +8,5 @@ export interface UserFile {
   uploadDate: Date;
   shouldPrint: boolean;
   isStamp: boolean;
+  isDiploma: boolean;
 }

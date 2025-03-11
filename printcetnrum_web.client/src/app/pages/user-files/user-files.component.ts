@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StampService } from '../../services/stamp.service';
 import { map } from 'rxjs';
+import { DiplomaService } from '../../services/diploma.service';
 
 @Component({
   selector: 'app-user-files',
@@ -16,11 +17,13 @@ import { map } from 'rxjs';
 export class UserFilesComponent implements OnInit {
   private authService = inject(AuthService);
   private stampService = inject(StampService);
+  private diplomaService = inject(DiplomaService);
   private fileHandlerService = inject(FileHandlerService);
   private modalService = inject(NgbModal);
   private router = inject(Router);
   files: UserFile[] = [];
   stamps: UserFile[] = [];
+  diplomas: UserFile[] = [];
   markedFiles: UserFile[] = [];
   unmarkedFiles: UserFile[] = [];
   baseUrl = environment.apiUrl;
@@ -47,11 +50,24 @@ export class UserFilesComponent implements OnInit {
         extension: '.json', 
         uploadDate: new Date(stamp.dateCreated),
         shouldPrint: false,
-        isStamp: true
+        isStamp: true,
+        isDiploma: false
       })))
     ).subscribe(mappedStamps => {
       this.stamps = mappedStamps;
     });
+    this.diplomaService.getUserDiplomas().pipe(
+      map((diplomas: any[]) => diplomas.map(diploma => ({
+        id: diploma.id,
+        fileName: diploma.diplomaName,
+        fileUinique: diploma.uniqueName,
+        filePath: diploma.diplomaPath,
+        extension: '.json',
+        uploadDate: new Date(diploma.dateCreated),
+        shouldPrint: false,
+        isStamp: false,
+        isDiploma: true
+      })))).subscribe((mappedDiplomas: UserFile[]) => { this.diplomas = mappedDiplomas });
   }
 
   updateFileLists(): void {
@@ -74,6 +90,11 @@ export class UserFilesComponent implements OnInit {
     if (this.fileIdToDelete) {
       if (this.stamps.filter(stamp => stamp.id === this.fileIdToDelete)) {
         this.stampService.deleteStamp(this.fileIdToDelete).subscribe(() => {
+          this.fetchFiles();
+          this.modalService.dismissAll();
+        });
+      } else if (this.diplomas.filter(diploma => diploma.id === this.fileIdToDelete)) {
+        this.diplomaService.deleteDiploma(this.fileIdToDelete).subscribe(() => {
           this.fetchFiles();
           this.modalService.dismissAll();
         });

@@ -21,7 +21,7 @@ export class DiplomaService {
     return this.http.post(`${this.baseUrl}/uploadDiploma`, formData);
   }
 
-  getUsesDiplomas(): Observable<UserFile[]> {
+  getUserDiplomas(): Observable<UserFile[]> {
     const userName = this.auth.getfullNameFromToken();
     return this.http.get<any[]>(`${this.baseUrl}/getUserDiplomas?userName=${userName}`);
   }
@@ -35,6 +35,6 @@ export class DiplomaService {
   }
 
   getDiplomasById(stampId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/getDiplomasWithId`, stampId, { responseType: 'blob' });
+    return this.http.post(`${this.baseUrl}/getDiplomaWithId`, stampId, { responseType: 'blob' });
   }
 }
