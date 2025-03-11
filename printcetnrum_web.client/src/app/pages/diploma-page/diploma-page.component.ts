@@ -1,10 +1,9 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal, inject } from '@angular/core';
-import { Stamp } from '../../models/stamp';
-import { StampService } from '../../services/stamp.service';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DiplomaTextBox } from '../../models/diploma';
+import { DiplomaService } from '../../services/diploma.service';
 
 @Component({
   selector: 'app-diploma-page',
@@ -12,7 +11,7 @@ import { DiplomaTextBox } from '../../models/diploma';
   styleUrl: './diploma-page.component.css'
 })
 export class DiplomaPageComponent {
-  private stampService = inject(StampService);
+  private diplomaService = inject(DiplomaService);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
   textBoxes: DiplomaTextBox[] = [];
@@ -23,10 +22,11 @@ export class DiplomaPageComponent {
   history: DiplomaTextBox[][] = [];
   startX = 0;
   startY = 0;
+  containerPosition = { left: 0, top: 0, right: 0, bottom: 0 };
   isMoved = false;
   containerWidth = 900;
   containerHeight = 1200;
-  stampId = 0;
+  diplomaId = 0;
   diplomaName = 'New Diploma';
   boardColor = 'default';
   textColor = 'black';
@@ -34,9 +34,9 @@ export class DiplomaPageComponent {
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
 
   ngOnInit() {
-    this.stampId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.stampId !== -1) {
-      this.stampService.getStampsById(this.stampId).subscribe(data => {
+    this.diplomaId = Number(this.route.snapshot.paramMap.get('id'));
+    if (this.diplomaId !== -1) {
+      this.diplomaService.getDiplomasById(this.diplomaId).subscribe(data => {
         this.parseJson(data);
       }
       );
@@ -54,14 +54,14 @@ export class DiplomaPageComponent {
     if (this.stampContainer) {
       const rect = this.stampContainer.nativeElement.getBoundingClientRect();
 
-      const position = {
+      this.containerPosition = {
         left: rect.left + window.scrollX, // X position relative to document
         top: rect.top + window.scrollY,  // Y position relative to document
         right: rect.right + window.scrollX,
         bottom: rect.bottom + window.scrollY
       };
 
-      console.log('Container Position:', position);
+      console.log('Container Position:', this.containerPosition);
     }
   }
 
@@ -69,8 +69,8 @@ export class DiplomaPageComponent {
     this.saveToHistory();
     this.textBoxes.push({
       text: 'New Text',
-      x: 50,
-      y: 50,
+      x: this.containerPosition.left + 50,
+      y: this.containerPosition.top + 100,
       width: 150,
       height: 40,
       color: 'black'
@@ -133,8 +133,8 @@ export class DiplomaPageComponent {
     let newY = event.clientY - this.startY;
     const textBox = this.textBoxes[this.activeIndex];
 
-    newX = Math.max(0, Math.min(this.containerWidth - textBox.width, newX));
-    newY = Math.max(0, Math.min(this.containerHeight - textBox.height, newY));
+    newX = Math.max(this.containerPosition.left, Math.min(this.containerPosition.right - textBox.width, newX));
+    newY = Math.max(this.containerPosition.top, Math.min(this.containerPosition.bottom - textBox.height, newY));
     console.log('x: ' + newX + '; y: ' + newY);
     if (newX !== textBox.x || newY !== textBox.y) this.isMoved = true;
     textBox.x = newX;
@@ -225,38 +225,36 @@ export class DiplomaPageComponent {
     });
   }
 
-  downloadStamp() {
-    //this.saveText();
-    //const finalType = this.stampType === 'other' ? this.stampDescription : this.stampType;
-    //const data = { stampName: this.stampName, stampType: finalType, textBoxes: this.textBoxes };
-    //const stampData = JSON.stringify(data);
-    //const blob = new Blob([stampData], { type: 'application/json' });
-    //const url = URL.createObjectURL(blob);
+  downloadDiploma() {
+    this.saveText();
+    const data = { stampName: this.diplomaName, textColor: this.textColor, boardColor: this.boardColor, textBoxes: this.textBoxes };
+    const stampData = JSON.stringify(data);
+    const blob = new Blob([stampData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
 
-    //const a = document.createElement('a');
-    //a.href = url;
-    //a.download = this.stampName;
-    //document.body.appendChild(a);
-    //a.click();
-    //document.body.removeChild(a);
-    //URL.revokeObjectURL(url);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.diplomaName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
-  saveStamp() {
+  saveDiploma() {
     this.saveText();
-    //const finalType = this.stampType === 'other' ? this.stampDescription : this.stampType;
-    //const data = { stampName: this.stampName, stampType: finalType, textBoxes: this.textBoxes };
-    //const stampData = JSON.stringify(data);
-    //const blob = new Blob([stampData], { type: 'application/json' });
-    //const file = new File([blob], 'stamp.json', { type: 'application/json' });
-    //this.stampService.uploadStamp(file, this.stampName, finalType, this.stampId).subscribe(
-    //  response => {
-    //    SnackBarUtil.showSnackBar(this.snackBar, 'Stamp saved successfully!', 'success');
-    //  },
-    //  error => {
-    //    SnackBarUtil.showSnackBar(this.snackBar, error, 'error');
-    //  }
-    //);
+    const data = { stampName: this.diplomaName, textColor: this.textColor, boardColor: this.boardColor, textBoxes: this.textBoxes };
+    const stampData = JSON.stringify(data);
+    const blob = new Blob([stampData], { type: 'application/json' });
+    const file = new File([blob], 'diploma.json', { type: 'application/json' });
+    this.diplomaService.uploadDiploma(file, this.diplomaName, this.diplomaId).subscribe(
+      response => {
+        SnackBarUtil.showSnackBar(this.snackBar, 'Diploma saved successfully!', 'success');
+      },
+      error => {
+        SnackBarUtil.showSnackBar(this.snackBar, error, 'error');
+      }
+    );
   }
 
   parseJson(file: File) {
@@ -265,9 +263,9 @@ export class DiplomaPageComponent {
       try {
         const data = JSON.parse(reader.result as string);
         if (data && data.textBoxes && Array.isArray(data.textBoxes)) {
-          //this.stampName = data.stampName || 'Unknown Name';
-          //this.stampDescription = data.stampType.toLowerCase().startsWith('modico') ? '' : data.stampType;
-          //this.stampType = this.stampDescription === '' ? data.stampType : 'other';
+          this.diplomaName = data.diplomaName || 'Unknown Name';
+          this.textColor = data.textColor || 'black';
+          this.boardColor = data.boardColor || 'default';
           this.textBoxes = data.textBoxes;
           this.saveToHistory();
         } else {
@@ -280,7 +278,7 @@ export class DiplomaPageComponent {
     reader.readAsText(file);
   }
 
-  loadStamp(event: Event) {
+  loadDiploma(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];

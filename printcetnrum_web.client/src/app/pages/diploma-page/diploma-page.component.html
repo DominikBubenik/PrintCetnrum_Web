@@ -19,7 +19,7 @@
           </select>
         </div>
         <div class="col-md-4">
-          <label>Board Color</label>
+          <label>Text Color</label>
           <select [(ngModel)]="textColor" class="form-select">
             <option value="silver">Silver</option>
             <option value="gold">Gold</option>
@@ -30,6 +30,13 @@
       <div class="controls-container" (click)="$event.stopPropagation()">
         <button class="font-size-btn bi bi-arrow-left" (click)="undo()" [disabled]="history.length <= 1"></button>
         <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
+      </div>
+      <div class="controls-container" (click)="$event.stopPropagation()">
+        <button class="font-size-btn bi bi-download" (click)="downloadDiploma()">Download Diploma</button>
+        <button class="font-size-btn bi bi-download" (click)="saveDiploma()">Save Diploma</button>
+
+        <label for="formFile" class="upload-button">Upload Diploma</label>
+        <input id="formFile" class="upload-input" type="file" (change)="loadDiploma($event)" accept=".json" />
       </div>
     </div>
     <div class="col-md-8">
@@ -49,18 +56,5 @@
         </div>
       </div>
     </div>
-
-    <!--<div class="controls-container" (click)="$event.stopPropagation()">
-    <button class="font-size-btn bi bi-download" (click)="downloadStamp()">Download Stamp</button>
-    <button class="font-size-btn bi bi-download" (click)="saveStamp()">Save Stamp</button>
-
-    <label for="formFile" class="upload-button">Upload Stamp</label>
-    <input id="formFile" class="upload-input" type="file" (change)="loadStamp($event)" accept=".json" />
-
-    <label for="imageLoad" class="upload-button">Upload Image</label>
-    <input id="imageLoad" class="upload-input" type="file" (change)="addImage($event)" accept="image/*" />
-  </div>-->
-
   </div>
-    
 </body>
