@@ -1,6 +1,6 @@
 :host {
   display: grid;
-  place-items: center;
+  
   height: 100vh;
   width: 100vw;
 }
@@ -9,7 +9,7 @@
   width: 900px;
   height: 1200px;
   border: 2px solid black;
-  position: relative;
+
   overflow: hidden;
   background-color: white;
 }

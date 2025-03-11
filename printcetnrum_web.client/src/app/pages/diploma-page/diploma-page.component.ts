@@ -4,6 +4,7 @@ import { StampService } from '../../services/stamp.service';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DiplomaTextBox } from '../../models/diploma';
 
 @Component({
   selector: 'app-diploma-page',
@@ -14,23 +15,21 @@ export class DiplomaPageComponent {
   private stampService = inject(StampService);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
-  textBoxes: Stamp[] = [];
+  textBoxes: DiplomaTextBox[] = [];
   isDragging = false;
   isResizing = false;
   activeIndex: number | null = null;
   selectedIndex: number | null = null;
-  history: Stamp[][] = [];
+  history: DiplomaTextBox[][] = [];
   startX = 0;
   startY = 0;
   isMoved = false;
-  containerWidth = 400;
-  containerHeight = 200;
-  currentSize = signal<number>(20);
+  containerWidth = 900;
+  containerHeight = 1200;
   stampId = 0;
-  spaceCounter = 0;
   diplomaName = 'New Diploma';
   boardColor = 'default';
-  textColor = '';
+  textColor = 'black';
 
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
 
@@ -48,19 +47,33 @@ export class DiplomaPageComponent {
   ngAfterViewInit() {
     this.containerWidth = this.stampContainer.nativeElement.clientWidth;
     this.containerHeight = this.stampContainer.nativeElement.clientHeight;
+    this.updateContainerBounds();
+  }
+
+  updateContainerBounds() {
+    if (this.stampContainer) {
+      const rect = this.stampContainer.nativeElement.getBoundingClientRect();
+
+      const position = {
+        left: rect.left + window.scrollX, // X position relative to document
+        top: rect.top + window.scrollY,  // Y position relative to document
+        right: rect.right + window.scrollX,
+        bottom: rect.bottom + window.scrollY
+      };
+
+      console.log('Container Position:', position);
+    }
   }
 
   addTextBox() {
     this.saveToHistory();
     this.textBoxes.push({
       text: 'New Text',
-      image: null,
       x: 50,
       y: 50,
-      fontSize: this.currentSize(),
       width: 150,
       height: 40,
-      isBold: false
+      color: 'black'
     });
   }
 
@@ -75,7 +88,6 @@ export class DiplomaPageComponent {
   selectTextBox(event: MouseEvent, index: number) {
     event.stopPropagation();
     this.selectedIndex = index;
-    this.currentSize.set(this.textBoxes[index].fontSize);
   }
 
   deselectTextBox(event: MouseEvent) {
@@ -123,6 +135,7 @@ export class DiplomaPageComponent {
 
     newX = Math.max(0, Math.min(this.containerWidth - textBox.width, newX));
     newY = Math.max(0, Math.min(this.containerHeight - textBox.height, newY));
+    console.log('x: ' + newX + '; y: ' + newY);
     if (newX !== textBox.x || newY !== textBox.y) this.isMoved = true;
     textBox.x = newX;
     textBox.y = newY;
@@ -159,7 +172,7 @@ export class DiplomaPageComponent {
 
     newWidth = Math.max(50, Math.min(this.containerWidth - textBox.x, newWidth));
     newHeight = Math.max(20, Math.min(this.containerHeight - textBox.y, newHeight));
-
+   
     textBox.width = newWidth;
     textBox.height = newHeight;
 
@@ -182,24 +195,6 @@ export class DiplomaPageComponent {
     }
   }
 
-  increaseFontSize(event: Event) {
-    event.stopPropagation();
-    if (this.selectedIndex !== null) {
-      this.saveToHistory();
-      this.currentSize.update(value => value += 2);
-      this.textBoxes[this.selectedIndex].fontSize = this.currentSize();
-    }
-  }
-
-  decreaseFontSize(event: Event) {
-    event.stopPropagation();
-    if (this.selectedIndex !== null && this.textBoxes[this.selectedIndex].fontSize > 2) {
-      this.saveToHistory();
-      this.currentSize.update(value => value -= 2);
-      this.textBoxes[this.selectedIndex].fontSize = this.currentSize();
-    }
-  }
-
   isNearEdge(event: MouseEvent): boolean {
     const element = event.target as HTMLElement;
     const rect = element.getBoundingClientRect();
@@ -216,52 +211,12 @@ export class DiplomaPageComponent {
     element.style.cursor = this.isNearEdge(event) ? 'move' : 'default';
   }
 
-  setFontSize(event: Event) {
-    event.stopPropagation();
-    const inputValue = (event.target as HTMLInputElement).valueAsNumber;
-    if (inputValue > 2 && this.selectedIndex !== null) {
-      this.currentSize.set(inputValue);
-      this.textBoxes[this.selectedIndex].fontSize = inputValue;
-    }
-  }
-
-  toggleBold(event: Event) {
-    event.stopPropagation();
-    if (this.selectedIndex !== null) {
-      this.saveToHistory();
-      this.textBoxes[this.selectedIndex].isBold = !this.textBoxes[this.selectedIndex].isBold;
-    }
-  }
-
   undo() {
     var state = this.history.pop();
     if (state) {
       this.textBoxes = state;
     }
     console.log(this.textBoxes);
-  }
-
-  addImage(event: Event) {
-    this.saveToHistory();
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        this.textBoxes.push({
-          text: '',
-          image: reader.result as string,
-          x: 50,
-          y: 50,
-          fontSize: 20,
-          width: 100,
-          height: 100,
-          isBold: false
-        });
-      };
-      reader.readAsDataURL(file);
-    }
   }
 
   saveText() {
