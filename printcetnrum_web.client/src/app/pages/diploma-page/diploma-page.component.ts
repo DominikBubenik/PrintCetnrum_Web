@@ -170,9 +170,9 @@ export class DiplomaPageComponent {
     let newWidth = textBox.width + (event.clientX - this.startX);
     let newHeight = textBox.height + (event.clientY - this.startY);
 
-    newWidth = Math.max(50, Math.min(this.containerWidth - textBox.x, newWidth));
-    newHeight = Math.max(20, Math.min(this.containerHeight - textBox.y, newHeight));
-   
+    newWidth = Math.max(50, Math.min(this.containerPosition.right  - textBox.x, newWidth));
+    newHeight = Math.max(30, Math.min(this.containerPosition.bottom - textBox.y, newHeight));
+
     textBox.width = newWidth;
     textBox.height = newHeight;
 
