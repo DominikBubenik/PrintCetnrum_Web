@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,11 +11,12 @@ import { DiplomaService } from '../../services/diploma.service';
   styleUrl: './diploma-page.component.css'
 })
 export class DiplomaPageComponent {
-  private diplomaService = inject(DiplomaService);
-  private route = inject(ActivatedRoute);
-  private snackBar = inject(MatSnackBar);
+  private readonly diplomaService = inject(DiplomaService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly snackBar = inject(MatSnackBar);
   textBoxes: DiplomaTextBox[] = [];
   isDragging = false;
+  innerBorderMargin = 20;
   isResizing = false;
   activeIndex: number | null = null;
   selectedIndex: number | null = null;
@@ -32,6 +33,7 @@ export class DiplomaPageComponent {
   textColor = 'black';
 
   @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
+  @ViewChild('innerBoarder', { static: false }) innerBoarder!: ElementRef;
 
   ngOnInit() {
     this.diplomaId = Number(this.route.snapshot.paramMap.get('id'));
@@ -53,21 +55,21 @@ export class DiplomaPageComponent {
   updateContainerBounds() {
     if (this.stampContainer) {
       const rect = this.stampContainer.nativeElement.getBoundingClientRect();
-
+      const innerRect = this.innerBoarder.nativeElement.getBoundingClientRect();
       this.containerPosition = {
-        left: rect.left,  // Using just the client coordinates
+        left: rect.left,
         top: rect.top,
         right: rect.right,
         bottom: rect.bottom
       };
-
-      console.log('Container Position:', this.containerPosition);
+      this.innerBorderMargin = innerRect.left - rect.left;
+      console.log('Container Position:', this.containerPosition, ' this is inner margin ', this.innerBorderMargin);
     }
   }
 
   addTextBox() {
     this.saveToHistory();
-    const centerX = 150; // Position relative to container
+    const centerX = 150;
     const centerY = 100;
 
     this.textBoxes.push({
@@ -120,13 +122,10 @@ export class DiplomaPageComponent {
 
   startDrag(event: MouseEvent, index: number) {
     if (!this.isNearEdge(event)) return;
-
     this.isDragging = true;
     this.activeIndex = index;
     this.selectedIndex = index;
 
-    // Get the current position of the textbox relative to the container
-    const rect = this.stampContainer.nativeElement.getBoundingClientRect();
     this.startX = event.clientX - this.textBoxes[index].x;
     this.startY = event.clientY - this.textBoxes[index].y;
 
@@ -137,17 +136,20 @@ export class DiplomaPageComponent {
   onDrag = (event: MouseEvent) => {
     if (!this.isDragging || this.activeIndex === null) return;
 
-    const rect = this.stampContainer.nativeElement.getBoundingClientRect();
-
-    // Calculate new position relative to the container
     let newX = event.clientX - this.startX;
     let newY = event.clientY - this.startY;
 
     const textBox = this.textBoxes[this.activeIndex];
 
-    // Constrain to container bounds
-    newX = Math.max(0, Math.min(this.containerWidth - textBox.width, newX));
-    newY = Math.max(0, Math.min(this.containerHeight - textBox.height, newY));
+    newX = Math.max(
+      this.innerBorderMargin,
+      Math.min(this.containerWidth - this.innerBorderMargin - textBox.width, newX)
+    );
+
+    newY = Math.max(
+      this.innerBorderMargin,
+      Math.min(this.containerHeight - this.innerBorderMargin - textBox.height, newY)
+    );
 
     if (newX !== textBox.x || newY !== textBox.y) this.isMoved = true;
 
@@ -184,9 +186,15 @@ export class DiplomaPageComponent {
     let newWidth = textBox.width + (event.clientX - this.startX);
     let newHeight = textBox.height + (event.clientY - this.startY);
 
-    // Constrain to container bounds
-    newWidth = Math.max(50, Math.min(this.containerWidth - textBox.x, newWidth));
-    newHeight = Math.max(30, Math.min(this.containerHeight - textBox.y, newHeight));
+    newWidth = Math.max(
+      50,
+      Math.min(this.containerWidth - this.innerBorderMargin - textBox.x, newWidth)
+    );
+
+    newHeight = Math.max(
+      30,
+      Math.min(this.containerHeight - this.innerBorderMargin - textBox.y, newHeight)
+    );
 
     textBox.width = newWidth;
     textBox.height = newHeight;
@@ -221,13 +229,13 @@ export class DiplomaPageComponent {
       event.clientY > rect.bottom - edgeMargin;
   }
 
-  updateCursor(event: MouseEvent, index: number) {
+  updateCursor(event: MouseEvent) {
     const element = event.target as HTMLElement;
     element.style.cursor = this.isNearEdge(event) ? 'move' : 'default';
   }
 
   undo() {
-    var state = this.history.pop();
+    let state = this.history.pop();
     if (state) {
       this.textBoxes = state;
     }
@@ -264,7 +272,7 @@ export class DiplomaPageComponent {
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'diploma.json', { type: 'application/json' });
     this.diplomaService.uploadDiploma(file, this.diplomaName, this.diplomaId).subscribe(
-      response => {
+      () => {
         SnackBarUtil.showSnackBar(this.snackBar, 'Diploma saved successfully!', 'success');
       },
       error => {
