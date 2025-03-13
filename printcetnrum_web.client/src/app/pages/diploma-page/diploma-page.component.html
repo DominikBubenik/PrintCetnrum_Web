@@ -41,19 +41,20 @@
     </div>
     <div class="col-md-8">
       <div class="stamp-container" #stampContainer>
-        <div *ngFor="let box of textBoxes; let i = index"
-             class="text-box"
-             [style.left.px]="box.x"
-             [style.top.px]="box.y"
-             [style.width.px]="box.width"
-             [style.height.px]="box.height"
-             (mousedown)="startDrag($event, i)"
-             (mousemove)="updateCursor($event, i)"
-             (click)="selectTextBox($event, i)"
-             contenteditable="true">
-          <div contenteditable="true">{{ box.text }}</div>
-          <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
-        </div>
+        <div class="inner-border"></div>
+          <div *ngFor="let box of textBoxes; let i = index"
+               class="text-box"
+               [style.left.px]="box.x"
+               [style.top.px]="box.y"
+               [style.width.px]="box.width"
+               [style.height.px]="box.height"
+               (mousedown)="startDrag($event, i)"
+               (mousemove)="updateCursor($event, i)"
+               (click)="selectTextBox($event, i)"
+               contenteditable="true">
+            <div contenteditable="true">{{ box.text }}</div>
+            <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
+          </div>
       </div>
     </div>
   </div>

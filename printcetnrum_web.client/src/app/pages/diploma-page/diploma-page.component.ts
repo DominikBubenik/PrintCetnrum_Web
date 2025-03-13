@@ -37,8 +37,8 @@ export class DiplomaPageComponent {
     this.diplomaId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.diplomaId !== -1) {
       this.diplomaService.getDiplomasById(this.diplomaId).subscribe(data => {
-        this.parseJson(data);
-      }
+          this.parseJson(data);
+        }
       );
     }
     this.history.push([...this.textBoxes]);
@@ -55,10 +55,10 @@ export class DiplomaPageComponent {
       const rect = this.stampContainer.nativeElement.getBoundingClientRect();
 
       this.containerPosition = {
-        left: rect.left + window.scrollX, // X position relative to document
-        top: rect.top + window.scrollY,  // Y position relative to document
-        right: rect.right + window.scrollX,
-        bottom: rect.bottom + window.scrollY
+        left: rect.left,  // Using just the client coordinates
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom
       };
 
       console.log('Container Position:', this.containerPosition);
@@ -67,10 +67,13 @@ export class DiplomaPageComponent {
 
   addTextBox() {
     this.saveToHistory();
+    const centerX = 150; // Position relative to container
+    const centerY = 100;
+
     this.textBoxes.push({
       text: 'New Text',
-      x: this.containerPosition.left + 50,
-      y: this.containerPosition.top + 100,
+      x: centerX,
+      y: centerY,
       width: 150,
       height: 40,
       color: 'black'
@@ -117,11 +120,16 @@ export class DiplomaPageComponent {
 
   startDrag(event: MouseEvent, index: number) {
     if (!this.isNearEdge(event)) return;
+
     this.isDragging = true;
     this.activeIndex = index;
     this.selectedIndex = index;
+
+    // Get the current position of the textbox relative to the container
+    const rect = this.stampContainer.nativeElement.getBoundingClientRect();
     this.startX = event.clientX - this.textBoxes[index].x;
     this.startY = event.clientY - this.textBoxes[index].y;
+
     document.addEventListener('mousemove', this.onDrag);
     document.addEventListener('mouseup', this.stopDrag);
   }
@@ -129,14 +137,20 @@ export class DiplomaPageComponent {
   onDrag = (event: MouseEvent) => {
     if (!this.isDragging || this.activeIndex === null) return;
 
+    const rect = this.stampContainer.nativeElement.getBoundingClientRect();
+
+    // Calculate new position relative to the container
     let newX = event.clientX - this.startX;
     let newY = event.clientY - this.startY;
+
     const textBox = this.textBoxes[this.activeIndex];
 
-    newX = Math.max(this.containerPosition.left, Math.min(this.containerPosition.right - textBox.width, newX));
-    newY = Math.max(this.containerPosition.top, Math.min(this.containerPosition.bottom - textBox.height, newY));
-    console.log('x: ' + newX + '; y: ' + newY);
+    // Constrain to container bounds
+    newX = Math.max(0, Math.min(this.containerWidth - textBox.width, newX));
+    newY = Math.max(0, Math.min(this.containerHeight - textBox.height, newY));
+
     if (newX !== textBox.x || newY !== textBox.y) this.isMoved = true;
+
     textBox.x = newX;
     textBox.y = newY;
   };
@@ -170,8 +184,9 @@ export class DiplomaPageComponent {
     let newWidth = textBox.width + (event.clientX - this.startX);
     let newHeight = textBox.height + (event.clientY - this.startY);
 
-    newWidth = Math.max(50, Math.min(this.containerPosition.right  - textBox.x, newWidth));
-    newHeight = Math.max(30, Math.min(this.containerPosition.bottom - textBox.y, newHeight));
+    // Constrain to container bounds
+    newWidth = Math.max(50, Math.min(this.containerWidth - textBox.x, newWidth));
+    newHeight = Math.max(30, Math.min(this.containerHeight - textBox.y, newHeight));
 
     textBox.width = newWidth;
     textBox.height = newHeight;
