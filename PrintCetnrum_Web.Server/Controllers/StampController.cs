@@ -180,7 +180,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             };
 
             return File(fileBytes, "application/json", fileName);
-            return Ok(response);
         }
     }
 }

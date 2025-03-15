@@ -1,0 +1,44 @@
+<div (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
+  <div class="container">
+    <div class="controls-container" (click)="$event.stopPropagation()">
+      <button class="font-size-btn bi bi-arrow-left" (click)="undo()" [disabled]="history.length <= 1"></button>
+      <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
+      <div class="font-size-controls">
+        <button class="font-size-btn bi bi-dash" (click)="decreaseFontSize($event)"></button>
+        <input type="number" class="font-size-input" [(ngModel)]="currentSize" (change)="setFontSize($event)" (click)="$event.stopPropagation()" />
+        <button class="font-size-btn bi bi-plus" (click)="increaseFontSize($event)"></button>
+      </div>
+      <button class="font-size-btn bi bi-type-bold" (click)="toggleBold($event)"></button>
+    </div>
+
+    <div class="stamp-container" #stampContainer>
+      <div *ngFor="let box of textBoxes; let i = index"
+           class="text-box"
+           [style.left.px]="box.x"
+           [style.top.px]="box.y"
+           [style.width.px]="box.width"
+           [style.height.px]="box.height"
+           [style.fontSize.px]="box.fontSize"
+           [style.fontWeight]="box.isBold ? 'bold' : 'normal'"
+           (mousedown)="startDrag($event, i)"
+           (mousemove)="updateCursor($event, i)"
+           (click)="selectTextBox($event, i)"
+           contenteditable="true">
+        <div *ngIf="!box.image" contenteditable="true">{{ box.text }}</div>
+        <img *ngIf="box.image" [src]="box.image" [style.width.%]="100" [style.height.%]="100" />
+        <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
+      </div>
+    </div>
+
+    <div class="controls-container" (click)="$event.stopPropagation()">
+      <button class="font-size-btn bi bi-download" (click)="downloadStamp()">Download Stamp</button>
+      <button class="font-size-btn bi bi-download" (click)="saveStamp()">Save Stamp</button>
+
+      <label for="formFile" class="upload-button">Upload Stamp</label>
+      <input id="formFile" class="upload-input" type="file" (change)="loadStamp($event)" accept=".json" />
+
+      <label for="imageLoad" class="upload-button">Upload Image</label>
+      <input id="imageLoad" class="upload-input" type="file" (change)="addImage($event)" accept="image/*" />
+    </div>
+  </div>
+</div>

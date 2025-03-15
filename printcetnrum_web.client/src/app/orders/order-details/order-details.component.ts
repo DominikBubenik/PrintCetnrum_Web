@@ -87,7 +87,7 @@ export class OrderDetailsComponent implements OnInit {
           this.fileService.getFilesWithId(fileIds).subscribe((files) => {
             this.orderItems.forEach(item => {
               if (files) {
-                item.userFile = files.find(file => file?.id === item.userFileId) ?? { id: 0, fileName: '', fileUinique: '', shouldPrint: false, uploadDate: new Date, filePath: '', extension: '', isStamp: false };
+                item.userFile = files.find(file => file?.id === item.userFileId) ?? { id: 0, fileName: '', fileUinique: '', shouldPrint: false, uploadDate: new Date, filePath: '', extension: '', isStamp: false, isDiploma: false };
               }
             });
           });

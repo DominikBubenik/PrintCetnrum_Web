@@ -24,6 +24,7 @@
         </button>
         <button *ngIf="isImage(file.extension)" class="btn btn-secondary" (click)="editFile.emit(file.id)">Edit</button>
         <button *ngIf="file.isStamp" class="btn btn-secondary"  [routerLink]="['/editStamp', file.id]">Edit Stamp</button>
+        <button *ngIf="file.isDiploma" class="btn btn-secondary"  [routerLink]="['/editDiploma', file.id]">Edit Diploma</button>
         <button class="btn btn-danger" (click)="openDeleteModal.emit(file.id)">Remove</button>
       </div>
     </div>
