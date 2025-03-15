@@ -1,15 +1,14 @@
 <header></header>
-<body (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
-  <h1>Diploma Creator</h1>
-
-  <div class="row">
-    <div class="col-md-4">
-      <div class="row controls-container">
-        <div class="col-md-8 d-flex flex-column">
-          <label>Stamp Name:</label>
-          <input type="text" [(ngModel)]="diplomaName" class="form-control" placeholder="Enter stamp name" />
+<div (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="row controls-container">
+          <div class="d-flex flex-column">
+            <label>Stamp Name:</label>
+            <input type="text" [(ngModel)]="diplomaName" class="form-control" placeholder="Enter stamp name" />
+          </div>
         </div>
-        <div class="col-md-4">
+        <div class="row controls-container">
           <label>Board Color</label>
           <select [(ngModel)]="boardColor" class="form-select">
             <option value="green">Green</option>
@@ -18,28 +17,26 @@
             <option value="red">Red</option>
           </select>
         </div>
-        <div class="col-md-4">
+        <div class="row controls-container">
           <label>Text Color</label>
           <select [(ngModel)]="textColor" class="form-select">
             <option value="silver">Silver</option>
             <option value="gold">Gold</option>
           </select>
         </div>
-      </div>
 
-      <div class="controls-container" (click)="$event.stopPropagation()">
-        <button class="font-size-btn bi bi-arrow-left" (click)="undo()" [disabled]="history.length <= 1"></button>
-        <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
-      </div>
-      <div class="controls-container" (click)="$event.stopPropagation()">
-        <button class="font-size-btn bi bi-download" (click)="downloadDiploma()">Download Diploma</button>
-        <button class="font-size-btn bi bi-download" (click)="saveDiploma()">Save Diploma</button>
+        <div class="controls-container" (click)="$event.stopPropagation()">
+          <button class="font-size-btn bi bi-arrow-left" (click)="undo()" [disabled]="history.length <= 1"></button>
+          <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
+        </div>
+        <div class="controls-container" (click)="$event.stopPropagation()">
+          <button class="font-size-btn bi bi-download" (click)="downloadDiploma()">Download Diploma</button>
+          <button class="font-size-btn bi bi-download" (click)="saveDiploma()">Save Diploma</button>
 
-        <label for="formFile" class="upload-button">Upload Diploma</label>
-        <input id="formFile" class="upload-input" type="file" (change)="loadDiploma($event)" accept=".json" />
+          <label for="formFile" class="upload-button">Upload Diploma</label>
+          <input id="formFile" class="upload-input" type="file" (change)="loadDiploma($event)" accept=".json" />
+        </div>
       </div>
-    </div>
-    <div class="col-md-8">
       <div class="stamp-container" #stampContainer [ngClass]="{'text-box-selected': selectedIndex !== null}">
         <div class="inner-border" #innerBoarder></div>
         <div *ngFor="let box of textBoxes; let i = index"
@@ -58,5 +55,6 @@
         </div>
       </div>
     </div>
-  </div>
-</body>
+
+
+</div>

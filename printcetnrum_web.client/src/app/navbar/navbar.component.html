@@ -1,39 +1,30 @@
-<!--navbar is from
-    https://github.com/chrisira/angular17-responsive-header
- -->
-<!DOCTYPE html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your </title>
-</head>
 <header>
   <div class="container">
     <div class="row">
       <div class="col-md-9 col-sm-9 col-9">
+        <!-- Consider adding your logo here -->
+        <!-- <img src="assets/images/logo.png" alt="Logo" class="logo" [routerLink]="['/']"> -->
+
         <div class="menu-icon" (click)="openMenu()">
           <i class="{{menu_icon}}"></i>
         </div>
-        <div class="desktop_menu" [class.mobile_menu]="menuValue">
+
+        <div class="desktop_menu" [class.mobile_menu]="menuValue" (click)="closeMenu()">
           <ul>
-            <li [routerLink]="['/']">Home</li>
-            <li [routerLink]="['/upload']">Upload Files</li>
-            <li [routerLink]="['/userFiles']">Your Files</li>
-            <li *ngIf="isLoggedIn()" [routerLink]="['/allOrders']">Your Orders</li>
-            <li *ngIf="isAdmin" [routerLink]="['/users']">Users</li>
-            <li *ngIf="!isLoggedIn()" [routerLink]="['/login']">Log in</li>
-            <li *ngIf="!isLoggedIn()" [routerLink]="['/register']">Register</li>
-            <li *ngIf="isLoggedIn()" (click)="onLogout()">Logout</li>
+            <li [routerLink]="['/']" [class.active]="currentUrl === '/'" (click)="$event.stopPropagation()">Home</li>
+            <li [routerLink]="['/upload']" [class.active]="currentUrl === '/upload'" (click)="$event.stopPropagation()">Upload Files</li>
+            <li [routerLink]="['/userFiles']" [class.active]="currentUrl === '/userFiles'" (click)="$event.stopPropagation()">Your Files</li>
+            <li *ngIf="isLoggedIn()" [routerLink]="['/allOrders']" [class.active]="currentUrl === '/allOrders'" (click)="$event.stopPropagation()">Your Orders</li>
+            <li *ngIf="isAdmin" [routerLink]="['/users']" [class.active]="currentUrl === '/users'" (click)="$event.stopPropagation()">Users</li>
+            <li *ngIf="!isLoggedIn()" [routerLink]="['/login']" [class.active]="currentUrl === '/login'" (click)="$event.stopPropagation()">Log in</li>
+            <li *ngIf="!isLoggedIn()" [routerLink]="['/register']" [class.active]="currentUrl === '/register'" (click)="$event.stopPropagation()">Register</li>
+            <li *ngIf="isLoggedIn()" (click)="onLogout(); $event.stopPropagation()">Logout</li>
           </ul>
           <div *ngIf="isLoggedIn()" class="user-name-mobile">
             Welcome, {{ userNameSignal() }}!
           </div>
         </div>
       </div>
-      <div class="col-md-3 col-sm-3 col-3 text-right">
-        <span *ngIf="isLoggedIn()" class="user-name">Welcome, {{ userNameSignal() }}!</span>
-      </div>
     </div>
   </div>
 </header>
-
