@@ -1,6 +1,3 @@
-/*
-  Enhanced Navbar Styles
-*/
 :root {
   --printcentrum-blue: #3B62D9;
   --printcentrum-dark-blue: #2c4a8c;
@@ -27,46 +24,46 @@ header {
   transition: var(--transition);
 }
 
-.logo:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-}
+  .logo:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+  }
 
 .desktop_menu {
   margin-top: 12px;
 }
 
-.desktop_menu ul {
-  padding: 0;
-  margin: 0;
-  text-align: left;
-  display: flex;
-  align-items: center;
-}
+  .desktop_menu ul {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
 
-.desktop_menu ul li {
-  list-style-type: none;
-  color: white;
-  display: inline-block;
-  font-size: 16px;
-  margin-left: 20px;
-  padding: 8px 12px;
-  border-radius: var(--border-radius);
-  transition: var(--transition);
-  font-weight: 500;
-}
+    .desktop_menu ul li {
+      list-style-type: none;
+      color: white;
+      display: inline-block;
+      font-size: 16px;
+      margin-left: 20px;
+      padding: 8px 12px;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      font-weight: 500;
+    }
 
-.desktop_menu ul li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  color: var(--printcentrum-accent);
-}
+      .desktop_menu ul li:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        color: var(--printcentrum-accent);
+      }
 
-.desktop_menu ul li.active {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: var(--printcentrum-accent);
-  font-weight: 600;
-}
+      .desktop_menu ul li.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: var(--printcentrum-accent);
+        font-weight: 600;
+      }
 
 .menu-icon {
   display: none;
@@ -76,9 +73,9 @@ header {
   transition: var(--transition);
 }
 
-.menu-icon:hover {
-  color: var(--printcentrum-accent);
-}
+  .menu-icon:hover {
+    color: var(--printcentrum-accent);
+  }
 
 .user-name {
   font-size: 16px;
@@ -90,12 +87,13 @@ header {
   transition: var(--transition);
   display: inline-block;
   box-shadow: var(--box-shadow);
+  cursor: pointer;
 }
 
-.user-name:hover {
-  background-color: rgba(44, 74, 140, 0.8);
-  transform: translateY(-2px);
-}
+  .user-name:hover {
+    background-color: rgba(44, 74, 140, 0.8);
+    transform: translateY(-2px);
+  }
 
 .user-name-mobile {
   margin-top: 20px;
@@ -107,19 +105,91 @@ header {
   font-weight: bold;
   border-left: 4px solid var(--printcentrum-accent);
 }
+/* User dropdown styling */
+.user-profile-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-top: 8px;
+}
 
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background: white;
+  border-radius: var(--border-radius);
+  min-width: 200px;
+  box-shadow: var(--box-shadow);
+  display: none;
+  z-index: 1010;
+}
+
+  .dropdown-menu.show {
+    display: block;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+.dropdown-user-info {
+  padding: 15px;
+  font-weight: 600;
+  color: var(--printcentrum-text);
+  display: flex;
+  align-items: center;
+}
+
+  .dropdown-user-info i {
+    font-size: 20px;
+    margin-right: 10px;
+    color: var(--printcentrum-dark-blue);
+  }
+
+.dropdown-divider {
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 5px 0;
+}
+
+.dropdown-item {
+  padding: 12px 15px;
+  color: var(--printcentrum-text);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+}
+
+  .dropdown-item i {
+    margin-right: 10px;
+    font-size: 16px;
+    color: var(--printcentrum-dark-blue);
+  }
+
+  .dropdown-item:hover {
+    background-color: rgba(59, 98, 217, 0.05);
+  }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* Hide mobile elements in desktop view */
 .desktop_menu:not(.mobile_menu) .user-name-mobile {
   display: none;
 }
-
 /* Mobile styles */
 @media screen and (max-width: 900px) {
   header {
     height: 64px;
     padding: 0;
   }
-  
+
   .desktop_menu {
     position: fixed !important;
     right: -280px;
@@ -131,21 +201,21 @@ header {
     overflow-y: auto;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
   }
-  
-  .desktop_menu ul {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .desktop_menu ul li {
-    display: block;
-    text-align: left;
-    margin: 0;
-    padding: 15px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0;
-  }
-  
+
+    .desktop_menu ul {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+      .desktop_menu ul li {
+        display: block;
+        text-align: left;
+        margin: 0;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0;
+      }
+
   .menu-icon {
     display: block;
     font-size: 28px;
@@ -154,17 +224,40 @@ header {
     right: 10px;
     top: 0;
   }
-  
+
   .mobile_menu {
     right: 0;
     transition: 0.3s ease-in-out;
   }
-  
-  .user-name {
+
+  .user-profile-dropdown {
     display: none;
   }
 }
 
+.dropdown-user-btn {
+  width: 100%;
+  text-align: left;
+  padding: 15px;
+  font-weight: 600;
+  color: var(--printcentrum-text);
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+  .dropdown-user-btn:hover {
+    background-color: rgba(59, 98, 217, 0.05);
+  }
+
+  .dropdown-user-btn i {
+    font-size: 20px;
+    margin-right: 10px;
+    color: var(--printcentrum-dark-blue);
+  }
 /* Main content padding adjustment */
 body {
   padding-top: 80px;

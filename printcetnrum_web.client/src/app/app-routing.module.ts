@@ -14,6 +14,7 @@ import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 import {StampPageComponent} from "./pages/stamp-page/stamp-page.component";
 import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
+import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
 
 
 
@@ -85,6 +86,13 @@ const routes: Routes = [
     path: 'editDiploma/:id',
     component: DiplomaPageComponent,
     title: 'Diploma',
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'userProfile',
+    component: UserProfilePageComponent,
+    title: 'Profile',
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },

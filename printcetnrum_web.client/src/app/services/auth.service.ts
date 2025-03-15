@@ -9,6 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { TokenApiModel } from '../models/token-api.model';
 import { UserStoreService } from './user-store.service';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +34,16 @@ export class AuthService {
     return this.http.post<any>(this.baseUrl + 'register', user);
   }
 
+  getCurrentUser() {
+    return this.http.get<any>(`${this.baseUrl}getUser/${this.getfullNameFromToken()}`);
+  }
+
   getAllUsers() {
     return this.http.get<any>(this.baseUrl + 'getAll');
+  }
+
+  updateUser(id: number, user: User): Observable<any> {
+    return this.http.put(`${this.baseUrl}update/${id}`, user);
   }
 
   storeToken(tokenValue: string) {
