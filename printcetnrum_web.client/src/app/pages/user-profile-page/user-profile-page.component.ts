@@ -7,34 +7,38 @@ import { SnackBarUtil } from '../../shared/snackbar-util';
 @Component({
   selector: 'app-user-profile-page',
   templateUrl: './user-profile-page.component.html',
-  styleUrl: './user-profile-page.component.css'
+  styleUrls: ['./user-profile-page.component.css']
 })
 export class UserProfilePageComponent {
   private authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
-  user = signal<User | undefined>(undefined);
+
+  user = signal<User>({
+    id: 0, firstName: '', lastName: '', userName: '', email: '', role: '',
+    street: '', city: '', postalCode: ''
+  });
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe((user: User) => {
-      this.user.set(user);
+      this.user.set(user); 
     });
   }
 
+  getInputValue(event: Event): string {
+    return (event.target as HTMLInputElement).value;
+  }
+
   updateUserField(field: keyof User, value: string) {
-    if (this.user()) {
-      this.user.set({
-        ...this.user()!,
-        [field]: value
-      });
-    }
+    this.user.update(user => ({
+      ...user,
+      [field]: value
+    }));
   }
 
   saveUser() {
-    if (this.user()) {
-      this.authService.updateUser(this.user()?.id ?? 0, this.user()!).subscribe(
-        response => SnackBarUtil.showSnackBar(this.snackBar, 'Changes saved successfully!', 'success'),
-        error => SnackBarUtil.showSnackBar(this.snackBar, 'Something failed. Please try again.', 'error')
-      );
-    }
+    this.authService.updateUser(this.user().id, this.user()).subscribe(
+      response => SnackBarUtil.showSnackBar(this.snackBar, 'Changes saved successfully!', 'success'),
+      error => SnackBarUtil.showSnackBar(this.snackBar, 'Something failed. Please try again.', 'error')
+    );
   }
 }

@@ -112,11 +112,11 @@ h1 {
 }
 
 .text-box.selected {
-  border: 1px dashed gray;
+
 }
 
   .text-box.selected .resize-handle {
-    display: block;
+
   }
 
 .controls-container {
