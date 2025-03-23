@@ -4,7 +4,6 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { EditPhotoPageComponent } from './pages/edit-photo-page/edit-photo-page.component';
-import { UploadPhotoPageComponent } from './pages/upload-photo-page/upload-photo-page.component';
 import { UsersListPageComponent } from './pages/users-list-page/users-list-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
@@ -15,6 +14,7 @@ import { OrderDetailsComponent } from './orders/order-details/order-details.comp
 import {StampPageComponent} from "./pages/stamp-page/stamp-page.component";
 import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
 import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
+import { UploadFileComponent } from './pages/upload-file/upload-file.component';
 
 
 
@@ -45,7 +45,7 @@ const routes: Routes = [
   },
   {
     path: 'upload',
-    component: UploadPhotoPageComponent,
+    component: UploadFileComponent,
     title: 'Upload page',
     pathMatch: 'full'
   },{
