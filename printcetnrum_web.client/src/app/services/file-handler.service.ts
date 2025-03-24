@@ -11,10 +11,9 @@ import { UserStoreService } from './user-store.service';
 })
 export class FileHandlerService {
   private userStore = inject(UserStoreService);
-  private baseUrl = 'https://localhost:7074/api/Upload/'
-
-  constructor(private http: HttpClient, private auth: AuthService) {
-  }
+  private http = inject(HttpClient);
+  private auth = inject(AuthService);
+  private baseUrl = 'https://localhost:7074/api/Upload/';
 
   uploadFiles(files: File[]): Observable<{ filePath: string }[]> {
     const formData = new FormData();

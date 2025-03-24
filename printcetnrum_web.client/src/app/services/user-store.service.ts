@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -8,8 +8,9 @@ import { HttpClient } from '@angular/common/http';
 export class UserStoreService {
   private fullName$ = new BehaviorSubject<string>("");
   private role$ = new BehaviorSubject<string>("");
+  private http = inject(HttpClient);
   private baseUrl = 'https://localhost:7074/api/User/';
-  constructor(private http: HttpClient) { }
+
 
   public getRoleFromStore() {
     return this.role$.asObservable();

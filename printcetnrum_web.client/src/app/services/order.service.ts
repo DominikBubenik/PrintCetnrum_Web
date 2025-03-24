@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Order, OrderItem } from '../models/order-models/order.model';
-import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
   private baseUrl = 'https://localhost:7074/api/Order/'
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
 
   createOrder(order: Order): Observable<Order> {
     const userName = this.authService.getfullNameFromToken();
