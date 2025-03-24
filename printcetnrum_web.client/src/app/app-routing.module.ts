@@ -17,7 +17,6 @@ import { UserProfilePageComponent } from './pages/user-profile-page/user-profile
 import { UploadFileComponent } from './pages/upload-file/upload-file.component';
 
 
-
 const routes: Routes = [
   {
     path: '',

@@ -192,10 +192,10 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
 
-        private Task<bool> CheckEmailExistAsync(string? email)
+        private Task<bool> CheckEmailExistAsync(string email)
             => _authContext.Users.AnyAsync(x => x.Email == email);
 
-        private Task<bool> CheckUsernameExistAsync(string? username)
+        private Task<bool> CheckUsernameExistAsync(string username)
             => _authContext.Users.AnyAsync(x => x.UserName == username);
 
         private static string CheckPasswordStrength(string pass)

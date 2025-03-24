@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DiplomaTextBox } from '../../models/diploma';
-import { DiplomaService } from '../../services/diploma.service';
+import {DesignFilesHandlerService} from "../../services/design-files-handler.service";
 
 @Component({
   selector: 'app-diploma-page',
@@ -11,7 +11,7 @@ import { DiplomaService } from '../../services/diploma.service';
   styleUrl: './diploma-page.component.css'
 })
 export class DiplomaPageComponent {
-  private readonly diplomaService = inject(DiplomaService);
+  private readonly designFileService = inject(DesignFilesHandlerService);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
   textBoxes: DiplomaTextBox[] = [];
@@ -38,7 +38,7 @@ export class DiplomaPageComponent {
   ngOnInit() {
     this.diplomaId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.diplomaId !== -1) {
-      this.diplomaService.getDiplomasById(this.diplomaId).subscribe(data => {
+      this.designFileService.getDesignFileById(this.diplomaId).subscribe(data => {
           this.parseJson(data);
         }
       );
@@ -271,8 +271,9 @@ export class DiplomaPageComponent {
     const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'diploma.json', { type: 'application/json' });
-    this.diplomaService.uploadDiploma(file, this.diplomaName, this.diplomaId).subscribe(
-      () => {
+    this.designFileService.uploadDesignFile(file, this.diplomaName, this.diplomaId, 'Diploma').subscribe(
+      data => {
+        this.diplomaId = data.id ?? -1;
         SnackBarUtil.showSnackBar(this.snackBar, 'Diploma saved successfully!', 'success');
       },
       error => {

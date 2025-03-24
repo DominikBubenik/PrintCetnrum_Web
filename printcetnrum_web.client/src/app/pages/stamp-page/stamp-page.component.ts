@@ -1,9 +1,9 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal, inject } from '@angular/core';
 import { Stamp } from '../../models/stamp';
-import { StampService } from '../../services/stamp.service';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DesignFilesHandlerService } from "../../services/design-files-handler.service";
 
 @Component({
   selector: 'app-stamp-page',
@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./stamp-page.component.css']
 })
 export class StampPageComponent implements AfterViewInit {
-  private stampService = inject(StampService);
+  private designFileService = inject(DesignFilesHandlerService);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
   textBoxes: Stamp[] = [];
@@ -37,7 +37,7 @@ export class StampPageComponent implements AfterViewInit {
   ngOnInit() {
     this.stampId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.stampId !== -1) {
-      this.stampService.getStampsById(this.stampId).subscribe(data => {
+      this.designFileService.getDesignFileById(this.stampId).subscribe(data => {
         this.parseJson(data);
         }
       );
@@ -251,7 +251,7 @@ export class StampPageComponent implements AfterViewInit {
       reader.onload = () => {
         this.textBoxes.push({
           text: '',
-          image: reader.result as string, 
+          image: reader.result as string,
           x: 50,
           y: 50,
           fontSize: 20,
@@ -269,7 +269,7 @@ export class StampPageComponent implements AfterViewInit {
       this.textBoxes[index].text = box.textContent as string
     });
   }
-  
+
   downloadStamp() {
     this.saveText();
     const finalType = this.stampType === 'other' ? this.stampDescription : this.stampType;
@@ -294,8 +294,9 @@ export class StampPageComponent implements AfterViewInit {
     const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'stamp.json', { type: 'application/json' });
-    this.stampService.uploadStamp(file, this.stampName, finalType, this.stampId).subscribe(
-      response => {
+    this.designFileService.uploadDesignFile(file, this.stampName, this.stampId, 'Stamp').subscribe(
+      data => {
+        this.stampId = data.id ?? -1;
         SnackBarUtil.showSnackBar(this.snackBar, 'Stamp saved successfully!', 'success');
       },
       error => {
@@ -310,9 +311,9 @@ export class StampPageComponent implements AfterViewInit {
       try {
         const data = JSON.parse(reader.result as string);
         if (data && data.textBoxes && Array.isArray(data.textBoxes)) {
-          this.stampName = data.stampName || 'Unknown Name'; 
+          this.stampName = data.stampName || 'Unknown Name';
           this.stampDescription = data.stampType.toLowerCase().startsWith('modico') ? '' : data.stampType;
-          this.stampType = this.stampDescription === '' ? data.stampType :  'other'; 
+          this.stampType = this.stampDescription === '' ? data.stampType :  'other';
           this.textBoxes = data.textBoxes;
           this.saveToHistory();
         } else {

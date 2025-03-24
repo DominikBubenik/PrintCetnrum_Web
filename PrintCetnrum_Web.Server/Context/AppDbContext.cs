@@ -16,8 +16,8 @@ namespace PrintCetnrum_Web.Server.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PrizeList> PrizeList { get; set; }
-        public DbSet<UserStamp> UserStamps { get; set; }
-        public DbSet<UserDiploma> UserDiplomas { get; set; }
+        public DbSet<DesignFile> DesignFiles { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,8 +26,8 @@ namespace PrintCetnrum_Web.Server.Context
             builder.Entity<Order>().ToTable("orders");
             builder.Entity<OrderItem>().ToTable("order_items");
             builder.Entity<PrizeList>().ToTable("prize_lists");
-            builder.Entity<UserStamp>().ToTable("user_stamps");
-            builder.Entity<UserDiploma>().ToTable("user_diplomas");
+            builder.Entity<DesignFile>().ToTable("design_files");
+            
 
             // Specify decimal precision and scale for TotalPrice in the Order entity
             builder.Entity<Order>()
