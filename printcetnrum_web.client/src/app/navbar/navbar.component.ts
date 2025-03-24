@@ -19,7 +19,9 @@ export class NavbarComponent {
   isLoggedIn = signal<boolean>(false);
   userNameSignal = signal<string>('');
   isAdmin: boolean = false;
+  dropdownOpen: boolean = false;
   private subscription?: Subscription;
+
   constructor(
     private router: Router,
     private http: HttpClient
@@ -43,19 +45,21 @@ export class NavbarComponent {
         this.userNameSignal.set(this.auth.getfullNameFromToken());
         this.isLoggedIn.set(true);
       }
-
     });
+
     if (!this.auth.getfullNameFromToken()) {
       this.isLoggedIn.set(false);
     }
-
     this.router.events.subscribe(() => {
       this.currentUrl = this.router.url;
     });
+
+    document.addEventListener('click', this.closeDropdownOnClickOutside.bind(this));
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    document.removeEventListener('click', this.closeDropdownOnClickOutside.bind(this));
   }
 
   openMenu() {
@@ -68,9 +72,27 @@ export class NavbarComponent {
     this.menu_icon = 'bi bi-list';
   }
 
+  toggleDropdown(event: Event) {
+    event.stopPropagation();
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  closeDropdownOnClickOutside(event: any) {
+    if (this.dropdownOpen && !event.target.closest('.user-profile-dropdown')) {
+      this.dropdownOpen = false;
+    }
+  }
+
   onLogout() {
     this.auth.logOut();
     this.isLoggedIn.set(false);
     this.userNameSignal.set('');
+    this.dropdownOpen = false;
+    this.router.navigate(['/login']);
+  }
+
+  showUserProfile() {
+    this.dropdownOpen = false;
+    this.router.navigate(['/userProfile']);
   }
 }

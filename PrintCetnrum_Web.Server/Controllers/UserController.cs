@@ -67,6 +67,22 @@ namespace PrintCetnrum_Web.Server.Controllers
             });
         }
 
+        [HttpGet("getUser/{userName}")]
+        public async Task<IActionResult> GetUser(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+            {
+                return BadRequest(new { message = "User Not Found" });
+            }
+
+            var user = await _authContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return NotFound(new { message = "User Not Found" });
+            }
+            return Ok(user);
+        }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User userParam)
@@ -90,6 +106,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             userParam.Password = PasswordHasher.HashPassword(userParam.Password);
             userParam.Role = "User";
             userParam.Token = "";
+            userParam.IsAccountActive = true;
             await _authContext.Users.AddAsync(userParam);
             await _authContext.SaveChangesAsync();
 
@@ -129,6 +146,10 @@ namespace PrintCetnrum_Web.Server.Controllers
             user.LastName = updatedUser.LastName;
             user.UserName = updatedUser.UserName;
             user.Email = updatedUser.Email;
+            user.Street = updatedUser.Street;
+            user.City = updatedUser.City;
+            user.PostCode = updatedUser.PostCode;
+            user.IsAccountActive = updatedUser.IsAccountActive;
             if (!string.IsNullOrEmpty(updatedUser.Password))
             {
                 user.Password = PasswordHasher.HashPassword(updatedUser.Password);

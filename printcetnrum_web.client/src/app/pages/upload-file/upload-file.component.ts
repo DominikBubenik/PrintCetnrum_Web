@@ -5,11 +5,11 @@ import { Router } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 
 @Component({
-  selector: 'app-upload-photo-page',
-  templateUrl: './upload-photo-page.component.html',
-  styleUrls: ['./upload-photo-page.component.css']
+  selector: 'app-upload-file',
+  templateUrl: './upload-file.component.html',
+  styleUrl: './upload-file.component.css'
 })
-export class UploadPhotoPageComponent {
+export class UploadFileComponent {
   selectedFiles: File[] = [];
 
   constructor(

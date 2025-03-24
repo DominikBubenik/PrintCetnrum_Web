@@ -1,0 +1,39 @@
+<div class="container">
+  <h2>User Profile</h2>
+  <form>
+    <div class="form-group">
+    <label>First Name:</label>
+    <input type="text" class="form-control" [value]="user().firstName"
+           (input)="updateUserField('firstName', getInputValue($event))" placeholder="Enter first name" />
+    </div>
+  <div class="form-group">
+    <label>Last Name:</label>
+    <input type="text" class="form-control" [value]="user().lastName"
+           (input)="updateUserField('lastName', getInputValue($event))" placeholder="Enter last name" />
+    </div>
+  <div class="form-group"><label>Username:</label>
+    <input type="text" class="form-control" [value]="user().userName"
+           (input)="updateUserField('userName', getInputValue($event))" placeholder="Enter username" />
+    </div>
+  <div class="form-group"><label>Email:</label>
+    <input type="email" class="form-control" [value]="user().email"
+           (input)="updateUserField('email', getInputValue($event))" placeholder="Enter email" />
+    </div>
+  <h3>Address</h3>
+    <div class="form-group">
+      <label>Street:</label>
+      <input type="text" class="form-control" [value]="user().street"
+           (input)="updateUserField('street', getInputValue($event))" placeholder="Enter street" />
+    </div>
+  <div class="form-group"><label>City:</label>
+    <input type="text" class="form-control" [value]="user().city"
+           (input)="updateUserField('city', getInputValue($event))" placeholder="Enter city" />
+    </div>
+  <div class="form-group">
+    <label>Postal Code:</label>
+    <input type="text" class="form-control" [value]="user().postalCode"
+           (input)="updateUserField('postalCode', getInputValue($event))" placeholder="Enter postal code" />
+  </div>
+  <button type="button" class="btn btn-primary" (click)="saveUser()">Save</button>
+    </form>
+</div>

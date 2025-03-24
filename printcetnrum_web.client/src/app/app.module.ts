@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { EditPhotoPageComponent } from './pages/edit-photo-page/edit-photo-page.component';
-import { UploadPhotoPageComponent } from './pages/upload-photo-page/upload-photo-page.component';
 import { FormsModule } from '@angular/forms';
 import { UsersListPageComponent } from './pages/users-list-page/users-list-page.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
@@ -29,7 +28,9 @@ import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.comp
 import { StampPageComponent } from './pages/stamp-page/stamp-page.component'
 import { FileCardComponentComponent } from './shared/file-card-component/file-card-component.component';
 import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
-import { GeneralTextComponent } from './shared/general-text/general-text.component'
+import { GeneralTextComponent } from './shared/general-text/general-text.component';
+import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
+import { UploadFileComponent } from './pages/upload-file/upload-file.component'
 
 
 @NgModule({
@@ -40,7 +41,6 @@ import { GeneralTextComponent } from './shared/general-text/general-text.compone
     LoginPageComponent,
     RegisterPageComponent,
     EditPhotoPageComponent,
-    UploadPhotoPageComponent,
     UsersListPageComponent,
     ResetPasswordPageComponent,
     UserFilesComponent,
@@ -51,7 +51,9 @@ import { GeneralTextComponent } from './shared/general-text/general-text.compone
     StampPageComponent,
     FileCardComponentComponent,
     DiplomaPageComponent,
-    GeneralTextComponent
+    GeneralTextComponent,
+    UserProfilePageComponent,
+    UploadFileComponent
   ],
   imports: [
     BrowserModule,

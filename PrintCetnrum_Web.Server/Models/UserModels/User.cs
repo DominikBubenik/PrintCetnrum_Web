@@ -13,6 +13,10 @@ namespace PrintCetnrum_Web.Server.Models.UserModels
         public string Token { get; set; }
         public string Role { get; set; }
         public string Email { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string PostCode { get; set; }
+        public bool IsAccountActive { get; set; }
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
         public string ResetPasswordToken { get; set; }
