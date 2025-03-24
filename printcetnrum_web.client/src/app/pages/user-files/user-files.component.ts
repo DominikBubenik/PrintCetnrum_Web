@@ -42,9 +42,9 @@ export class UserFilesComponent implements OnInit {
     this.designFileService.getUserStamps().pipe(
       map((stamps: any[]) => stamps.map(stamp => ({
         id: stamp.id,
-        fileName: stamp.stampName,
+        fileName: stamp.fileName,
         fileUinique: stamp.uniqueName,
-        filePath: stamp.stampPath,
+        filePath: stamp.filePath,
         extension: '.json',
         uploadDate: new Date(stamp.dateCreated),
         shouldPrint: false,
@@ -57,9 +57,9 @@ export class UserFilesComponent implements OnInit {
     this.designFileService.getUserDiplomas().pipe(
       map((diplomas: any[]) => diplomas.map(diploma => ({
         id: diploma.id,
-        fileName: diploma.diplomaName,
+        fileName: diploma.fileName,
         fileUinique: diploma.uniqueName,
-        filePath: diploma.diplomaPath,
+        filePath: diploma.filePath,
         extension: '.json',
         uploadDate: new Date(diploma.dateCreated),
         shouldPrint: false,
