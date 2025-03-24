@@ -272,7 +272,8 @@ export class DiplomaPageComponent {
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'diploma.json', { type: 'application/json' });
     this.designFileService.uploadDesignFile(file, this.diplomaName, this.diplomaId, 'Diploma').subscribe(
-      () => {
+      data => {
+        this.diplomaId = data.id ?? -1;
         SnackBarUtil.showSnackBar(this.snackBar, 'Diploma saved successfully!', 'success');
       },
       error => {

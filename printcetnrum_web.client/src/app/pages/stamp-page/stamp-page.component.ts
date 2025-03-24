@@ -295,7 +295,8 @@ export class StampPageComponent implements AfterViewInit {
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'stamp.json', { type: 'application/json' });
     this.designFileService.uploadDesignFile(file, this.stampName, this.stampId, 'Stamp').subscribe(
-      response => {
+      data => {
+        this.stampId = data.id ?? -1;
         SnackBarUtil.showSnackBar(this.snackBar, 'Stamp saved successfully!', 'success');
       },
       error => {

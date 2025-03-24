@@ -65,8 +65,13 @@ namespace PrintCetnrum_Web.Server.Controllers
                 var existingFile = await _dbContext.DesignFiles.FindAsync(parsedId);
                 if (existingFile != null)
                 {
+                    userFile.Id = parsedId;
                     DeleteExistingFile(existingFile.FilePath);
-                    _dbContext.Entry(existingFile).CurrentValues.SetValues(userFile);
+                    existingFile.FileName= fileName;
+                    existingFile.FilePath= filePath;
+                    existingFile.UserId = user.Id;
+                    existingFile.UniqueName = uniqueName;
+                    _dbContext.DesignFiles.Update(existingFile);
                 }
             }
             else
