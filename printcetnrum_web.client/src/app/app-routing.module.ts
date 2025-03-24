@@ -16,7 +16,6 @@ import {StampPageComponent} from "./pages/stamp-page/stamp-page.component";
 import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
 
 
-
 const routes: Routes = [
   {
     path: '',
