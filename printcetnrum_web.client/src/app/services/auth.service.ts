@@ -99,4 +99,8 @@ export class AuthService {
   getLoginState(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
   }
+
+  deactivateUser(id: number) {
+    return this.http.put(`${this.baseUrl}deactivateUser/${id}`, {}); 
+  }
 }
