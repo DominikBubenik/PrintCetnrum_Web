@@ -37,10 +37,10 @@ export class GeneralTextComponent {
   ngOnInit() {
     this.stampId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.stampId !== -1) {
-      this.stampService.getStampsById(this.stampId).subscribe(data => {
-        this.parseJson(data);
-      }
-      );
+      // this.stampService.getStampsById(this.stampId).subscribe(data => {
+      //   this.parseJson(data);
+      // }
+      // );
     }
     this.history.push([...this.textBoxes]);
   }
@@ -294,14 +294,14 @@ export class GeneralTextComponent {
     const stampData = JSON.stringify(data);
     const blob = new Blob([stampData], { type: 'application/json' });
     const file = new File([blob], 'stamp.json', { type: 'application/json' });
-    this.stampService.uploadStamp(file, this.stampName, finalType, this.stampId).subscribe(
-      response => {
-        SnackBarUtil.showSnackBar(this.snackBar, 'Stamp saved successfully!', 'success');
-      },
-      error => {
-        SnackBarUtil.showSnackBar(this.snackBar, error, 'error');
-      }
-    );
+    // this.stampService.uploadStamp(file, this.stampName, finalType, this.stampId).subscribe(
+    //   response => {
+    //     SnackBarUtil.showSnackBar(this.snackBar, 'Stamp saved successfully!', 'success');
+    //   },
+    //   error => {
+    //     SnackBarUtil.showSnackBar(this.snackBar, error, 'error');
+    //   }
+    // );
   }
 
   parseJson(file: File) {

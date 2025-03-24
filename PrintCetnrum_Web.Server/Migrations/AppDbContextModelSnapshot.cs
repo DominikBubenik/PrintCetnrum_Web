@@ -125,6 +125,42 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.ToTable("prize_lists", (string)null);
                 });
 
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.DesignFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("design_files", (string)null);
+                });
+
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.User", b =>
                 {
                     b.Property<int>("Id")
@@ -174,39 +210,6 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserDiploma", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DiplomaName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DiplomaPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UniqueName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("user_diplomas", (string)null);
-                });
-
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserFile", b =>
                 {
                     b.Property<int>("Id")
@@ -249,43 +252,6 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.ToTable("user_files", (string)null);
                 });
 
-            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserStamp", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StampName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StampPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StampType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UniqueName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("user_stamps", (string)null);
-                });
-
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.OrderModels.Order", b =>
                 {
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
@@ -308,7 +274,7 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserDiploma", b =>
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.DesignFile", b =>
                 {
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
                         .WithMany()
@@ -320,17 +286,6 @@ namespace PrintCetnrum_Web.Server.Migrations
                 });
 
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserFile", b =>
-                {
-                    b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserStamp", b =>
                 {
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
                         .WithMany()

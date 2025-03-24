@@ -5,9 +5,8 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StampService } from '../../services/stamp.service';
 import { map } from 'rxjs';
-import { DiplomaService } from '../../services/diploma.service';
+import {DesignFilesHandlerService} from "../../services/design-files-handler.service";
 
 @Component({
   selector: 'app-user-files',
@@ -16,8 +15,7 @@ import { DiplomaService } from '../../services/diploma.service';
 })
 export class UserFilesComponent implements OnInit {
   private authService = inject(AuthService);
-  private stampService = inject(StampService);
-  private diplomaService = inject(DiplomaService);
+  private designFileService = inject(DesignFilesHandlerService);
   private fileHandlerService = inject(FileHandlerService);
   private modalService = inject(NgbModal);
   private router = inject(Router);
@@ -41,13 +39,13 @@ export class UserFilesComponent implements OnInit {
       this.files = data;
       this.updateFileLists();
     });
-    this.stampService.getUserStamps().pipe(
+    this.designFileService.getUserStamps().pipe(
       map((stamps: any[]) => stamps.map(stamp => ({
         id: stamp.id,
         fileName: stamp.stampName,
         fileUinique: stamp.uniqueName,
         filePath: stamp.stampPath,
-        extension: '.json', 
+        extension: '.json',
         uploadDate: new Date(stamp.dateCreated),
         shouldPrint: false,
         isStamp: true,
@@ -56,7 +54,7 @@ export class UserFilesComponent implements OnInit {
     ).subscribe(mappedStamps => {
       this.stamps = mappedStamps;
     });
-    this.diplomaService.getUserDiplomas().pipe(
+    this.designFileService.getUserDiplomas().pipe(
       map((diplomas: any[]) => diplomas.map(diploma => ({
         id: diploma.id,
         fileName: diploma.diplomaName,
@@ -88,13 +86,8 @@ export class UserFilesComponent implements OnInit {
 
   confirmDelete(): void {
     if (this.fileIdToDelete) {
-      if (this.stamps.filter(stamp => stamp.id === this.fileIdToDelete)) {
-        this.stampService.deleteStamp(this.fileIdToDelete).subscribe(() => {
-          this.fetchFiles();
-          this.modalService.dismissAll();
-        });
-      } else if (this.diplomas.filter(diploma => diploma.id === this.fileIdToDelete)) {
-        this.diplomaService.deleteDiploma(this.fileIdToDelete).subscribe(() => {
+      if (this.stamps.filter(stamp => stamp.id === this.fileIdToDelete) || this.diplomas.filter(diploma => diploma.id === this.fileIdToDelete)) {
+        this.designFileService.deleteDesignFile(this.fileIdToDelete).subscribe(() => {
           this.fetchFiles();
           this.modalService.dismissAll();
         });
