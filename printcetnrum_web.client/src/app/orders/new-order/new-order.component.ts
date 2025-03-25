@@ -90,14 +90,11 @@ export class NewOrderComponent implements OnInit {
   }
 
   submitOrder(): void {
-    console.log('ideeem');
     if (!this.order) {
       return;
     }
-    console.log('ideeem');
     this.orderService.createOrder(this.order).subscribe(
       (createdOrder) => {
-        console.log('vytvaram objednavku');
         this.orderService.addOrderItems(createdOrder.orderName, this.orderItems).subscribe(
           () => {
             this.order = undefined;
@@ -105,7 +102,6 @@ export class NewOrderComponent implements OnInit {
             this.router.navigate(['/allOrders']);
           },
           (error) => {
-            console.error('Error adding order items:', error);
             SnackBarUtil.showSnackBar(this.snackBar, 'Failed to add order items!', 'error');
           }
         );

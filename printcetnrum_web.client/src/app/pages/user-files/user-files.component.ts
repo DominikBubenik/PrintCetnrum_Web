@@ -140,8 +140,8 @@ export class UserFilesComponent implements OnInit {
   sortFiles(criteria: string): void {
     if (criteria === 'date') {
       this.files.sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()).reverse;
-    } else if (criteria === 'type') {
-      this.files.sort((a, b) => a.extension.localeCompare(b.extension));
+    } else if (criteria === 'name') {
+      this.files.sort((a, b) => a.fileName.localeCompare(b.fileName));
     }
     this.updateFileLists();
   }

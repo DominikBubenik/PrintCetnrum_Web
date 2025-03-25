@@ -11,16 +11,15 @@ export class UserStoreService {
   private http = inject(HttpClient);
   private baseUrl = 'https://localhost:7074/api/User/';
 
-
-  public getRoleFromStore() {
+  getRoleFromStore() {
     return this.role$.asObservable();
   }
 
-  public setRoleForStore(role: string) {
+  setRoleForStore(role: string) {
     this.role$.next(role);
   }
 
-  public getFullNameFromStore() {
+  getFullNameFromStore() {
     return this.fullName$.getValue();
   }
 
@@ -28,16 +27,16 @@ export class UserStoreService {
     return this.fullName$.asObservable();
   }
 
-  public setFullNameForStore(fullname: string) {
+  setFullNameForStore(fullname: string) {
     console.log('setFullNameForStore', fullname);
     this.fullName$.next(fullname)
   }
 
-  public updateUser(id: number, user: any) {
+  updateUser(id: number, user: any) {
     return this.http.put<any>(`${this.baseUrl}update/${id}`, user);
   }
 
-  public deleteUser(id: number) {
+  deleteUser(id: number) {
     return this.http.delete<any>(`${this.baseUrl}delete/${id}`);
   }
 }

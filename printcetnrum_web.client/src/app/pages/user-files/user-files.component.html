@@ -14,32 +14,32 @@
       </div>
       <div class="sorting-options col-10">
         <select id="sortSelect" [(ngModel)]="criteria" (change)="sortFiles(criteria)" class="form-select">
-          <option value="type">Type</option>
           <option value="date">Date</option>
+          <option value="name">Name</option>
         </select>
         <div class="filter-options">
           <label class="filter-label">
-            <input type="checkbox" [(ngModel)]="showImages" />
+            <input type="checkbox" [(ngModel)]="showImages"/>
             <span>Show Images</span>
           </label>
           <label class="filter-label">
-            <input type="checkbox" [(ngModel)]="showPDFFiles" />
+            <input type="checkbox" [(ngModel)]="showPDFFiles"/>
             <span>Show PDF Files</span>
           </label>
           <label class="filter-label">
-            <input type="checkbox" [(ngModel)]="showWordFiles" />
+            <input type="checkbox" [(ngModel)]="showWordFiles"/>
             <span>Show Word Files</span>
           </label>
           <label class="filter-label">
-            <input type="checkbox" [(ngModel)]="showOtherFiles" />
+            <input type="checkbox" [(ngModel)]="showOtherFiles"/>
             <span>Show Other Files</span>
           </label>
           <label class="filter-label">
-            <input type="checkbox" [(ngModel)]="showStamps" />
+            <input type="checkbox" [(ngModel)]="showStamps"/>
             <span>Show Stamps</span>
           </label>
           <label class="filter-label">
-            <input type="checkbox" [(ngModel)]="showDiplomas" />
+            <input type="checkbox" [(ngModel)]="showDiplomas"/>
             <span>Show Diplomas</span>
           </label>
         </div>
@@ -105,7 +105,5 @@
         </div>
       </ng-template>
     </div>
-   
   </div>
-  
 </body>
