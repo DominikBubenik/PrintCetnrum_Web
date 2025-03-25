@@ -1,7 +1,13 @@
 <app-navbar></app-navbar>
-<main>
+
+<main class="main-container">
+  <aside class="sidebar" *ngIf="showSidebar">
+    <app-selected-files-list></app-selected-files-list>
+  </aside>
   <section class="content">
     <router-outlet></router-outlet>
   </section>
 </main>
+
 <footer></footer>
+

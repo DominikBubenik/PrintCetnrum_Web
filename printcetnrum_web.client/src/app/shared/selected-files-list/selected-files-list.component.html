@@ -1,0 +1,18 @@
+<div class="order-container">
+  <div class="selected-files">
+    <h3>Selected Files</h3>
+    <ul>
+      <li *ngFor="let file of selectedFiles">
+        {{ file.fileName }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="file-selection">
+    <app-file-card title="Select Files for Order"
+                   [files]="files"
+                   [selectedFiles]="selectedFiles"
+                   (toggleSelectFile)="toggleFileSelection($event)">
+    </app-file-card>
+  </div>
+</div>

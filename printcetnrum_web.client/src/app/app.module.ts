@@ -29,7 +29,8 @@ import { StampPageComponent } from './pages/stamp-page/stamp-page.component'
 import { FileCardComponentComponent } from './shared/file-card-component/file-card-component.component';
 import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
 import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
-import { UploadFileComponent } from './pages/upload-file/upload-file.component'
+import { UploadFileComponent } from './pages/upload-file/upload-file.component';
+import { SelectedFilesListComponent } from './shared/selected-files-list/selected-files-list.component'
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { UploadFileComponent } from './pages/upload-file/upload-file.component'
     FileCardComponentComponent,
     DiplomaPageComponent,
     UserProfilePageComponent,
-    UploadFileComponent
+    UploadFileComponent,
+    SelectedFilesListComponent
   ],
   imports: [
     BrowserModule,

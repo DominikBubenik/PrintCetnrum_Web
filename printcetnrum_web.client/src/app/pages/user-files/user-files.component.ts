@@ -28,6 +28,7 @@ export class UserFilesComponent implements OnInit {
   fileIdToDelete: number | null = null;
   criteria: string = 'date';
 
+
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
       this.fetchFiles();
@@ -74,6 +75,7 @@ export class UserFilesComponent implements OnInit {
   }
 
   markForPrint(event: { id: number, shouldPrint: boolean }): void {
+    console.log('user-files');
     this.fileHandlerService.markForPrint(event.id, event.shouldPrint).subscribe(() => {
       this.fetchFiles();
     });
@@ -112,5 +114,11 @@ export class UserFilesComponent implements OnInit {
       this.files.sort((a, b) => a.extension.localeCompare(b.extension));
     }
     this.updateFileLists();
+  }
+
+  startOrder() { }
+
+  toggleSelectFile(event: { id: number, shouldPrint: boolean }):void {
+    console.log('toto je ten co je v sidebare' + event);
   }
 }
