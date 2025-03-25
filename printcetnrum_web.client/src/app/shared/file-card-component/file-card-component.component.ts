@@ -15,7 +15,7 @@ export class FileCardComponentComponent {
   @Output() markForPrint = new EventEmitter<{ id: number, shouldPrint: boolean }>();
   @Output() editFile = new EventEmitter<number>();
   @Output() openDeleteModal = new EventEmitter<number>();
-  @Output() toggleSelectFile = new EventEmitter<{ id: number, shouldPrint: boolean }>(); 
+  @Output() toggleSelectFileCard = new EventEmitter<{ id: number, shouldPrint: boolean }>(); 
 
   isImage(extension: string): boolean {
     return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'].includes(extension.toLowerCase());
@@ -32,7 +32,7 @@ export class FileCardComponentComponent {
 
   toggleSelection(file: UserFile) {
     console.log('toglujem' + file.id);
-    this.toggleSelectFile.emit({ id: file.id, shouldPrint: false });
+    this.toggleSelectFileCard.emit({ id: file.id, shouldPrint: false });
   }
 
   isFileSelected(file: UserFile): boolean {

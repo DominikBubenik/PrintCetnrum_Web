@@ -1,60 +1,70 @@
 <header></header>
 <body>
-  <div class="file-actions-row">
-    <button class="btn btn-primary" [routerLink]="['/upload']">Upload New File</button>
-    <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
-    <button class="btn btn-primary custom-color" [routerLink]="['/newOrder']">Create New Order</button>
-    <button class="btn btn-primary" [routerLink]="['/editStamp', -1]">New Stamp</button>
-    <button class="btn btn-primary" [routerLink]="['/editDiploma', -1]">New Diploma</button>
-    <button class="btn btn-primary" (click)="startOrder()">Add items</button>
-  </div>
-  <div class="sorting-options col-1">
-    <select id="sortSelect" [(ngModel)]="criteria" (change)="sortFiles(criteria)" class="form-select">
-      <option value="type">Type</option>
-      <option value="date">Date</option>
-    </select>
-  </div>
-  <app-file-card title="Marked for Printing"
-                 [files]="markedFiles"
-                 [baseUrl]="baseUrl"
-                 (markForPrint)="markForPrint($event)"
-                 (editFile)="editFile($event)"
-                 (openDeleteModal)="openDeleteModal($event, deleteModal)">
-  </app-file-card>
-  <app-file-card title="Other Files"
-                 [files]="unmarkedFiles"
-                 [baseUrl]="baseUrl"
-                 (markForPrint)="markForPrint($event)"
-                 (editFile)="editFile($event)"
-                 (openDeleteModal)="openDeleteModal($event, deleteModal)">
-  </app-file-card>
-  <app-file-card title="Stamps"
-                 [files]="stamps"
-                 [baseUrl]="baseUrl"
-                 (markForPrint)="markForPrint($event)"
-                 (editFile)="editFile($event)"
-                 (openDeleteModal)="openDeleteModal($event, deleteModal)">
-  </app-file-card>
-  <app-file-card title="Diplomas"
-                 [files]="diplomas"
-                 [baseUrl]="baseUrl"
-                 (markForPrint)="markForPrint($event)"
-                 (editFile)="editFile($event)"
-                 (openDeleteModal)="openDeleteModal($event, deleteModal)"
-                 (toggleSelection)="toggleSelection($event)">
+  <div class="main-container">
+    <aside class="sidebar">
+      <app-selected-files-list [selectedFiles]="markedFiles"></app-selected-files-list>
+    </aside>
+    <div class="content">
+      <div class="file-actions-row">
+        <button class="btn btn-primary" [routerLink]="['/upload']">Upload New File</button>
+        <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
+        <button class="btn btn-primary custom-color" [routerLink]="['/newOrder']">Create New Order</button>
+        <button class="btn btn-primary" [routerLink]="['/editStamp', -1]">New Stamp</button>
+        <button class="btn btn-primary" [routerLink]="['/editDiploma', -1]">New Diploma</button>
+        <button class="btn btn-primary" (click)="startOrder()">Add items</button>
+      </div>
+      <div class="sorting-options col-1">
+        <select id="sortSelect" [(ngModel)]="criteria" (change)="sortFiles(criteria)" class="form-select">
+          <option value="type">Type</option>
+          <option value="date">Date</option>
+        </select>
+      </div>
+      <app-file-card title="Marked for Printing"
+                     [files]="markedFiles"
+                     [baseUrl]="baseUrl"
+                     (markForPrint)="markForPrint($event)"
+                     (editFile)="editFile($event)"
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)"
+                     (toggleSelectFileCard)="toggleSelection($event)">
+      </app-file-card>
+      <app-file-card title="Other Files"
+                     [files]="unmarkedFiles"
+                     [baseUrl]="baseUrl"
+                     (markForPrint)="markForPrint($event)"
+                     (editFile)="editFile($event)"
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)"
+                     (toggleSelectFileCard)="toggleSelection($event)">
+      </app-file-card>
+      <app-file-card title="Stamps"
+                     [files]="stamps"
+                     [baseUrl]="baseUrl"
+                     (markForPrint)="markForPrint($event)"
+                     (editFile)="editFile($event)"
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)">
+      </app-file-card>
+      <app-file-card title="Diplomas"
+                     [files]="diplomas"
+                     [baseUrl]="baseUrl"
+                     (markForPrint)="markForPrint($event)"
+                     (editFile)="editFile($event)"
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)">
 
-  </app-file-card>
-  <ng-template #deleteModal let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title">Confirm Deletion</h5>
-      <button type="button" class="btn-close" (click)="modal.dismiss('Close click')"></button>
+      </app-file-card>
+      <ng-template #deleteModal let-modal>
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Deletion</h5>
+          <button type="button" class="btn-close" (click)="modal.dismiss('Close click')"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this file?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+        </div>
+      </ng-template>
     </div>
-    <div class="modal-body">
-      <p>Are you sure you want to delete this file?</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="confirmDelete()">Delete</button>
-    </div>
-  </ng-template>
+   
+  </div>
+  
 </body>

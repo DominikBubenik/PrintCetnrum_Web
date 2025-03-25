@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserFile } from '../../models/user-file';
 
 @Component({
@@ -8,7 +8,7 @@ import { UserFile } from '../../models/user-file';
 })
 export class SelectedFilesListComponent {
   files: UserFile[] = []; // Load user files here
-  selectedFiles: UserFile[] = [];
+  @Input() selectedFiles: UserFile[] = [];
 
   toggleFileSelection(file: UserFile) {
     const index = this.selectedFiles.findIndex(f => f.id === file.id);

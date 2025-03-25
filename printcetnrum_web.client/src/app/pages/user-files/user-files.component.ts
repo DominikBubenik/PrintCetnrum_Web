@@ -118,7 +118,10 @@ export class UserFilesComponent implements OnInit {
 
   startOrder() { }
 
-  toggleSelectFile(event: { id: number, shouldPrint: boolean }):void {
-    console.log('toto je ten co je v sidebare' + event);
+  toggleSelection(event: any):void {
+    console.log('toto je ten co je v sidebare' + event.id);
+    this.fileHandlerService.markForPrint(event.id, true).subscribe(() => {
+      this.fetchFiles();
+    });
   }
 }
