@@ -8,46 +8,87 @@
       <div class="file-actions-row">
         <button class="btn btn-primary" [routerLink]="['/upload']">Upload New File</button>
         <button class="btn btn-primary" [routerLink]="['/allOrders']">All Orders</button>
-        <button class="btn btn-primary custom-color" [routerLink]="['/newOrder']">Create New Order</button>
         <button class="btn btn-primary" [routerLink]="['/editStamp', -1]">New Stamp</button>
         <button class="btn btn-primary" [routerLink]="['/editDiploma', -1]">New Diploma</button>
         <button class="btn btn-primary" (click)="startOrder()">Add items</button>
       </div>
-      <div class="sorting-options col-1">
+      <div class="sorting-options col-10">
         <select id="sortSelect" [(ngModel)]="criteria" (change)="sortFiles(criteria)" class="form-select">
           <option value="type">Type</option>
           <option value="date">Date</option>
         </select>
+        <div class="filter-options">
+          <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="showImages" />
+            <span>Show Images</span>
+          </label>
+          <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="showPDFFiles" />
+            <span>Show PDF Files</span>
+          </label>
+          <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="showWordFiles" />
+            <span>Show Word Files</span>
+          </label>
+          <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="showOtherFiles" />
+            <span>Show Other Files</span>
+          </label>
+          <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="showStamps" />
+            <span>Show Stamps</span>
+          </label>
+          <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="showDiplomas" />
+            <span>Show Diplomas</span>
+          </label>
+        </div>
       </div>
-      <app-file-card title="Marked for Printing"
-                     [files]="markedFiles"
-                     [baseUrl]="baseUrl"
-                     (markForPrint)="markForPrint($event)"
-                     (editFile)="editFile($event)"
-                     (openDeleteModal)="openDeleteModal($event, deleteModal)"
-                     (toggleSelectFileCard)="toggleSelection($event)">
-      </app-file-card>
       <app-file-card title="Other Files"
-                     [files]="unmarkedFiles"
+                     [files]="otherFiles"
                      [baseUrl]="baseUrl"
                      (markForPrint)="markForPrint($event)"
                      (editFile)="editFile($event)"
                      (openDeleteModal)="openDeleteModal($event, deleteModal)"
-                     (toggleSelectFileCard)="toggleSelection($event)">
+                     (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showOtherFiles">
+      </app-file-card>
+      <app-file-card title="Images Files"
+                     [files]="images"
+                     [baseUrl]="baseUrl"
+                     (markForPrint)="markForPrint($event)"
+                     (editFile)="editFile($event)"
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)"
+                     (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showImages">
+      </app-file-card>
+      <app-file-card title="PDF Files"
+                     [files]="pdfFiles"
+                     [baseUrl]="baseUrl"
+                     (markForPrint)="markForPrint($event)"
+                     (editFile)="editFile($event)"
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)"
+                     (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showPDFFiles">
+      </app-file-card>
+      <app-file-card title="Word Files"
+                     [files]="wordFiles"
+                     [baseUrl]="baseUrl"
+                     (markForPrint)="markForPrint($event)"
+                     (editFile)="editFile($event)"
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)"
+                     (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showWordFiles">
       </app-file-card>
       <app-file-card title="Stamps"
                      [files]="stamps"
                      [baseUrl]="baseUrl"
                      (markForPrint)="markForPrint($event)"
                      (editFile)="editFile($event)"
-                     (openDeleteModal)="openDeleteModal($event, deleteModal)">
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)" *ngIf="showStamps">
       </app-file-card>
       <app-file-card title="Diplomas"
                      [files]="diplomas"
                      [baseUrl]="baseUrl"
                      (markForPrint)="markForPrint($event)"
                      (editFile)="editFile($event)"
-                     (openDeleteModal)="openDeleteModal($event, deleteModal)">
+                     (openDeleteModal)="openDeleteModal($event, deleteModal)" *ngIf="showDiplomas">
 
       </app-file-card>
       <ng-template #deleteModal let-modal>

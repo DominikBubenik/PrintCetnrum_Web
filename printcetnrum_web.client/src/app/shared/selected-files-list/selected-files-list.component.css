@@ -62,3 +62,14 @@
   font-size: 0.875rem;
   color: #495057;
 }
+
+.custom-color {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  color: white !important;
+}
+
+  .custom-color:hover {
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
+  }

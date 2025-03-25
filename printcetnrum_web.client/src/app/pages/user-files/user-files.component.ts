@@ -22,11 +22,20 @@ export class UserFilesComponent implements OnInit {
   files: UserFile[] = [];
   stamps: UserFile[] = [];
   diplomas: UserFile[] = [];
+  images: UserFile[] = [];
+  wordFiles: UserFile[] = [];
+  pdfFiles: UserFile[] = [];
   markedFiles: UserFile[] = [];
-  unmarkedFiles: UserFile[] = [];
+  otherFiles: UserFile[] = [];
   baseUrl = environment.apiUrl;
   fileIdToDelete: number | null = null;
   criteria: string = 'date';
+  showPDFFiles = true;
+  showWordFiles = true;
+  showImages = true;
+  showOtherFiles = true;
+  showStamps = true;
+  showDiplomas = true;
 
 
   ngOnInit() {
@@ -70,8 +79,25 @@ export class UserFilesComponent implements OnInit {
   }
 
   updateFileLists(): void {
-    this.markedFiles = this.files.filter(file => file.shouldPrint);
-    this.unmarkedFiles = this.files.filter(file => !file.shouldPrint);
+    this.images = [];
+    this.wordFiles = [];
+    this.pdfFiles = [];
+    this.otherFiles = [];
+    this.markedFiles = [];
+    this.files.forEach(file => {
+      if (file.shouldPrint) {
+        this.markedFiles.push(file);
+      }
+      if (this.isImage(file.extension)) {
+        this.images.push(file);
+      } else if (file.extension === '.doc' || file.extension === '.docx') {
+        this.wordFiles.push(file);
+      } else if (file.extension === '.pdf') {
+        this.pdfFiles.push(file);
+      } else {
+        this.otherFiles.push(file);
+       }
+    });
   }
 
   markForPrint(event: { id: number, shouldPrint: boolean }): void {
@@ -100,6 +126,10 @@ export class UserFilesComponent implements OnInit {
         });
       }
     }
+  }
+
+  isImage(extension: string): boolean {
+    return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'].includes(extension.toLowerCase());
   }
 
   editFile(id: number) {
