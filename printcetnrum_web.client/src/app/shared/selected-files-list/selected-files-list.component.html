@@ -1,10 +1,18 @@
-<div class="order-container">
-  <div class="selected-files">
-    <h3>Selected Files</h3>
-    <ul>
-      <li *ngFor="let file of selectedFiles">
-        {{ file.fileName }}
-      </li>
-    </ul>
+<div class="selected-files-sidebar" *ngIf="selectedFiles.length > 0">
+  <h3>Selected Files</h3>
+  <div class="selected-files-list">
+    <div class="selected-file" *ngFor="let file of selectedFiles">
+      <div class="file-thumbnail">
+        <ng-container *ngIf="getFileThumbnail(file); else defaultIcon">
+          <img [src]="getFileThumbnail(file)" [alt]="file.fileName" />
+        </ng-container>
+        <ng-template #defaultIcon>
+          <i class="file-icon">📄</i>
+        </ng-template>
+      </div>
+      <span class="file-name" title="{{ file.fileName }}">
+        {{ truncateFileName(file.fileName) }}
+      </span>
+    </div>
   </div>
 </div>
