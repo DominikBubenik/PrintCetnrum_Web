@@ -102,8 +102,9 @@ export class AllOrdersListComponent implements OnInit {
         order.orderName.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesStatus = status === 'all' ||
-        (status === 'prepared' && order.isPreparedForCustomer) ||
-        (status === 'completed' && order.isTakenByCustomer);
+        (status === 'prepared' && order.isPreparedForCustomer && !order.isTakenByCustomer) || 
+        (status === 'completed' && order.isTakenByCustomer) ||
+        (status === 'pending' && !order.isPreparedForCustomer && !order.isTakenByCustomer);
 
       return dateInRange && matchesSearch && matchesStatus;
     });
