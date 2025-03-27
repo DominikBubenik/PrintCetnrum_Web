@@ -7,7 +7,6 @@
   overflow: hidden;
 }
 
-/* Sidebar Enhancements */
 .sidebar {
   width: 280px;
   background-color: #ffffff;
@@ -17,7 +16,15 @@
   transition: width 0.3s ease;
 }
 
-/* Action Buttons Row Improvements */
+.files-container {
+  flex-grow: 1;
+  overflow-y: auto; 
+  padding: 20px;
+  background-color: #f4f6f9;
+  height: calc(100vh - 250px); 
+}
+
+
 .file-actions-row {
   display: flex;
   justify-content: center;
