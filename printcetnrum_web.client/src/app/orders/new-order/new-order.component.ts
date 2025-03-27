@@ -112,4 +112,19 @@ export class NewOrderComponent implements OnInit {
       }
     );
   }
+
+  getFileIcon(extension: string): string {
+    switch (extension) {
+      case '.pdf':
+        return 'bi bi-filetype-pdf pdf';
+      case '.doc':
+      case '.docx':
+        return 'bi bi-file-earmark-word word';
+      case '.xls':
+      case '.xlsx':
+        return 'bi bi-filetype-xlsx excel';
+      default:
+        return 'bi bi-file-earmark-text';
+    }
+  }
 }
