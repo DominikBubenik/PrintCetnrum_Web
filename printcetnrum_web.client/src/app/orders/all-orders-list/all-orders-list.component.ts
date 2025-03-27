@@ -24,6 +24,7 @@ export class AllOrdersListComponent implements OnInit {
 
   orders: Order[] = [];
   filteredOrders: Order[] = [];
+  displayedOrders: Order[] = [];
   isAdmin: boolean = false;
   filterForm: FormGroup;
   sortBy: string = 'orderCreated';
@@ -53,12 +54,6 @@ export class AllOrdersListComponent implements OnInit {
   ngOnInit(): void {
     this.getAllOrders();
     this.setupFormListeners();
-    this.filterForm.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(() => {
-      this.applyFilters();
-    });
   }
 
   initializeForm(): void {
@@ -114,8 +109,15 @@ export class AllOrdersListComponent implements OnInit {
     });
 
     this.sortOrders();
-    this.currentPage = 1;
     this.totalItems = this.filteredOrders.length;
+    this.currentPage = 1;  
+    this.updateDisplayedOrders();
+  }
+
+  updateDisplayedOrders(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.displayedOrders = this.filteredOrders.slice(startIndex, endIndex);
   }
 
   sortOrders(): void {
@@ -131,6 +133,8 @@ export class AllOrdersListComponent implements OnInit {
           return modifier * (new Date(a.orderCreated).getTime() - new Date(b.orderCreated).getTime());
       }
     });
+
+    this.updateDisplayedOrders();
   }
 
   changeSorting(column: string): void {
@@ -190,5 +194,6 @@ export class AllOrdersListComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.currentPage = page;
+    this.updateDisplayedOrders();
   }
 }
