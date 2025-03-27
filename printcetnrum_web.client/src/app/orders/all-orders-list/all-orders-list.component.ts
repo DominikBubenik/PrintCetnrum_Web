@@ -33,6 +33,8 @@ export class AllOrdersListComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalItems: number = 0;
+  showDeleteModal = false;
+  orderToDelete = -1;
 
   constructor() {
     this.filterForm = this.fb.group({
@@ -138,6 +140,15 @@ export class AllOrdersListComponent implements OnInit {
     this.updateDisplayedOrders();
   }
 
+  openDeleteModal(id: number) {
+    this.orderToDelete = id;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+  }
+
   changeSorting(column: string): void {
     if (this.sortBy === column) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -149,17 +160,17 @@ export class AllOrdersListComponent implements OnInit {
   }
 
   deleteOrder(id: number): void {
-    if (confirm('Are you sure you want to delete this order?')) {
-      this.orderService.deleteOrder(id).subscribe(
-        () => {
-          SnackBarUtil.showSnackBar(this.snackBar, 'Order removed successfully!', 'success');
-          this.getAllOrders();
-        },
-        () => {
-          SnackBarUtil.showSnackBar(this.snackBar, 'Something went wrong!', 'error');
-        }
-      );
-    }
+    this.orderService.deleteOrder(id).subscribe(
+      () => {
+        SnackBarUtil.showSnackBar(this.snackBar, 'Order removed successfully!', 'success');
+        this.getAllOrders();
+        this.showDeleteModal = false;
+      },
+      () => {
+        SnackBarUtil.showSnackBar(this.snackBar, 'Something went wrong!', 'error');
+        this.showDeleteModal = false;
+      }
+    );
   }
 
   viewOrderDetails(orderId: number): void {

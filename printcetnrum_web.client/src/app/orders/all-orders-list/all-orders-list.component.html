@@ -57,10 +57,11 @@
           Mark Completed
         </button>
         <button class="btn btn-danger"
-                (click)="deleteOrder(order.id)">
+                (click)="openDeleteModal(order.id)">
           Delete
         </button>
       </div>
+
     </div>
   </div>
   <div class="pagination" *ngIf="filteredOrders.length > itemsPerPage">
@@ -70,4 +71,11 @@
       {{ page }}
     </button>
   </div>
+  <app-confirm-modal [title]="'Delete Order'"
+                     [message]="'Are you sure you want to delete this order? This action cannot be undone.'"
+                     [confirmButtonText]="'Delete'"
+                     [isVisible]="showDeleteModal"
+                     (confirmed)="deleteOrder(orderToDelete)"
+                     (canceled)="closeDeleteModal()">
+  </app-confirm-modal>
 </div>
