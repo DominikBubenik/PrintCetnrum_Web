@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { OrderService } from '../../services/order.service';
 import { Order } from '../../models/order-models/order.model';
 import { AuthService } from '../../services/auth.service';
@@ -6,24 +7,40 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserStoreService } from '../../services/user-store.service';
 import { SnackBarUtil } from '../../shared/snackbar-util';
-
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-all-orders-list',
   templateUrl: './all-orders-list.component.html',
-  styleUrl: './all-orders-list.component.css'
+  styleUrls: ['./all-orders-list.component.css']
 })
-export class AllOrdersListComponent {
-  orders: Order[] = [];
-  isAdmin: boolean = false;
+export class AllOrdersListComponent implements OnInit {
+  private orderService = inject(OrderService);
+  private authService = inject(AuthService);
+  private userStore = inject(UserStoreService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  private fb = inject(FormBuilder);
 
-  constructor(
-    private orderService: OrderService,
-    private authService: AuthService,
-    private userStore: UserStoreService,
-    private router: Router,
-    private snackBar: MatSnackBar
-  ) {
+  orders: Order[] = [];
+  filteredOrders: Order[] = [];
+  isAdmin: boolean = false;
+  filterForm: FormGroup;
+  sortBy: string = 'orderCreated';
+  sortDirection: 'asc' | 'desc' = 'desc';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalItems: number = 0;
+
+  constructor() {
+    this.filterForm = this.fb.group({
+      startDate: [null],
+      endDate: [null],
+      searchTerm: [''],
+      status: ['all']
+    });
+    this.initializeForm();
     this.userStore.getRoleFromStore().subscribe(role => {
       if (role) {
         this.isAdmin = role === 'Admin';
@@ -35,18 +52,95 @@ export class AllOrdersListComponent {
 
   ngOnInit(): void {
     this.getAllOrders();
+    this.setupFormListeners();
+    this.filterForm.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.applyFilters();
+    });
+  }
+
+  initializeForm(): void {
+    this.filterForm = this.fb.group({
+      startDate: [null],
+      endDate: [null],
+      searchTerm: [''],
+      status: ['all']
+    });
+  }
+
+  setupFormListeners(): void {
+    this.filterForm.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.applyFilters();
+    });
   }
 
   getAllOrders(): void {
     this.orderService.getOrders().subscribe(
       (orders) => {
         this.orders = orders;
+        this.applyFilters();
       },
       (error) => {
         console.error('Error fetching orders:', error);
         SnackBarUtil.showSnackBar(this.snackBar, 'Error fetching orders. Please try again.', 'error');
       }
     );
+  }
+
+  applyFilters(): void {
+    const { startDate, endDate, searchTerm, status } = this.filterForm.value;
+
+    this.filteredOrders = this.orders.filter(order => {
+      const orderDate = new Date(order.orderCreated);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      const dateInRange = (!start || orderDate >= start) &&
+        (!end || orderDate <= end);
+
+      const matchesSearch = !searchTerm ||
+        order.orderName.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus = status === 'all' ||
+        (status === 'prepared' && order.isPreparedForCustomer) ||
+        (status === 'completed' && order.isTakenByCustomer);
+
+      return dateInRange && matchesSearch && matchesStatus;
+    });
+
+    this.sortOrders();
+    this.currentPage = 1;
+    this.totalItems = this.filteredOrders.length;
+  }
+
+  sortOrders(): void {
+    this.filteredOrders.sort((a, b) => {
+      const modifier = this.sortDirection === 'asc' ? 1 : -1;
+
+      switch (this.sortBy) {
+        case 'totalPrice':
+          return modifier * (a.totalPrice - b.totalPrice);
+        case 'orderName':
+          return modifier * a.orderName.localeCompare(b.orderName);
+        default:
+          return modifier * (new Date(a.orderCreated).getTime() - new Date(b.orderCreated).getTime());
+      }
+    });
+  }
+
+  changeSorting(column: string): void {
+    if (this.sortBy === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortDirection = 'desc';
+    }
+    this.sortOrders();
   }
 
   deleteOrder(id: number): void {
@@ -87,5 +181,14 @@ export class AllOrdersListComponent {
         }
       });
     }
+  }
+
+  getPaginationArray(): number[] {
+    const totalPages = Math.ceil(this.filteredOrders.length / this.itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
   }
 }
