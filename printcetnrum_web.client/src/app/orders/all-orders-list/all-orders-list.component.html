@@ -65,11 +65,13 @@
     </div>
   </div>
   <div class="pagination" *ngIf="filteredOrders.length > itemsPerPage">
-    <button *ngFor="let page of getPaginationArray()"
-            (click)="onPageChange(page)"
-            [ngClass]="{'active': page === currentPage}">
-      {{ page }}
-    </button>
+    <div class="pagination-container">
+      <button *ngFor="let page of getPaginationArray()"
+              (click)="onPageChange(page)"
+              [ngClass]="{'active': page === currentPage, 'disabled': page === '...'}">
+        {{ page }}
+      </button>
+    </div>
   </div>
   <app-confirm-modal [title]="'Delete Order'"
                      [message]="'Are you sure you want to delete this order? This action cannot be undone.'"

@@ -98,6 +98,7 @@ export class UserFilesComponent implements OnInit {
         this.otherFiles.push(file);
        }
     });
+    console.log('images', this.images.length);
   }
 
   markForPrint(event: { id: number, shouldPrint: boolean }): void {

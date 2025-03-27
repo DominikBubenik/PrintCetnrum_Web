@@ -104,7 +104,7 @@ export class AllOrdersListComponent implements OnInit {
         order.orderName.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesStatus = status === 'all' ||
-        (status === 'prepared' && order.isPreparedForCustomer && !order.isTakenByCustomer) || 
+        (status === 'prepared' && order.isPreparedForCustomer && !order.isTakenByCustomer) ||
         (status === 'completed' && order.isTakenByCustomer) ||
         (status === 'pending' && !order.isPreparedForCustomer && !order.isTakenByCustomer);
 
@@ -113,7 +113,7 @@ export class AllOrdersListComponent implements OnInit {
 
     this.sortOrders();
     this.totalItems = this.filteredOrders.length;
-    this.currentPage = 1;  
+    this.currentPage = 1;
     this.updateDisplayedOrders();
   }
 
@@ -199,13 +199,35 @@ export class AllOrdersListComponent implements OnInit {
     }
   }
 
-  getPaginationArray(): number[] {
+  getPaginationArray(): (number | string)[] {
     const totalPages = Math.ceil(this.filteredOrders.length / this.itemsPerPage);
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
+    const visiblePages = 5;
+    const paginationArray: (number | string)[] = [];
+    if (totalPages <= 10) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    paginationArray.push(1);
+    if (this.currentPage > visiblePages + 2) {
+      paginationArray.push('...');
+    }
+
+    let startPage = Math.max(2, this.currentPage - visiblePages);
+    let endPage = Math.min(totalPages - 1, this.currentPage + visiblePages);
+
+    for (let i = startPage; i <= endPage; i++) {
+      paginationArray.push(i);
+    }
+    if (this.currentPage < totalPages - visiblePages - 1) {
+      paginationArray.push('...');
+    }
+    paginationArray.push(totalPages);
+    return paginationArray;
   }
 
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updateDisplayedOrders();
+  onPageChange(page: number | string): void {
+    if (typeof page === 'number') {
+      this.currentPage = page;
+      this.updateDisplayedOrders();
+    }
   }
 }
