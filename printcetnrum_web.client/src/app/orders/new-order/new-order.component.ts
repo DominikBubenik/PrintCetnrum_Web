@@ -90,14 +90,11 @@ export class NewOrderComponent implements OnInit {
   }
 
   submitOrder(): void {
-    console.log('ideeem');
     if (!this.order) {
       return;
     }
-    console.log('ideeem');
     this.orderService.createOrder(this.order).subscribe(
       (createdOrder) => {
-        console.log('vytvaram objednavku');
         this.orderService.addOrderItems(createdOrder.orderName, this.orderItems).subscribe(
           () => {
             this.order = undefined;
@@ -105,7 +102,6 @@ export class NewOrderComponent implements OnInit {
             this.router.navigate(['/allOrders']);
           },
           (error) => {
-            console.error('Error adding order items:', error);
             SnackBarUtil.showSnackBar(this.snackBar, 'Failed to add order items!', 'error');
           }
         );
@@ -115,5 +111,20 @@ export class NewOrderComponent implements OnInit {
         SnackBarUtil.showSnackBar(this.snackBar, 'Creating order failed!', 'error');
       }
     );
+  }
+
+  getFileIcon(extension: string): string {
+    switch (extension) {
+      case '.pdf':
+        return 'bi bi-filetype-pdf pdf';
+      case '.doc':
+      case '.docx':
+        return 'bi bi-file-earmark-word word';
+      case '.xls':
+      case '.xlsx':
+        return 'bi bi-filetype-xlsx excel';
+      default:
+        return 'bi bi-file-earmark-text';
+    }
   }
 }

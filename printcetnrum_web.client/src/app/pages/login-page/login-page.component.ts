@@ -50,8 +50,8 @@ export class LoginPageComponent {
           this.loginForm.reset();
           this.router.navigate(['']);
         },
-        error: () => {
-          SnackBarUtil.showSnackBar(this.snackBar, 'Login failed. Please try again.', 'error');
+        error: (err) => {
+          SnackBarUtil.showSnackBar(this.snackBar, err.error.message, 'error');
         },
       });
     } else {

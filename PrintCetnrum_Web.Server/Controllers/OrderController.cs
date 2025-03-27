@@ -63,12 +63,18 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
 
             decimal totalPrice = 0;
+            var fileIds = items.Select(i => i.UserFileId).ToList();
+            var filesToUpdate = await _context.UserFiles.Where(f => fileIds.Contains(f.Id)).ToListAsync();
 
             foreach (var item in items)
             {
                 item.OrderId = order.Id;
                 totalPrice += item.Count * item.Price;
                 this._context.OrderItems.Add(item);
+            }
+            foreach (var file in filesToUpdate)
+            {
+                file.ShouldPrint = false;
             }
 
             order.TotalPrice = totalPrice;

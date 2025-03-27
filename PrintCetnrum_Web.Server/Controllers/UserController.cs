@@ -45,7 +45,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var user = await _authContext.Users
                 .FirstOrDefaultAsync(x => x.UserName == userParam.UserName || x.Email == userParam.UserName);
 
-            if (user == null)
+            if (user == null || !user.IsAccountActive)
                 return NotFound(new { message = "User Not Found" });
 
             if (!PasswordHasher.VerifyPassword(userParam.Password, user.Password))
@@ -189,6 +189,20 @@ namespace PrintCetnrum_Web.Server.Controllers
             await _authContext.SaveChangesAsync();
 
             return Ok(new { message = "User Deleted Successfully" });
+        }
+
+        [Authorize]
+        [HttpPut("deactivateUser/{id}")]
+        public async Task<IActionResult> DeactivateUser(int id)
+        {
+            var user = await _authContext.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User Not Found" });
+            user.IsAccountActive = false;
+            _authContext.Users.Update(user);
+            await _authContext.SaveChangesAsync();
+
+            return Ok(new { message = "User Deactivated Successfully" });
         }
 
 

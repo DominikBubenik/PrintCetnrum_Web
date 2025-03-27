@@ -1,16 +1,16 @@
 <div *ngIf="files.length > 0">
   <h3 class="section-title">{{ title }}</h3>
   <div class="file-grid">
-    <div class="file-card" *ngFor="let file of files">
+    <div class="file-card" *ngFor="let file of files" [ngClass]="{ 'marked-file': file.shouldPrint }">
       <div class="file-image-wrapper">
         @if (isImage(file.extension)) {
-          <img [src]="baseUrl + file.filePath" alt="{{ file.fileName }}" class="file-image" />
+        <img [src]="baseUrl + file.filePath" alt="{{ file.fileName }}" class="file-image" />
         } @else if (file.extension === '.pdf') {
-          <img src="assets/icon-pictures/pdf-icon.png" alt="PDF File" class="file-image" />
+        <img src="assets/icon-pictures/pdf-icon.png" alt="PDF File" class="file-image" />
         } @else if (file.extension === '.doc' || file.extension === '.docx') {
-          <img src="assets/icon-pictures/docx-icon.png" alt="Word File" class="file-image" />
+        <img src="assets/icon-pictures/docx-icon.png" alt="Word File" class="file-image" />
         } @else {
-          <img src="assets/icon-pictures/file-icon.png" alt="Other File" class="file-image" />
+        <img src="assets/icon-pictures/file-icon.png" alt="Other File" class="file-image" />
         }
       </div>
       <div class="file-details">
@@ -18,13 +18,15 @@
         <p class="file-date">Uploaded: {{ file.uploadDate | date:'yyyy:MM:dd HH:mm' }}</p>
       </div>
       <div class="file-actions">
-        <button class="btn btn-primary" (click)="markFile(file)">
+        <button class="btn"
+                [ngClass]="file.shouldPrint ? 'btn-success' : 'btn-primary'"
+                (click)="markFile(file)">
           <i class="bi bi-printer"></i>
           {{ file.shouldPrint ? 'Unmark' : 'Mark for Print' }}
         </button>
         <button *ngIf="isImage(file.extension)" class="btn btn-secondary" (click)="editFile.emit(file.id)">Edit</button>
-        <button *ngIf="file.isStamp" class="btn btn-secondary"  [routerLink]="['/editStamp', file.id]">Edit Stamp</button>
-        <button *ngIf="file.isDiploma" class="btn btn-secondary"  [routerLink]="['/editDiploma', file.id]">Edit Diploma</button>
+        <button *ngIf="file.isStamp" class="btn btn-secondary" [routerLink]="['/editStamp', file.id]">Edit Stamp</button>
+        <button *ngIf="file.isDiploma" class="btn btn-secondary" [routerLink]="['/editDiploma', file.id]">Edit Diploma</button>
         <button class="btn btn-danger" (click)="openDeleteModal.emit(file.id)">Remove</button>
       </div>
     </div>

@@ -22,11 +22,21 @@ export class UserFilesComponent implements OnInit {
   files: UserFile[] = [];
   stamps: UserFile[] = [];
   diplomas: UserFile[] = [];
+  images: UserFile[] = [];
+  wordFiles: UserFile[] = [];
+  pdfFiles: UserFile[] = [];
   markedFiles: UserFile[] = [];
-  unmarkedFiles: UserFile[] = [];
+  otherFiles: UserFile[] = [];
   baseUrl = environment.apiUrl;
   fileIdToDelete: number | null = null;
   criteria: string = 'date';
+  showPDFFiles = true;
+  showWordFiles = true;
+  showImages = true;
+  showOtherFiles = true;
+  showStamps = true;
+  showDiplomas = true;
+
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -69,11 +79,30 @@ export class UserFilesComponent implements OnInit {
   }
 
   updateFileLists(): void {
-    this.markedFiles = this.files.filter(file => file.shouldPrint);
-    this.unmarkedFiles = this.files.filter(file => !file.shouldPrint);
+    this.images = [];
+    this.wordFiles = [];
+    this.pdfFiles = [];
+    this.otherFiles = [];
+    this.markedFiles = [];
+    this.files.forEach(file => {
+      if (file.shouldPrint) {
+        this.markedFiles.push(file);
+      }
+      if (this.isImage(file.extension)) {
+        this.images.push(file);
+      } else if (file.extension === '.doc' || file.extension === '.docx') {
+        this.wordFiles.push(file);
+      } else if (file.extension === '.pdf') {
+        this.pdfFiles.push(file);
+      } else {
+        this.otherFiles.push(file);
+       }
+    });
+    console.log('images', this.images.length);
   }
 
   markForPrint(event: { id: number, shouldPrint: boolean }): void {
+    console.log('user-files');
     this.fileHandlerService.markForPrint(event.id, event.shouldPrint).subscribe(() => {
       this.fetchFiles();
     });
@@ -100,6 +129,10 @@ export class UserFilesComponent implements OnInit {
     }
   }
 
+  isImage(extension: string): boolean {
+    return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'].includes(extension.toLowerCase());
+  }
+
   editFile(id: number) {
     this.router.navigate(['/edit', id]);
   }
@@ -108,9 +141,18 @@ export class UserFilesComponent implements OnInit {
   sortFiles(criteria: string): void {
     if (criteria === 'date') {
       this.files.sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()).reverse;
-    } else if (criteria === 'type') {
-      this.files.sort((a, b) => a.extension.localeCompare(b.extension));
+    } else if (criteria === 'name') {
+      this.files.sort((a, b) => a.fileName.localeCompare(b.fileName));
     }
     this.updateFileLists();
+  }
+
+  startOrder() { }
+
+  toggleSelection(event: any):void {
+    console.log('toto je ten co je v sidebare' + event.id);
+    this.fileHandlerService.markForPrint(event.id, true).subscribe(() => {
+      this.fetchFiles();
+    });
   }
 }

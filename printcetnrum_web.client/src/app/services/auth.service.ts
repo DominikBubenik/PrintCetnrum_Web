@@ -1,7 +1,3 @@
-/**
- * inspired by this tutorial
- * https://www.youtube.com/watch?v=R7s5I9H1H9s&list=PLc2Ziv7051bZhBeJlJaqq5lrQuVmBJL6A
- */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -98,5 +94,9 @@ export class AuthService {
 
   getLoginState(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
+  }
+
+  deactivateUser(id: number) {
+    return this.http.put(`${this.baseUrl}deactivateUser/${id}`, {}); 
   }
 }

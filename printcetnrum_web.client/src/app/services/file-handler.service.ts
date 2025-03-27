@@ -1,9 +1,8 @@
-import { inject, Injectable, OnInit, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { UserFile } from '../models/user-file';
-import { ValueChangeEvent } from '@angular/forms';
 import { UserStoreService } from './user-store.service';
 
 @Injectable({
@@ -11,10 +10,9 @@ import { UserStoreService } from './user-store.service';
 })
 export class FileHandlerService {
   private userStore = inject(UserStoreService);
-  private baseUrl = 'https://localhost:7074/api/Upload/'
-
-  constructor(private http: HttpClient, private auth: AuthService) {
-  }
+  private http = inject(HttpClient);
+  private auth = inject(AuthService);
+  private baseUrl = 'https://localhost:7074/api/Upload/';
 
   uploadFiles(files: File[]): Observable<{ filePath: string }[]> {
     const formData = new FormData();
@@ -38,7 +36,6 @@ export class FileHandlerService {
     return this.http.post<UserFile[]>(`${this.baseUrl}getFilesWithId`, listOfId);
   }
 
-
   deleteFile(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}`);
   }
@@ -50,17 +47,13 @@ export class FileHandlerService {
   saveChanges(id: number, file: File): Observable<number> {
     const formData = new FormData();
     formData.append('newFile', file);
-    console.log(formData.forEach((value, key) => {
-      console.log('this is value' + value);
-    }
-    ));
     return this.http.put<number>(`${this.baseUrl}replaceFile/${id}`, formData);
   }
 
 
   downloadFile(fileId: number) {
     return this.http.get(`${this.baseUrl}downloadFile/${fileId}`, {
-      responseType: 'blob', // Binary response
+      responseType: 'blob',
     });
   }
 }
