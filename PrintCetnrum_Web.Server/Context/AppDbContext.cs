@@ -12,6 +12,9 @@ namespace PrintCetnrum_Web.Server.Context
 
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserAddress> UserAddresses { get; set; }
+        public DbSet<UserAuthentication> UserAuthentications { get; set; }
         public DbSet<UserFile> UserFiles { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -27,6 +30,9 @@ namespace PrintCetnrum_Web.Server.Context
             builder.Entity<OrderItem>().ToTable("order_items");
             builder.Entity<PrizeList>().ToTable("prize_lists");
             builder.Entity<DesignFile>().ToTable("design_files");
+            builder.Entity<Role>().ToTable("roles");
+            builder.Entity<UserAddress>().ToTable("user_addresses");
+            builder.Entity<UserAuthentication>().ToTable("user_authentications");
             
 
             // Specify decimal precision and scale for TotalPrice in the Order entity

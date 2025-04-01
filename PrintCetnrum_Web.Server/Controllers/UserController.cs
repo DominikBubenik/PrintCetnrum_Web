@@ -1,8 +1,4 @@
-﻿/**
- * inspired by this tutorial
- * https://www.youtube.com/watch?v=R7s5I9H1H9s&list=PLc2Ziv7051bZhBeJlJaqq5lrQuVmBJL6A
- */
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,7 +19,7 @@ namespace PrintCetnrum_Web.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly AppDbContext _authContext;
         private readonly IConfiguration _configuration;
@@ -37,7 +33,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] User userParam)
+        public async Task<IActionResult> Authenticate([FromBody] UserDto userParam)
         {
             if (userParam == null)
                 return BadRequest();
@@ -47,17 +43,18 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             if (user == null || !user.IsAccountActive)
                 return NotFound(new { message = "User Not Found" });
+            var userAuthentication = await _authContext.UserAuthentications.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
-            if (!PasswordHasher.VerifyPassword(userParam.Password, user.Password))
+            if (!PasswordHasher.VerifyPassword(userParam.Password, userAuthentication.Password))
             {
                 return BadRequest(new { Message = "Password is Incorrect" });
             }
 
-            user.Token = CreateJwt(user);
-            var newAccessToken = user.Token;
+            userAuthentication.Token = CreateJwt(user);
+            var newAccessToken = userAuthentication.Token;
             var newRefreshToken = CreateRefreshToken();
-            user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
+            userAuthentication.RefreshToken = newRefreshToken;
+            userAuthentication.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
             await _authContext.SaveChangesAsync();
 
             return Ok(new TokenApiDto()
@@ -85,16 +82,14 @@ namespace PrintCetnrum_Web.Server.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User userParam)
+        public async Task<IActionResult> Register([FromBody] UserDto userParam)
         {
             if (userParam == null)
                 return BadRequest();
             
-            // check email
             if (await CheckEmailExistAsync(userParam.Email))
                 return BadRequest(new { Message = "Email Already Exist" });
-
-            //check username
+            
             if (await CheckUsernameExistAsync(userParam.UserName))
                 return BadRequest(new { Message = "Username Already Exist" });
 
@@ -102,38 +97,54 @@ namespace PrintCetnrum_Web.Server.Controllers
             //var passMessage = CheckPasswordStrength(userParam.Password);
             //if (!string.IsNullOrEmpty(passMessage))
             //    return BadRequest(new { Message = passMessage.ToString() });
-
-            userParam.Password = PasswordHasher.HashPassword(userParam.Password);
-            userParam.Role = "User";
-            userParam.Token = "";
-            userParam.IsAccountActive = true;
-            await _authContext.Users.AddAsync(userParam);
+            var hashedPassword = PasswordHasher.HashPassword(userParam.Password);
+            
+            var user = new User
+            {
+                FirstName = userParam.FirstName,
+                LastName = userParam.LastName,
+                UserName = userParam.UserName,
+                Email = userParam.Email,
+                IsAccountActive = true,  
+                RoleId = 2, 
+                Authentication = new UserAuthentication
+                {
+                    Password = hashedPassword,
+                    Token = "" 
+                }
+            };
+            
+            await _authContext.Users.AddAsync(user);
             await _authContext.SaveChangesAsync();
 
             return Ok(new { message = "User Created Successfully" });
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _authContext.Users
-                .Select(user => new
+                .Select(user => new UserDto  // Use a DTO instead of exposing full User model
                 {
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     UserName = user.UserName,
                     Email = user.Email,
-                    Role = user.Role
+                    Role = user.Role.Name
                 })
                 .ToListAsync();
+
+            if (users.Count == 0)
+                return NotFound(new { message = "No users found" });
+
             return Ok(users);
         }
 
         [Authorize]
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto updatedUser)
         {
             if (updatedUser == null || id != updatedUser.Id)
                 return BadRequest();
@@ -146,14 +157,10 @@ namespace PrintCetnrum_Web.Server.Controllers
             user.LastName = updatedUser.LastName;
             user.UserName = updatedUser.UserName;
             user.Email = updatedUser.Email;
-            user.Street = updatedUser.Street;
-            user.City = updatedUser.City;
-            user.PostCode = updatedUser.PostCode;
+            user.Address.Street = updatedUser.Street;
+            user.Address.City = updatedUser.City;
+            user.Address.PostCode = updatedUser.PostCode;
             user.IsAccountActive = updatedUser.IsAccountActive;
-            if (!string.IsNullOrEmpty(updatedUser.Password))
-            {
-                user.Password = PasswordHasher.HashPassword(updatedUser.Password);
-            }
 
             await _authContext.SaveChangesAsync();
             return Ok(new { message = "User Updated Successfully" });
@@ -228,10 +235,11 @@ namespace PrintCetnrum_Web.Server.Controllers
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key-that-is-at-least-256-bits-long");
+            var userRole = _authContext.Roles.Where(r => r.Id == user.RoleId).FirstOrDefault();
             var identity = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Name,$"{user.UserName}")
+                new(ClaimTypes.Role, userRole.Name),
+                new(ClaimTypes.Name,$"{user.UserName}")
             });
 
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256); //HmacSha256
@@ -251,7 +259,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var refreshToken = Convert.ToBase64String(tokenBytes);
 
-            var tokenInUser = _authContext.Users.Any(a => a.RefreshToken == refreshToken);
+            var tokenInUser = _authContext.Users.Any(a => a.Authentication.RefreshToken == refreshToken);
             if (tokenInUser)
             {
                 return CreateRefreshToken();
@@ -290,11 +298,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             var principal = GetPrincipleFromExpiredToken(accessToken);
             var username = principal.Identity.Name;
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
-            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            if (user is null || user.Authentication.RefreshToken != refreshToken || user.Authentication.RefreshTokenExpiryTime <= DateTime.Now)
                 return BadRequest("Invalid Request");
             var newAccessToken = CreateJwt(user);
             var newRefreshToken = CreateRefreshToken();
-            user.RefreshToken = newRefreshToken;
+            user.Authentication.RefreshToken = newRefreshToken;
             await _authContext.SaveChangesAsync();
             return Ok(new TokenApiDto()
             {
@@ -314,8 +322,8 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var emailToken = Convert.ToBase64String(tokenBytes);
-            user.ResetPasswordToken = emailToken;
-            user.ResetPasswordExpiry = DateTime.Now.AddDays(1);
+            user.Authentication.ResetPasswordToken = emailToken;
+            user.Authentication.ResetPasswordExpiry = DateTime.Now.AddDays(1);
             string from = _configuration["EmailSettings:From"];
             var emailModel = new EmailModel(email, "Reset Password", 
                 EmailBody.EmailStringBody(email, emailToken));
@@ -344,8 +352,8 @@ namespace PrintCetnrum_Web.Server.Controllers
                 });
             }
 
-            var tokenCode = user.ResetPasswordToken;
-            DateTime emailTokenExpiry = user.ResetPasswordExpiry;
+            var tokenCode = user.Authentication.ResetPasswordToken;
+            DateTime emailTokenExpiry = user.Authentication.ResetPasswordExpiry;
             if (tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
             {
                 return BadRequest(new
@@ -355,7 +363,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 });
             }
 
-            user.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
+            user.Authentication.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
             _authContext.Entry(user).State = EntityState.Modified;
             await _authContext.SaveChangesAsync();
             return Ok(new
