@@ -10,6 +10,7 @@ namespace PrintCetnrum_Web.Server.Models.OrderModels
         [Key]
         public int Id { get; set; }
         [Required]
+        [MaxLength(100)]
         public string OrderName { get; set; }
 
         [Required]

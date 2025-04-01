@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using PrintCetnrum_Web.Server.Context;
 using PrintCetnrum_Web.Server.Helpers;
 using PrintCetnrum_Web.Server.Models;
@@ -17,13 +16,11 @@ namespace PrintCetnrum_Web.Server.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
 
-        public OrderController(AppDbContext context, IEmailService emailService, IConfiguration configuration)
+        public OrderController(AppDbContext context, IEmailService emailService)
         {
             _context = context;
             _emailService = emailService;
-            _configuration = configuration;
         }
 
         [HttpPost("create-order")]
@@ -43,8 +40,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             string timeStamp = DateTime.Now.ToString("yyMMddHHmmss");
             order.OrderName = $"{timeStamp}{order.UserId}";
-
-            order.TotalPrice = order.TotalPrice;
             order.OrderCreated = DateTime.UtcNow;
 
             _context.Orders.Add(order);
@@ -56,7 +51,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpPost("add-order-items")]
         public async Task<IActionResult> AddOrderItems([FromBody] OrderItem[] items, [FromQuery] string orderName)
         {
-            var order = this._context.Orders.FirstOrDefault(o => o.OrderName == orderName);
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderName == orderName);
             if (order == null)
             {
                 return BadRequest("No Order Found!");
@@ -70,7 +65,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 item.OrderId = order.Id;
                 totalPrice += item.Count * item.Price;
-                this._context.OrderItems.Add(item);
+                _context.OrderItems.Add(item);
             }
             foreach (var file in filesToUpdate)
             {
@@ -81,9 +76,7 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             //dont forget to update order total price
             await _context.SaveChangesAsync();
-            
             return Ok();
-
         }
 
         [HttpPost("send-order-ready-email/{orderId}")]
@@ -204,7 +197,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("get-orders/{userName}")]
         public async Task<IActionResult> GetOrders(string userName)
         {
@@ -213,8 +206,8 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 return NotFound("User not found.");
             }
- 
-            if (user.Role == "Admin")
+            var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Id == user.RoleId);
+            if (userRole.Name == "Admin")
             {
                 var orders = await _context.Orders
                     .Include(o => o.OrderItems)

@@ -46,4 +46,16 @@
     <Folder Include="wwwroot\UserData\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\1c266865-8258-45c2-9161-86e4644e070a.pdf" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\2a378c51-7323-4205-8a16-ff7a8414fd39.pdf" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\2bbcaf62-f856-41e9-bf16-5d17a9b5ddcf.pdf" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\8774ee55-4b37-42b0-abfd-e50a07f14838.xls" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\b19c365e-83e7-4c05-97ea-3e51b1213443.pdf" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\DesignFiles\Diploma_3c8826c9-ae97-4034-a4de-74f470c258c4.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\DesignFiles\Stamp_deb67abb-ca9d-49f3-837d-528ad0c882f6.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\DesignFiles\Stamp_e0444fd1-a08f-4b3a-ba88-c406f3872da1.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\UserData\prvyPou\Diplomas\e57cf388-4b0b-4204-bc0a-188f1085a959.json" />
+  </ItemGroup>
+
 </Project>

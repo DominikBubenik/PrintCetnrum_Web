@@ -8,13 +8,17 @@ public class DesignFile
     [Key]
     public int Id { get; set; }
     [Required]
+    [MaxLength(255)]
     public string FileName { get; set; }
     [Required]
+    [MaxLength(255)]
     public string UniqueName { get; set; }
     [Required]
+    [MaxLength(255)]
     public string FilePath { get; set; }
     [Required]
     public DateTime DateCreated { get; set; }
+    [MaxLength(50)]
     public string Type { get; set; }
     [ForeignKey("User")]
     public int UserId { get; set; }
