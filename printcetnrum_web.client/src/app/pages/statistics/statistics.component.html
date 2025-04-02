@@ -1,0 +1,22 @@
+<div class="dashboard">
+  <mat-card class="stat-card">
+    <mat-card-title>Total Orders</mat-card-title>
+    <mat-card-content>{{ businessOverview?.TotalOrders }}</mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card">
+    <mat-card-title>Total Revenue</mat-card-title>
+    <mat-card-content>{{ businessOverview?.TotalRevenue | currency }}</mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card">
+    <mat-card-title>Pending Orders</mat-card-title>
+    <mat-card-content>{{ businessOverview?.PendingOrders }}</mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card">
+    <mat-card-title>Completed Orders</mat-card-title>
+    <mat-card-content>{{ businessOverview?.CompletedOrders }}</mat-card-content>
+  </mat-card>
+</div>
+

@@ -1,0 +1,17 @@
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stat-card {
+  flex: 1 1 calc(25% - 16px);
+  min-width: 200px;
+  text-align: center;
+  padding: 16px;
+  background-color: #f4f4f4;
+}
+
+mat-card {
+  margin-bottom: 20px;
+}
