@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {StatService} from "../../services/stat.service";
+import { StatService } from "../../services/stat.service";
 
 @Component({
   selector: 'app-statistics',
@@ -8,10 +8,37 @@ import {StatService} from "../../services/stat.service";
 })
 export class StatisticsComponent implements OnInit {
   businessOverview: any;
-  salesTrends: any;
-  topProducts: any;
-  newCustomers: any;
-  orderStatus: any;
+  salesTrends: any[] = [];
+  topProducts: any[] = [];
+  newCustomers: any[] = [];
+  orderStatus: any[] = [];
+  loading = true;
+  error = false;
+
+  // Chart options
+  view: [number, number] = [700, 300];
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  showYAxisLabel = true;
+  xAxisLabel = 'Period';
+  yAxisLabel = 'Sales ($)';
+
+  // Color schemes
+  colorScheme = {
+    domain: ['#4caf50', '#2196F3', '#FFC107', '#FF5722']
+  };
+
+  // For pie/donut chart
+  doughnutColorScheme = {
+    domain: ['#FFC107', '#2196F3', '#4CAF50']
+  };
+
+  showLabels = true;
+  isDoughnut = true;
+  legendPosition = 'below';
 
   constructor(private statService: StatService) {}
 
@@ -20,33 +47,74 @@ export class StatisticsComponent implements OnInit {
   }
 
   loadStatistics() {
-    this.statService.getBusinessOverview().subscribe((data) => {
-      this.businessOverview = data;
+    this.statService.getBusinessOverview().subscribe({
+      next: (data) => {
+        this.businessOverview = data;
+      },
+      error: (err) => {
+        console.error('Error loading business overview', err);
+        this.error = true;
+      }
     });
 
-    this.statService.getSalesTrends().subscribe((data) => {
-      this.salesTrends = [
-        { name: 'Today', value: data.TodaySales },
-        { name: 'This Week', value: data.WeeklySales },
-        { name: 'This Month', value: data.MonthlySales },
-      ];
+    this.statService.getSalesTrends().subscribe({
+      next: (data) => {
+        this.salesTrends = [
+          { name: 'Today', value: data.TodaySales },
+          { name: 'This Week', value: data.WeeklySales },
+          { name: 'This Month', value: data.MonthlySales },
+        ];
+      },
+      error: (err) => {
+        console.error('Error loading sales trends', err);
+        this.error = true;
+      }
     });
 
-    this.statService.getTopProducts().subscribe((data) => {
-      this.topProducts = data;
-      console.log(this.topProducts);
+    this.statService.getTopProducts().subscribe({
+      next: (data) => {
+        this.topProducts = data;
+      },
+      error: (err) => {
+        console.error('Error loading top products', err);
+        this.error = true;
+      }
     });
 
-    this.statService.getNewCustomers().subscribe((data) => {
-      this.newCustomers = data.NewCustomers;
+    this.statService.getNewCustomers().subscribe({
+      next: (data) => {
+        this.newCustomers = data.NewCustomers;
+      },
+      error: (err) => {
+        console.error('Error loading new customers', err);
+        this.error = true;
+      }
     });
 
-    this.statService.getOrderStatus().subscribe((data) => {
-      this.orderStatus = [
-        { name: 'Prepared', value: data.PreparedOrders },
-        { name: 'Taken', value: data.TakenOrders },
-        { name: 'Finished', value: data.FinishedOrders },
-      ];
+    this.statService.getOrderStatus().subscribe({
+      next: (data) => {
+        this.orderStatus = [
+          { name: 'Prepared', value: data.PreparedOrders },
+          { name: 'Taken', value: data.TakenOrders },
+          { name: 'Finished', value: data.FinishedOrders },
+        ];
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading order status', err);
+        this.error = true;
+        this.loading = false;
+      }
     });
+  }
+
+  onResize(event: any) {
+    // Responsive chart sizing
+    const width = event.target.innerWidth;
+    if (width < 700) {
+      this.view = [width - 50, 300];
+    } else {
+      this.view = [700, 300];
+    }
   }
 }
