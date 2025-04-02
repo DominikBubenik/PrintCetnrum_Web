@@ -47,7 +47,6 @@ export class StatisticsComponent implements OnInit {
   loadStatistics() {
     this.statService.getBusinessOverview().subscribe({
       next: (data) => {
-        console.log('this is businessOverview' + data);
         this.businessOverview.set(data);
       },
       error: (err) => {
@@ -58,7 +57,6 @@ export class StatisticsComponent implements OnInit {
 
     this.statService.getSalesTrends().subscribe({
       next: (data) => {
-        console.log('this is salesTrends' + data.DailySales);
         this.salesTrends.set([
           { name: 'Today', value: data.todaySales },
           { name: 'This Week', value: data.weeklySales },
