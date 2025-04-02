@@ -15,6 +15,7 @@ import {StampPageComponent} from "./pages/stamp-page/stamp-page.component";
 import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
 import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
 import { UploadFileComponent } from './pages/upload-file/upload-file.component';
+import {StatisticsComponent} from "./pages/statistics/statistics.component";
 
 
 const routes: Routes = [
@@ -92,6 +93,13 @@ const routes: Routes = [
     path: 'userProfile',
     component: UserProfilePageComponent,
     title: 'Profile',
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'statistics',
+    component: StatisticsComponent,
+    title: 'Stats',
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },

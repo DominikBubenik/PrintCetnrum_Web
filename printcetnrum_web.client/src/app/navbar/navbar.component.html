@@ -12,6 +12,7 @@
             <li [routerLink]="['/userFiles']" [class.active]="currentUrl === '/userFiles'" (click)="$event.stopPropagation()">Your Files</li>
             <li *ngIf="isLoggedIn()" [routerLink]="['/allOrders']" [class.active]="currentUrl === '/allOrders'" (click)="$event.stopPropagation()">Your Orders</li>
             <li *ngIf="isLoggedIn() && isAdmin" [routerLink]="['/users']" [class.active]="currentUrl === '/users'" (click)="$event.stopPropagation()">Users</li>
+            <li *ngIf="isLoggedIn() && isAdmin" [routerLink]="['/statistics']" [class.active]="currentUrl === '/statistics'" (click)="$event.stopPropagation()">Statistics</li>
             <li *ngIf="!isLoggedIn()" [routerLink]="['/login']" [class.active]="currentUrl === '/login'" (click)="$event.stopPropagation()">Log in</li>
             <li *ngIf="!isLoggedIn()" [routerLink]="['/register']" [class.active]="currentUrl === '/register'" (click)="$event.stopPropagation()">Register</li>
           </ul>

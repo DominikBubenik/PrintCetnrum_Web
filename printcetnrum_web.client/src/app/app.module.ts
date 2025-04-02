@@ -5,9 +5,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HomePageComponent } from './pages/home-page/home-page.component';
@@ -30,7 +31,12 @@ import { FileCardComponentComponent } from './shared/file-card-component/file-ca
 import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
 import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
 import { UploadFileComponent } from './pages/upload-file/upload-file.component';
-import { SelectedFilesListComponent } from './shared/selected-files-list/selected-files-list.component'
+import { SelectedFilesListComponent } from './shared/selected-files-list/selected-files-list.component';
+import { StatisticsComponent } from './pages/statistics/statistics.component'
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {NgxChartsModule} from "@swimlane/ngx-charts";
+import {MatTable} from "@angular/material/table";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -53,7 +59,8 @@ import { SelectedFilesListComponent } from './shared/selected-files-list/selecte
     DiplomaPageComponent,
     UserProfilePageComponent,
     UploadFileComponent,
-    SelectedFilesListComponent
+    SelectedFilesListComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,
@@ -61,9 +68,10 @@ import { SelectedFilesListComponent } from './shared/selected-files-list/selecte
     MatToolbarModule, MatButtonModule, MatIconModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    CommonModule,
     FormsModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule, MatCard, MatCardContent, MatCardTitle, MatCardHeader, NgxChartsModule, MatTable, MatProgressSpinner
   ],
   providers: [
     provideAnimationsAsync(),

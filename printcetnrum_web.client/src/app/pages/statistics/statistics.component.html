@@ -1,0 +1,93 @@
+<div class="dashboard-container" (window:resize)="onResize($event)">
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading statistics...</p>
+  </div>
+  <div *ngIf="error" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>Failed to load some statistics. Please try again later.</p>
+    <button mat-raised-button color="primary" (click)="loadStatistics()">Retry</button>
+  </div>
+  <div *ngIf="!loading && !error" class="dashboard">
+    <div class="card-row">
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>shopping_cart</mat-icon>
+          <mat-card-title>Total Orders</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-value">
+          {{ businessOverview()?.totalOrders || 0 }}
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>payments</mat-icon>
+          <mat-card-title>Total Revenue</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-value">
+          {{ businessOverview()?.totalRevenue | currency:'USD':'symbol':'1.2-2' || '$0.00' }}
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>hourglass_empty</mat-icon>
+          <mat-card-title>Pending Orders</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-value">
+          {{ businessOverview()?.pendingOrders || 0 }}
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>hourglass_empty</mat-icon>
+          <mat-card-title>Prepared Orders</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-value">
+          {{ businessOverview()?.preparedOrders || 0 }}
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>check_circle</mat-icon>
+          <mat-card-title>Completed Orders</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-value">
+          {{ businessOverview()?.completedOrders || 0 }}
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="chart-row">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Sales Trends</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ngx-charts-bar-horizontal [view]="view"
+                                     [results]="salesTrends()"
+                                     [gradient]="gradient"
+                                     [xAxis]="showXAxis"
+                                     [yAxis]="showYAxis"
+                                     [legend]="showLegend"
+                                     [showXAxisLabel]="showXAxisLabel"
+                                     [showYAxisLabel]="showYAxisLabel"
+                                     [xAxisLabel]="xAxisLabel"
+                                     [yAxisLabel]="yAxisLabel">
+          </ngx-charts-bar-horizontal>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Order Status</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ngx-charts-pie-chart [view]="view"
+                                [results]="orderStatus"
+                                [gradient]="gradient"
+                                [legend]="showLegend"
+                                [labels]="showLabels">
+          </ngx-charts-pie-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
