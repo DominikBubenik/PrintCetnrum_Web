@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /PrintCetnrum_Web.Server/wwwroot/UserData
 /data_model_printCentrum.mwb
 /data_model_printCentrum.mwb.bak
+/printcetnrum_web.client/package-lock.json
+/data_model_printCentrum.mwb.bak.bak

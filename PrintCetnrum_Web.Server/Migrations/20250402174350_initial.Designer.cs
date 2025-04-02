@@ -12,8 +12,8 @@ using PrintCetnrum_Web.Server.Context;
 namespace PrintCetnrum_Web.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250401094334_change-size-of-filename")]
-    partial class changesizeoffilename
+    [Migration("20250402174350_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

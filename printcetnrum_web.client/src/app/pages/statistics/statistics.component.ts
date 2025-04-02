@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { StatService } from "../../services/stat.service";
+import { BusinessOverview, SalesTrend } from '../../models/statistics.model';
 
 @Component({
   selector: 'app-statistics',
@@ -7,15 +8,14 @@ import { StatService } from "../../services/stat.service";
   styleUrls: ['./statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
-  businessOverview: any;
-  salesTrends: any[] = [];
+  businessOverview = signal<BusinessOverview | null>(null);
+  salesTrends = signal<SalesTrend[] | null>([]);
   topProducts: any[] = [];
   newCustomers: any[] = [];
   orderStatus: any[] = [];
   loading = true;
   error = false;
 
-  // Chart options
   view: [number, number] = [700, 300];
   showXAxis = true;
   showYAxis = true;
@@ -26,12 +26,10 @@ export class StatisticsComponent implements OnInit {
   xAxisLabel = 'Period';
   yAxisLabel = 'Sales ($)';
 
-  // Color schemes
   colorScheme = {
     domain: ['#4caf50', '#2196F3', '#FFC107', '#FF5722']
   };
 
-  // For pie/donut chart
   doughnutColorScheme = {
     domain: ['#FFC107', '#2196F3', '#4CAF50']
   };
@@ -49,7 +47,8 @@ export class StatisticsComponent implements OnInit {
   loadStatistics() {
     this.statService.getBusinessOverview().subscribe({
       next: (data) => {
-        this.businessOverview = data;
+        console.log('this is businessOverview' + data);
+        this.businessOverview.set(data);
       },
       error: (err) => {
         console.error('Error loading business overview', err);
@@ -59,11 +58,12 @@ export class StatisticsComponent implements OnInit {
 
     this.statService.getSalesTrends().subscribe({
       next: (data) => {
-        this.salesTrends = [
-          { name: 'Today', value: data.TodaySales },
-          { name: 'This Week', value: data.WeeklySales },
-          { name: 'This Month', value: data.MonthlySales },
-        ];
+        console.log('this is salesTrends' + data.DailySales);
+        this.salesTrends.set([
+          { name: 'Today', value: data.todaySales },
+          { name: 'This Week', value: data.weeklySales },
+          { name: 'This Month', value: data.monthlySales },
+        ]);
       },
       error: (err) => {
         console.error('Error loading sales trends', err);
@@ -94,9 +94,9 @@ export class StatisticsComponent implements OnInit {
     this.statService.getOrderStatus().subscribe({
       next: (data) => {
         this.orderStatus = [
-          { name: 'Prepared', value: data.PreparedOrders },
-          { name: 'Taken', value: data.TakenOrders },
-          { name: 'Finished', value: data.FinishedOrders },
+          { name: 'Pending', value: data.pendingOrders },
+          { name: 'Prepared', value: data.preparedOrders },
+          { name: 'Taken', value: data.takenOrders },
         ];
         this.loading = false;
       },
@@ -109,7 +109,6 @@ export class StatisticsComponent implements OnInit {
   }
 
   onResize(event: any) {
-    // Responsive chart sizing
     const width = event.target.innerWidth;
     if (width < 700) {
       this.view = [width - 50, 300];

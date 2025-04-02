@@ -7,7 +7,7 @@ namespace PrintCetnrum_Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]  // Restrict to admins only
+    [Authorize(Roles = "Admin")]
     public class StatisticsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -17,16 +17,14 @@ namespace PrintCetnrum_Web.Server.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// Gets total sales, order count, and other key statistics.
-        /// </summary>
         [HttpGet("overview")]
         public async Task<IActionResult> GetBusinessOverview()
         {
             var totalOrders = await _context.Orders.CountAsync();
             var totalRevenue = await _context.Orders.SumAsync(o => o.TotalPrice);
-            var completedOrders = await _context.Orders.CountAsync(o => o.OrderFinished != null);
-            var pendingOrders = totalOrders - completedOrders;
+            var completedOrders = await _context.Orders.CountAsync(o => o.IsTakenByCustomer);
+            var preparedOrders = await _context.Orders.CountAsync(o => !o.IsTakenByCustomer && o.IsPreparedForCustomer);
+            var pendingOrders = totalOrders - completedOrders - preparedOrders;
             var avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
             return Ok(new
@@ -34,14 +32,12 @@ namespace PrintCetnrum_Web.Server.Controllers
                 TotalOrders = totalOrders,
                 TotalRevenue = totalRevenue,
                 CompletedOrders = completedOrders,
+                PreparedOrders = preparedOrders,
                 PendingOrders = pendingOrders,
                 AverageOrderValue = avgOrderValue
             });
         }
 
-        /// <summary>
-        /// Gets daily, weekly, and monthly revenue trends.
-        /// </summary>
         [HttpGet("sales-trends")]
         public async Task<IActionResult> GetSalesTrends()
         {
@@ -69,14 +65,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             });
         }
 
-        /// <summary>
-        /// Gets the top 5 selling items based on total quantity ordered.
-        /// </summary>
         [HttpGet("top-products")]
         public async Task<IActionResult> GetTopSellingProducts()
         {
             var topProducts = await _context.OrderItems
-                .GroupBy(oi => new { oi.Description, oi.PaperType, oi.Size })  // Group by product attributes
+                .GroupBy(oi => new { oi.Description, oi.PaperType, oi.Size }) 
                 .Select(group => new
                 {
                     Product = $"{group.Key.Description} ({group.Key.PaperType}, {group.Key.Size})",
@@ -90,9 +83,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             return Ok(topProducts);
         }
 
-        /// <summary>
-        /// Gets the number of new customers in the last month.
-        /// </summary>
         [HttpGet("new-customers")]
         public async Task<IActionResult> GetNewCustomers()
         {
@@ -105,23 +95,19 @@ namespace PrintCetnrum_Web.Server.Controllers
             return Ok(new { NewCustomers = newCustomers });
         }
 
-        /// <summary>
-        /// Gets a breakdown of orders by status.
-        /// </summary>
         [HttpGet("order-status")]
         public async Task<IActionResult> GetOrderStatusBreakdown()
         {
             var totalOrders = await _context.Orders.CountAsync();
-            var preparedOrders = await _context.Orders.CountAsync(o => o.IsPreparedForCustomer);
+            var preparedOrders = await _context.Orders.CountAsync(o => o.IsPreparedForCustomer && !o.IsTakenByCustomer);
             var takenOrders = await _context.Orders.CountAsync(o => o.IsTakenByCustomer);
-            var finishedOrders = await _context.Orders.CountAsync(o => o.OrderFinished != null);
+            var pendingOrders = totalOrders - preparedOrders - takenOrders;
 
             return Ok(new
             {
-                TotalOrders = totalOrders,
+                PendingOrders = pendingOrders,
                 PreparedOrders = preparedOrders,
-                TakenOrders = takenOrders,
-                FinishedOrders = finishedOrders
+                TakenOrders = takenOrders
             });
         }
     }

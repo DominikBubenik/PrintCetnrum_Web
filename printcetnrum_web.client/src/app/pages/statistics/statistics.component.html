@@ -19,7 +19,7 @@
           <mat-card-title>Total Orders</mat-card-title>
         </mat-card-header>
         <mat-card-content class="card-value">
-          {{ businessOverview?.TotalOrders || 0 }}
+          {{ businessOverview()?.totalOrders || 0 }}
         </mat-card-content>
       </mat-card>
 
@@ -29,7 +29,7 @@
           <mat-card-title>Total Revenue</mat-card-title>
         </mat-card-header>
         <mat-card-content class="card-value">
-          {{ businessOverview?.TotalRevenue | currency:'USD':'symbol':'1.2-2' || '$0.00' }}
+          {{ businessOverview()?.totalRevenue | currency:'USD':'symbol':'1.2-2' || '$0.00' }}
         </mat-card-content>
       </mat-card>
 
@@ -39,7 +39,17 @@
           <mat-card-title>Pending Orders</mat-card-title>
         </mat-card-header>
         <mat-card-content class="card-value">
-          {{ businessOverview?.PendingOrders || 0 }}
+          {{ businessOverview()?.pendingOrders || 0 }}
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>hourglass_empty</mat-icon>
+          <mat-card-title>Prepared Orders</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-value">
+          {{ businessOverview()?.preparedOrders || 0 }}
         </mat-card-content>
       </mat-card>
 
@@ -49,7 +59,7 @@
           <mat-card-title>Completed Orders</mat-card-title>
         </mat-card-header>
         <mat-card-content class="card-value">
-          {{ businessOverview?.CompletedOrders || 0 }}
+          {{ businessOverview()?.completedOrders || 0 }}
         </mat-card-content>
       </mat-card>
     </div>
@@ -61,10 +71,9 @@
           <mat-card-title>Sales Trends</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <ngx-charts-bar-vertical
+          <ngx-charts-bar-horizontal
             [view]="view"
-            [scheme]="colorScheme[0]"
-            [results]="salesTrends"
+            [results]="salesTrends()"
             [gradient]="gradient"
             [xAxis]="showXAxis"
             [yAxis]="showYAxis"
@@ -73,7 +82,7 @@
             [showYAxisLabel]="showYAxisLabel"
             [xAxisLabel]="xAxisLabel"
             [yAxisLabel]="yAxisLabel">
-          </ngx-charts-bar-vertical>
+          </ngx-charts-bar-horizontal>
         </mat-card-content>
       </mat-card>
 
@@ -85,12 +94,10 @@
         <mat-card-content>
           <ngx-charts-pie-chart
             [view]="view"
-            [scheme]="doughnutColorScheme[0]"
             [results]="orderStatus"
             [gradient]="gradient"
             [legend]="showLegend"
-            [labels]="showLabels"
-            [doughnut]="isDoughnut">
+            [labels]="showLabels">
           </ngx-charts-pie-chart>
         </mat-card-content>
       </mat-card>
