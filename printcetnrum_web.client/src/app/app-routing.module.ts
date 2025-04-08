@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomePageComponent } from './pages/home-page/home-page.component';
-import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { RegisterPageComponent } from './pages/register-page/register-page.component';
-import { UsersListPageComponent } from './pages/users-list-page/users-list-page.component';
+import { HomePageComponent } from './home-page/home-page.component';
+import { LoginPageComponent } from './user-pages/login-page/login-page.component';
+import { RegisterPageComponent } from './user-pages/register-page/register-page.component';
+import { UsersListPageComponent } from './admin-pages/users-list-page/users-list-page.component';
 import { AuthGuard } from './guards/auth.guard';
-import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
-import { UserFilesComponent } from './pages/user-files/user-files.component';
+import { ResetPasswordPageComponent } from './user-pages/reset-password-page/reset-password-page.component';
+import { UserFilesComponent } from './file-pages/user-files/user-files.component';
 import { NewOrderComponent } from './orders/new-order/new-order.component';
 import { AllOrdersListComponent } from './orders/all-orders-list/all-orders-list.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
-import {StampPageComponent} from "./pages/stamp-page/stamp-page.component";
-import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.component';
-import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
-import { UploadFileComponent } from './pages/upload-file/upload-file.component';
-import {StatisticsComponent} from "./pages/statistics/statistics.component";
+import {StampPageComponent} from "./file-pages/stamp-page/stamp-page.component";
+import { DiplomaPageComponent } from './file-pages/diploma-page/diploma-page.component';
+import { UserProfilePageComponent } from './user-pages/user-profile-page/user-profile-page.component';
+import { UploadFileComponent } from './file-pages/upload-file/upload-file.component';
+import {StatisticsComponent} from "./admin-pages/statistics/statistics.component";
 import { AdminGuard } from './guards/admin.guard';
 
 
