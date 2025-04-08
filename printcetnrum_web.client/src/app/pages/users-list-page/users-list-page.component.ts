@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
-import { UserStoreService } from '../../services/user-store.service';
+import { AuthService } from '../../services/auth-services/auth.service';
+import { UserStoreService } from '../../services/auth-services/user-store.service';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

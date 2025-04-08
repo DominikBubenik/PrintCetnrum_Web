@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UserFile } from '../../models/user-file';
-import { FileHandlerService } from '../../services/file-handler.service';
+import { FileHandlerService } from '../../services/file-services/file-handler.service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth-services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { map } from 'rxjs';
-import {DesignFilesHandlerService} from "../../services/design-files-handler.service";
+import {DesignFilesHandlerService} from "../../services/file-services/design-files-handler.service";
 
 @Component({
   selector: 'app-user-files',

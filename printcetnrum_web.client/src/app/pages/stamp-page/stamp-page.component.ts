@@ -3,7 +3,7 @@ import { Stamp } from '../../models/stamp-container.model';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DesignFilesHandlerService } from "../../services/design-files-handler.service";
+import { DesignFilesHandlerService } from "../../services/file-services/design-files-handler.service";
 
 @Component({
   selector: 'app-stamp-page',

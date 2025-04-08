@@ -1,11 +1,11 @@
 import { Component, Inject, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { OrderService } from '../../services/order.service';
+import { OrderService } from '../../services/order-services/order.service';
 import { Order } from '../../models/order-models/order.model';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth-services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserStoreService } from '../../services/user-store.service';
+import { UserStoreService } from '../../services/auth-services/user-store.service';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 

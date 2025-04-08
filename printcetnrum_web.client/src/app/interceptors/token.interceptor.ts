@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from './../services/auth.service';
+import { AuthService } from '../services/auth-services/auth.service';
 import { inject, Injectable } from '@angular/core';
 import {
   HttpRequest,

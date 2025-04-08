@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { StatService } from "../../services/stat.service";
+import { StatService } from "../../services/stat-services/stat.service";
 import { BusinessOverview, SalesTrend } from '../../models/statistics.model';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FileHandlerService } from '../../services/file-handler.service';
+import { FileHandlerService } from '../../services/file-services/file-handler.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';

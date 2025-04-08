@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth-services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 
