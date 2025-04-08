@@ -106,7 +106,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 UserName = userParam.UserName,
                 Email = userParam.Email,
                 IsAccountActive = true,  
-                RoleId = 1, 
+                RoleId = 2, 
                 Authentication = new UserAuthentication
                 {
                     Password = hashedPassword,

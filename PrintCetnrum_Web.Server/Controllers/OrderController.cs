@@ -12,6 +12,7 @@ namespace PrintCetnrum_Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly AppDbContext _context;
