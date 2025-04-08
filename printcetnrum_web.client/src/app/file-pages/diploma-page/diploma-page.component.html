@@ -1,60 +1,62 @@
 <header></header>
+<div class="row mt-2">
+  <div class="col">
+    <h3 class="text-start ms-3">Diploma Page</h3>
+  </div>
+</div>
 <div (click)="deselectTextBox($event)" (keydown)="handleKeyDown($event)">
-    <div class="row">
-      <div class="col-md-2">
-        <div class="row controls-container">
-          <div class="d-flex flex-column">
-            <label>Stamp Name:</label>
-            <input type="text" [(ngModel)]="diplomaName" class="form-control" placeholder="Enter stamp name" />
-          </div>
-        </div>
-        <div class="row controls-container">
-          <label>Board Color</label>
-          <select [(ngModel)]="boardColor" class="form-select">
-            <option value="green">Green</option>
-            <option value="blue">Blue</option>
-            <option value="black">Black</option>
-            <option value="red">Red</option>
-          </select>
-        </div>
-        <div class="row controls-container">
-          <label>Text Color</label>
-          <select [(ngModel)]="textColor" class="form-select">
-            <option value="silver">Silver</option>
-            <option value="gold">Gold</option>
-          </select>
-        </div>
-
-        <div class="controls-container" (click)="$event.stopPropagation()">
-          <button class="font-size-btn bi bi-arrow-left" (click)="undo()" [disabled]="history.length <= 1"></button>
-          <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
-        </div>
-        <div class="controls-container" (click)="$event.stopPropagation()">
-          <button class="font-size-btn bi bi-download" (click)="downloadDiploma()">Download Diploma</button>
-          <button class="font-size-btn bi bi-download" (click)="saveDiploma()">Save Diploma</button>
-
-          <label for="formFile" class="upload-button">Upload Diploma</label>
-          <input id="formFile" class="upload-input" type="file" (change)="loadDiploma($event)" accept=".json" />
+  <div class="row">
+    <div class="col-md-2">
+      <div class="row controls-container">
+        <div class="d-flex flex-column">
+          <label>Stamp Name:</label>
+          <input type="text" [(ngModel)]="diplomaName" class="form-control" placeholder="Enter stamp name" />
         </div>
       </div>
-      <div class="stamp-container" #stampContainer [ngClass]="{'text-box-selected': selectedIndex !== null}">
-        <div class="inner-border" #innerBoarder></div>
-        <div *ngFor="let box of textBoxes; let i = index"
-             class="text-box"
-             [ngClass]="{'selected': selectedIndex === i}"
-             [style.left.px]="box.x"
-             [style.top.px]="box.y"
-             [style.width.px]="box.width"
-             [style.height.px]="box.height"
-             (mousedown)="startDrag($event, i)"
-             (mousemove)="updateCursor($event)"
-             (click)="selectTextBox($event, i)"
-             contenteditable="true">
-          <div contenteditable="true">{{ box.text }}</div>
-          <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
-        </div>
+      <div class="row controls-container">
+        <label>Board Color</label>
+        <select [(ngModel)]="boardColor" class="form-select">
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+          <option value="black">Black</option>
+          <option value="red">Red</option>
+        </select>
+      </div>
+      <div class="row controls-container">
+        <label>Text Color</label>
+        <select [(ngModel)]="textColor" class="form-select">
+          <option value="silver">Silver</option>
+          <option value="gold">Gold</option>
+        </select>
+      </div>
+      <div class="controls-container" (click)="$event.stopPropagation()">
+        <button class="font-size-btn bi bi-arrow-left" (click)="undo()" [disabled]="history.length <= 1"></button>
+        <button class="add-text-btn" (click)="addTextBox()">Add Text</button>
+      </div>
+      <div class="controls-container" (click)="$event.stopPropagation()">
+        <button class="font-size-btn bi bi-download" (click)="downloadDiploma()">Download Diploma</button>
+        <button class="font-size-btn bi bi-download" (click)="saveDiploma()">Save Diploma</button>
+
+        <label for="formFile" class="upload-button">Upload Diploma</label>
+        <input id="formFile" class="upload-input" type="file" (change)="loadDiploma($event)" accept=".json" />
       </div>
     </div>
-
-
+    <div class="stamp-container" #stampContainer [ngClass]="{'text-box-selected': selectedIndex !== null}">
+      <div class="inner-border" #innerBoarder></div>
+      <div *ngFor="let box of textBoxes; let i = index"
+           class="text-box"
+           [ngClass]="{'selected': selectedIndex === i}"
+           [style.left.px]="box.x"
+           [style.top.px]="box.y"
+           [style.width.px]="box.width"
+           [style.height.px]="box.height"
+           (mousedown)="startDrag($event, i)"
+           (mousemove)="updateCursor($event)"
+           (click)="selectTextBox($event, i)"
+           contenteditable="true">
+        <div contenteditable="true">{{ box.text }}</div>
+        <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
+      </div>
+    </div>
+  </div>
 </div>

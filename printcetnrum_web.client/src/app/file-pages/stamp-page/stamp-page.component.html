@@ -14,7 +14,7 @@
           <option value="modico5">MODICO 5</option>
           <option value="other">Other</option>
         </select>
-        <input *ngIf="stampType == 'other'" [(ngModel)]="stampDescription" class="form-control" placeholder="Enter short description and size" maxlength="40" />
+        <input *ngIf="stampType == 'other'" [(ngModel)]="stampDescription" class="form-control col-8" placeholder="Enter size" maxlength="40" />
       </div>
     </div>
     <div class="controls-container" (click)="$event.stopPropagation()">
