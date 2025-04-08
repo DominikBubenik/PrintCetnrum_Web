@@ -16,7 +16,6 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
-import { EditPhotoPageComponent } from './pages/edit-photo-page/edit-photo-page.component';
 import { FormsModule } from '@angular/forms';
 import { UsersListPageComponent } from './pages/users-list-page/users-list-page.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
@@ -46,7 +45,6 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
     HomePageComponent,
     LoginPageComponent,
     RegisterPageComponent,
-    EditPhotoPageComponent,
     UsersListPageComponent,
     ResetPasswordPageComponent,
     UserFilesComponent,

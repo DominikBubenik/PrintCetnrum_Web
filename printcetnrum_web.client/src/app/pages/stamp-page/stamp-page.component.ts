@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, signal, inject } from '@angular/core';
-import { Stamp } from '../../models/stamp';
+import { Stamp } from '../../models/stamp-container.model';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';

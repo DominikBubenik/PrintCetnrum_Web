@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
-import { EditPhotoPageComponent } from './pages/edit-photo-page/edit-photo-page.component';
 import { UsersListPageComponent } from './pages/users-list-page/users-list-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ResetPasswordPageComponent } from './user-accounts/reset-password-page/reset-password-page.component';
@@ -16,6 +15,7 @@ import { DiplomaPageComponent } from './pages/diploma-page/diploma-page.componen
 import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
 import { UploadFileComponent } from './pages/upload-file/upload-file.component';
 import {StatisticsComponent} from "./pages/statistics/statistics.component";
+import { AdminGuard } from './guards/admin.guard';
 
 
 const routes: Routes = [
@@ -29,12 +29,6 @@ const routes: Routes = [
     path: 'login',
     component: LoginPageComponent,
     title: 'Login page',
-    pathMatch: 'full'
-  },
-  {
-    path: 'edit/:id',
-    component: EditPhotoPageComponent,
-    title: 'Edit page',
     pathMatch: 'full'
   },
   {
@@ -80,7 +74,7 @@ const routes: Routes = [
     component: UsersListPageComponent,
     title: 'Users list',
     pathMatch: 'full',
-    canActivate: [AuthGuard]
+    canActivate: [AdminGuard]
   },
   {
     path: 'editDiploma/:id',
