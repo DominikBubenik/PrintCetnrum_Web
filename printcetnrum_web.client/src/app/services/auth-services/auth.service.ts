@@ -3,9 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { TokenApiModel } from '../../models/token-api.model';
+import { TokenApiModel } from '../../models/user-models/token-api.model';
 import { UserStoreService } from './user-store.service';
-import { User } from '../../models/user.model';
+import { User } from '../../models/user-models/user.model';
 
 @Injectable({
   providedIn: 'root'

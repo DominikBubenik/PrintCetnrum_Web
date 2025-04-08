@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DiplomaTextBox } from '../../models/diploma-container.model';
+import { DiplomaTextBox } from '../../models/design-files-models/diploma-container.model';
 import {DesignFilesHandlerService} from "../../services/file-services/design-files-handler.service";
 
 @Component({

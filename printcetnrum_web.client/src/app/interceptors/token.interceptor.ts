@@ -10,7 +10,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { TokenApiModel } from '../models/token-api.model';
+import { TokenApiModel } from '../models/user-models/token-api.model';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {

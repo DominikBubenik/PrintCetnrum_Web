@@ -1,5 +1,5 @@
 import { UserFile } from "../user-file";
-import { User } from "../user.model";
+import { User } from "../user-models/user.model";
 
 export interface Order {
   id: number;
