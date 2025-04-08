@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { StatService } from "../../services/stat-services/stat.service";
-import { BusinessOverview, SalesTrend } from '../../models/statistics.model';
+import { BusinessOverview, ChartData} from '../../models/statistics.model';
 
 @Component({
   selector: 'app-statistics',
@@ -9,9 +9,10 @@ import { BusinessOverview, SalesTrend } from '../../models/statistics.model';
 })
 export class StatisticsComponent implements OnInit {
   businessOverview = signal<BusinessOverview | null>(null);
-  salesTrends = signal<SalesTrend[] | null>([]);
+  salesTrends = signal<ChartData[]>([]);
+  newCustomers= signal<ChartData[]>([]);
+  fileStats = signal<ChartData[]>([]); 
   topProducts: any[] = [];
-  newCustomers: any[] = [];
   orderStatus: any[] = [];
   loading = true;
   error = false;
@@ -81,7 +82,8 @@ export class StatisticsComponent implements OnInit {
 
     this.statService.getNewCustomers().subscribe({
       next: (data) => {
-        this.newCustomers = data.NewCustomers;
+        this.newCustomers.set(data);
+        console.log('New customers:', data);
       },
       error: (err) => {
         console.error('Error loading new customers', err);
@@ -96,6 +98,22 @@ export class StatisticsComponent implements OnInit {
           { name: 'Prepared', value: data.preparedOrders },
           { name: 'Taken', value: data.takenOrders },
         ];
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading order status', err);
+        this.error = true;
+        this.loading = false;
+      }
+    });
+
+    this.statService.getFilesStatistics().subscribe({
+      next: (data) => {
+        this.fileStats.set([{ name: 'PDF Files', value: data.pdfFiles },
+          { name: 'Word Files', value: data.wordFiles },
+          { name: 'Images', value: data.images },
+          { name: 'Design Files', value: data.designFiles },
+          { name: 'Other Files', value: data.otherFiles}]);
         this.loading = false;
       },
       error: (err) => {

@@ -69,7 +69,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         public async Task<IActionResult> GetTopSellingProducts()
         {
             var topProducts = await _context.OrderItems
-                .GroupBy(oi => new { oi.Description, oi.PaperType, oi.Size }) 
+                .GroupBy(oi => new { oi.Description, oi.PaperType, oi.Size })
                 .Select(group => new
                 {
                     Product = $"{group.Key.Description} ({group.Key.PaperType}, {group.Key.Size})",
@@ -86,13 +86,24 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpGet("new-customers")]
         public async Task<IActionResult> GetNewCustomers()
         {
-            var oneMonthAgo = DateTime.UtcNow.AddMonths(-1);
+            var now = DateTime.UtcNow;
 
-            var newCustomers = await _context.Users
-                .Where(u => u.AccountCreated >= oneMonthAgo)
-                .CountAsync();
+            var last7Days = now.AddDays(-7);
+            var last30Days = now.AddDays(-30);
+            var last90Days = now.AddDays(-90);
 
-            return Ok(new { NewCustomers = newCustomers });
+            var count7 = await _context.Users.CountAsync(u => u.AccountCreated >= last7Days);
+            var count30 = await _context.Users.CountAsync(u => u.AccountCreated >= last30Days);
+            var count90 = await _context.Users.CountAsync(u => u.AccountCreated >= last90Days);
+
+            var chartData = new[]
+            {
+                new { name = "Last 7 Days", value = count7 },
+                new { name = "Last 30 Days", value = count30 },
+                new { name = "Last 90 Days", value = count90 }
+            };
+
+            return Ok(chartData);
         }
 
         [HttpGet("order-status")]
@@ -108,6 +119,25 @@ namespace PrintCetnrum_Web.Server.Controllers
                 PendingOrders = pendingOrders,
                 PreparedOrders = preparedOrders,
                 TakenOrders = takenOrders
+            });
+        }
+
+        [HttpGet("user-files")]
+        public async Task<IActionResult> GetUserFiles()
+        {
+            var pdfFiles = await _context.UserFiles.CountAsync(f => f.Extension == "pdf");
+            var wordFiles = await _context.UserFiles.CountAsync(f => f.Extension == "doc" || f.Extension == "docx");
+            var images = await _context.UserFiles.CountAsync(f =>
+                f.Extension == "jpg" || f.Extension == "png" || f.Extension == "jpeg");
+            var designFiles = await _context.DesignFiles.CountAsync();
+            var otherFiles = await _context.UserFiles.CountAsync() - pdfFiles - wordFiles - images;
+            return Ok(new
+            {
+                pdfFiles = pdfFiles,
+                wordFiles = wordFiles,
+                images = images,
+                designFiles = designFiles,
+                otherFiles = otherFiles
             });
         }
     }

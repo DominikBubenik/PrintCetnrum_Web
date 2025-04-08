@@ -7,7 +7,7 @@ export interface BusinessOverview {
   averageOrderValue: number;
 }
 
-export interface SalesTrend {
+export interface ChartData {
   name: string;
   value: number;
 }

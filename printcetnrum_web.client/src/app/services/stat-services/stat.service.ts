@@ -28,4 +28,8 @@ export class StatService {
   getOrderStatus(): Observable<any> {
     return this.http.get(`${this.baseUrl}/order-status`);
   }
+
+  getFilesStatistics(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/user-files`);
+  }
 }
