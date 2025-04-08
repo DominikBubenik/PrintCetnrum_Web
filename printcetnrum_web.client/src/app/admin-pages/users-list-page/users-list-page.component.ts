@@ -12,7 +12,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class UsersListPageComponent {
   users: User[] = [];
-  userName: string = "";
+  searchedUsername: string = '';
+  filteredUsers: User[] = [];
   currentUser: User | null = null;
   isModalVisible: boolean = false;
 
@@ -24,19 +25,13 @@ export class UsersListPageComponent {
 
   ngOnInit() {
     this.loadUsers();
-    const uniqueNameToken = this.auth.getfullNameFromToken();
-
-    if (uniqueNameToken) {
-      this.userName = uniqueNameToken;
-    } else {
-      this.userName = "Unknown User";
-    }
   }
 
   loadUsers() {
     this.auth.getAllUsers().subscribe(
       (data: User[]) => {
         this.users = data;
+        this.filteredUsers = this.users;
       },
       (error) => {
         console.error('Error fetching users', error);
@@ -60,6 +55,18 @@ export class UsersListPageComponent {
     this.users.sort((a, b) => a.userName.localeCompare(b.userName));
   }
 
+  sortByStreet() {
+    this.users.sort((a, b) => a?.street.localeCompare(b?.street));
+  }
+
+  sortByCity() {
+    this.users.sort((a, b) => a?.city.localeCompare(b?.city));
+  }
+
+  sortByPostcode() {
+    this.users.sort((a, b) => a?.postcode.localeCompare(b?.postcode));
+  }
+
   onLogout() {
     this.auth.logOut();
   }
@@ -69,13 +76,20 @@ export class UsersListPageComponent {
     this.isModalVisible = true;
   }
 
+  findUser() {
+    this.filteredUsers = this.users.filter(user => user.userName.includes(this.searchedUsername));
+  }
+
   onSave() {
     if (this.currentUser) {
       const updatedUser: User = {
         ...this.currentUser,
         firstName: this.currentUser.firstName,
         lastName: this.currentUser.lastName,
-        email: this.currentUser.email
+        email: this.currentUser.email,
+        street: this.currentUser.street,
+        city: this.currentUser.city,
+        postcode: this.currentUser.postcode,
       };
 
       this.userStore.updateUser(this.currentUser.id, updatedUser).subscribe(
@@ -85,6 +99,7 @@ export class UsersListPageComponent {
           this.closeModal();
         },
         (error) => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'Failed to update user', "error");
           console.error('Error updating user:', error);
         }
       );
@@ -99,10 +114,26 @@ export class UsersListPageComponent {
     if (confirm('Are you sure you want to delete this user?')) {
       this.userStore.deleteUser(userId).subscribe(
         () => {
-          alert('User deleted successfully');
+          SnackBarUtil.showSnackBar(this.snackBar, 'User deleted successfully', "success");
           this.loadUsers();
         },
         (error) => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'Failed to delete user', "error");
+          console.error('Error deleting user:', error);
+        }
+      );
+    }
+  }
+
+  onDeactivation(userId: number) {
+    if (confirm('Are you sure you want to deactivate this user?')) {
+      this.userStore.deleteUser(userId).subscribe(
+        () => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'User deactivated successfully', "success");
+          this.loadUsers();
+        },
+        (error) => {
+          SnackBarUtil.showSnackBar(this.snackBar, 'Failed to deactivate user', "error");
           console.error('Error deleting user:', error);
         }
       );

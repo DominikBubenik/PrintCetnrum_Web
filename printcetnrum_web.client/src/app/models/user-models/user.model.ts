@@ -8,5 +8,6 @@ export interface User {
   role: string;
   street: string;
   city: string;
-  postalCode: string;
+  postcode: string;
+  isActive: boolean;
 }

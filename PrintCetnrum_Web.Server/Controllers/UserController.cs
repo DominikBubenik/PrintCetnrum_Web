@@ -132,7 +132,11 @@ namespace PrintCetnrum_Web.Server.Controllers
                     LastName = user.LastName,
                     UserName = user.UserName,
                     Email = user.Email,
-                    Role = user.Role.Name
+                    Role = user.Role.Name,
+                    Street = user.Address.Street,
+                    City = user.Address.City,
+                    Postcode = user.Address.PostCode,
+                    IsActive = user.IsAccountActive
                 })
                 .ToListAsync();
 
@@ -152,15 +156,31 @@ namespace PrintCetnrum_Web.Server.Controllers
             var user = await _authContext.Users.FindAsync(id);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
+            var userAddress = await _authContext.UserAddresses.FirstOrDefaultAsync(address => address.UserId == user.Id);
+
+            if (userAddress == null)
+            {
+                userAddress = new UserAddress
+                {
+                    UserId = user.Id,
+                    Street = updatedUser.Street,
+                    City = updatedUser.City,
+                    PostCode = updatedUser.Postcode
+                };
+                await _authContext.UserAddresses.AddAsync(userAddress);
+            }
+            else
+            {
+                userAddress.Street = updatedUser.Street;
+                userAddress.City = updatedUser.City;
+                userAddress.PostCode = updatedUser.Postcode;
+            }
 
             user.FirstName = updatedUser.FirstName;
             user.LastName = updatedUser.LastName;
             user.UserName = updatedUser.UserName;
             user.Email = updatedUser.Email;
-            user.Address.Street = updatedUser.Street;
-            user.Address.City = updatedUser.City;
-            user.Address.PostCode = updatedUser.PostCode;
-            user.IsAccountActive = updatedUser.IsAccountActive;
+            user.IsAccountActive = updatedUser.IsActive;
 
             await _authContext.SaveChangesAsync();
             return Ok(new { message = "User Updated Successfully" });

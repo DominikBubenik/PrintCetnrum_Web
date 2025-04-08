@@ -10,7 +10,7 @@ public class UserDto
     public string Role { get; set; }
     public string? Street { get; set; } 
     public string? City { get; set; }    
-    public string? PostCode { get; set; } 
-    public bool IsAccountActive { get; set; } 
+    public string? Postcode { get; set; } 
+    public bool IsActive { get; set; } 
     public string? Password { get; set; }
 }

@@ -15,7 +15,7 @@ export class UserProfilePageComponent implements OnInit {
   showDeleteModal = false;
   user: User = {
     id: 0, firstName: '', lastName: '', userName: '', email: '', role: '',
-    street: '', city: '', postalCode: ''
+    street: '', city: '', postcode: '', isActive: true
   };
 
   ngOnInit() {
