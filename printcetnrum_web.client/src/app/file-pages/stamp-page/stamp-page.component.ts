@@ -8,12 +8,15 @@ import { DesignFilesHandlerService } from "../../services/file-services/design-f
 @Component({
   selector: 'app-stamp-page',
   templateUrl: './stamp-page.component.html',
-  styleUrls: ['./stamp-page.component.css']
+  styleUrls: ['./stamp-page.component.css', '../shared-design-creator.css']
 })
 export class StampPageComponent implements AfterViewInit {
   private designFileService = inject(DesignFilesHandlerService);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
+
+  @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
+
   textBoxes: Stamp[] = [];
   isDragging = false;
   isResizing = false;
@@ -31,8 +34,6 @@ export class StampPageComponent implements AfterViewInit {
   stampName = 'New Stamp';
   stampType = 'default';
   stampDescription = '';
-
-  @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
 
   ngOnInit() {
     this.stampId = Number(this.route.snapshot.paramMap.get('id'));

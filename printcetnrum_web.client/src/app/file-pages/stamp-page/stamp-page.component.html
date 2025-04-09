@@ -1,3 +1,4 @@
+<h3>Stamp Creator</h3>
 <div class="stamp-creator-wrapper">
   <div class="container">
     <div class="row controls-container">
@@ -47,8 +48,8 @@
       </div>
     </div>
     <div class="controls-container" (click)="$event.stopPropagation()">
-      <button class="font-size-btn bi bi-download" (click)="downloadStamp()">Download Stamp</button>
-      <button class="font-size-btn bi bi-download" (click)="saveStamp()">Save Stamp</button>
+      <button class="font-size-btn bi bi-download" (click)="downloadStamp()"> Download Stamp</button>
+      <button class="font-size-btn bi bi-floppy" (click)="saveStamp()"> Save Stamp</button>
       <label for="formFile" class="upload-button">Upload Stamp</label>
       <input id="formFile" class="upload-input" type="file" (change)="loadStamp($event)" accept=".json" />
       <label for="imageLoad" class="upload-button">Upload Image</label>

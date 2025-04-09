@@ -8,12 +8,16 @@ import {DesignFilesHandlerService} from "../../services/file-services/design-fil
 @Component({
   selector: 'app-diploma-page',
   templateUrl: './diploma-page.component.html',
-  styleUrl: './diploma-page.component.css'
+  styleUrls: ['./diploma-page.component.css', '../shared-design-creator.css']
 })
 export class DiplomaPageComponent {
   private readonly designFileService = inject(DesignFilesHandlerService);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
+
+  @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
+  @ViewChild('innerBoarder', { static: false }) innerBoarder!: ElementRef;
+
   textBoxes: DiplomaTextBox[] = [];
   isDragging = false;
   innerBorderMargin = 20;
@@ -31,9 +35,6 @@ export class DiplomaPageComponent {
   diplomaName = 'New Diploma';
   boardColor = 'default';
   textColor = 'black';
-
-  @ViewChild('stampContainer', { static: false }) stampContainer!: ElementRef;
-  @ViewChild('innerBoarder', { static: false }) innerBoarder!: ElementRef;
 
   ngOnInit() {
     this.diplomaId = Number(this.route.snapshot.paramMap.get('id'));
