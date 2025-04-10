@@ -96,7 +96,7 @@ export class AuthService {
     return this.isLoggedInSubject.asObservable();
   }
 
-  deactivateUser(id: number) {
-    return this.http.put(`${this.baseUrl}deactivateUser/${id}`, {}); 
+  setUserActivity(id: number, activity: boolean) {
+    return this.http.put(`${this.baseUrl}set-activity/${id}/${activity}`, {}); 
   }
 }

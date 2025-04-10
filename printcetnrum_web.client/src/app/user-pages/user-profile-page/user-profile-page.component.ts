@@ -14,7 +14,7 @@ export class UserProfilePageComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   showDeleteModal = false;
   user: User = {
-    id: 0, firstName: '', lastName: '', userName: '', email: '', role: '',
+    id: 0, firstName: '', lastName: '', userName: '', email: '', phone: '0', role: '',
     street: '', city: '', postcode: '', isActive: true
   };
 
@@ -44,7 +44,7 @@ export class UserProfilePageComponent implements OnInit {
   }
 
   deleteUser() {
-    this.authService.deactivateUser(this.user.id).subscribe({
+    this.authService.setUserActivity(this.user.id, false).subscribe({
       next: () => {
         SnackBarUtil.showSnackBar(this.snackBar, 'Account deactivated successfully!', 'success');
         this.authService.logOut();

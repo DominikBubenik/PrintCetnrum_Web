@@ -54,7 +54,7 @@
                 class="btn btn-success"
                 (click)="markOrderAsCompleted(order.id)"
                 [disabled]="order.isTakenByCustomer || !order.isPreparedForCustomer">
-          Mark Completed
+          Mark as Taken
         </button>
         <button class="btn btn-danger"
                 (click)="openDeleteModal(order.id)">

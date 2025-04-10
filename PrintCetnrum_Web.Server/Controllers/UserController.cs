@@ -19,31 +19,21 @@ namespace PrintCetnrum_Web.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class UserController : ControllerBase
+    public class UserController(AppDbContext authContext, IConfiguration configuration, IEmailService emailService)
+        : ControllerBase
     {
-        private readonly AppDbContext _authContext;
-        private readonly IConfiguration _configuration;
-        private readonly IEmailService _emailService;
-
-        public UserController(AppDbContext authContext, IConfiguration configuration, IEmailService emailService)
-        {
-            _authContext = authContext;
-            _configuration = configuration;
-            _emailService = emailService;
-        }
-
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] UserDto userParam)
         {
             if (userParam == null)
                 return BadRequest();
 
-            var user = await _authContext.Users
+            var user = await authContext.Users
                 .FirstOrDefaultAsync(x => x.UserName == userParam.UserName || x.Email == userParam.UserName);
 
             if (user == null || !user.IsAccountActive)
                 return NotFound(new { message = "User Not Found" });
-            var userAuthentication = await _authContext.UserAuthentications.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var userAuthentication = await authContext.UserAuthentications.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
             if (!PasswordHasher.VerifyPassword(userParam.Password, userAuthentication.Password))
             {
@@ -55,7 +45,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var newRefreshToken = CreateRefreshToken();
             userAuthentication.RefreshToken = newRefreshToken;
             userAuthentication.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
-            await _authContext.SaveChangesAsync();
+            await authContext.SaveChangesAsync();
 
             return Ok(new TokenApiDto()
             {
@@ -72,7 +62,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 return BadRequest(new { message = "User Not Found" });
             }
 
-            var user = await _authContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            var user = await authContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
                 return NotFound(new { message = "User Not Found" });
@@ -105,7 +95,9 @@ namespace PrintCetnrum_Web.Server.Controllers
                 LastName = userParam.LastName,
                 UserName = userParam.UserName,
                 Email = userParam.Email,
+                Phone = userParam.Phone,
                 IsAccountActive = true,  
+                AccountCreated = DateTime.Now,
                 RoleId = 2, 
                 Authentication = new UserAuthentication
                 {
@@ -114,8 +106,8 @@ namespace PrintCetnrum_Web.Server.Controllers
                 }
             };
             
-            await _authContext.Users.AddAsync(user);
-            await _authContext.SaveChangesAsync();
+            await authContext.Users.AddAsync(user);
+            await authContext.SaveChangesAsync();
 
             return Ok(new { message = "User Created Successfully" });
         }
@@ -124,14 +116,15 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _authContext.Users
-                .Select(user => new UserDto  // Use a DTO instead of exposing full User model
+            var users = await authContext.Users
+                .Select(user => new UserDto 
                 {
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     UserName = user.UserName,
                     Email = user.Email,
+                    Phone = user.Phone,
                     Role = user.Role.Name,
                     Street = user.Address.Street,
                     City = user.Address.City,
@@ -153,10 +146,10 @@ namespace PrintCetnrum_Web.Server.Controllers
             if (updatedUser == null || id != updatedUser.Id)
                 return BadRequest();
 
-            var user = await _authContext.Users.FindAsync(id);
+            var user = await authContext.Users.FindAsync(id);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
-            var userAddress = await _authContext.UserAddresses.FirstOrDefaultAsync(address => address.UserId == user.Id);
+            var userAddress = await authContext.UserAddresses.FirstOrDefaultAsync(address => address.UserId == user.Id);
 
             if (userAddress == null)
             {
@@ -167,7 +160,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                     City = updatedUser.City,
                     PostCode = updatedUser.Postcode
                 };
-                await _authContext.UserAddresses.AddAsync(userAddress);
+                await authContext.UserAddresses.AddAsync(userAddress);
             }
             else
             {
@@ -180,9 +173,10 @@ namespace PrintCetnrum_Web.Server.Controllers
             user.LastName = updatedUser.LastName;
             user.UserName = updatedUser.UserName;
             user.Email = updatedUser.Email;
+            user.Phone = updatedUser.Phone;
             user.IsAccountActive = updatedUser.IsActive;
 
-            await _authContext.SaveChangesAsync();
+            await authContext.SaveChangesAsync();
             return Ok(new { message = "User Updated Successfully" });
         }
 
@@ -190,54 +184,69 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _authContext.Users.FindAsync(id);
+            var user = await authContext.Users.FindAsync(id);
             if (user == null)
                 return NotFound(new { message = "User Not Found" });
 
-            var userOrders = await _authContext.Orders.Where(a => a.UserId == id).ToListAsync();
+            var userOrders = await authContext.Orders.Where(a => a.UserId == id).ToListAsync();
 
             foreach (var order in userOrders)
             {
-                var orderItems = await _authContext.OrderItems.Where(a => a.OrderId == order.Id).ToListAsync();
+                var orderItems = await authContext.OrderItems.Where(a => a.OrderId == order.Id).ToListAsync();
                 foreach (var orderItem in orderItems)
                 {
-                    _authContext.OrderItems.Remove(orderItem);
+                    authContext.OrderItems.Remove(orderItem);
                 }
 
-                _authContext.Orders.Remove(order);
+                authContext.Orders.Remove(order);
             }
-            UploadController uploadController = new UploadController(_authContext);
-            var userFiles = await _authContext.UserFiles.Where(a => a.UserId == id).ToListAsync();
+            UploadController uploadController = new UploadController(authContext);
+            var userFiles = await authContext.UserFiles.Where(a => a.UserId == id).ToListAsync();
             foreach (var file in userFiles)
             {
                 await uploadController.DeleteFile(file.Id);
             }
-            _authContext.Users.Remove(user);
-            await _authContext.SaveChangesAsync();
+            authContext.Users.Remove(user);
+            await authContext.SaveChangesAsync();
 
             return Ok(new { message = "User Deleted Successfully" });
         }
 
         [Authorize]
-        [HttpPut("deactivateUser/{id}")]
-        public async Task<IActionResult> DeactivateUser(int id)
+        [HttpPut("set-activity/{id}/{activity}")]
+        public async Task<IActionResult> SetActivity(int id, bool activity)
         {
-            var user = await _authContext.Users.FindAsync(id);
-            if (user == null)
+            var userName = User.Identity?.Name;
+            var userToVerify = await authContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            var userToChange = await authContext.Users.FindAsync(id);
+            if (userToChange == null)
                 return NotFound(new { message = "User Not Found" });
-            user.IsAccountActive = false;
-            _authContext.Users.Update(user);
-            await _authContext.SaveChangesAsync();
 
-            return Ok(new { message = "User Deactivated Successfully" });
+            var userRole = await authContext.Roles.FirstOrDefaultAsync(r => r.Id == userToVerify.RoleId);
+            if (activity == true && userRole.Name != "Admin")
+            {
+                return BadRequest(new { message = "Only Admin can do changes" });
+            }
+
+            if (userToChange.UserName != userName && userRole.Name != "Admin")
+            {
+                return BadRequest(new { message = "You can do changes only to your profile" });
+            }
+            userToChange.IsAccountActive = activity;
+           
+            authContext.Users.Update(userToChange);
+            await authContext.SaveChangesAsync();
+
+            var status = activity ? "activated" : "deactivated";
+            return Ok(new { message = $"User {status} successfully" });
         }
 
 
         private Task<bool> CheckEmailExistAsync(string email)
-            => _authContext.Users.AnyAsync(x => x.Email == email);
+            => authContext.Users.AnyAsync(x => x.Email == email);
 
         private Task<bool> CheckUsernameExistAsync(string username)
-            => _authContext.Users.AnyAsync(x => x.UserName == username);
+            => authContext.Users.AnyAsync(x => x.UserName == username);
 
         private static string CheckPasswordStrength(string pass)
         {
@@ -255,7 +264,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key-that-is-at-least-256-bits-long");
-            var userRole = _authContext.Roles.Where(r => r.Id == user.RoleId).FirstOrDefault();
+            var userRole = authContext.Roles.FirstOrDefault(r => r.Id == user.RoleId);
             var identity = new ClaimsIdentity(new Claim[]
             {
                 new(ClaimTypes.Role, userRole.Name),
@@ -279,7 +288,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var refreshToken = Convert.ToBase64String(tokenBytes);
 
-            var tokenInUser = _authContext.Users.Any(a => a.Authentication.RefreshToken == refreshToken);
+            var tokenInUser = authContext.Users.Any(a => a.Authentication.RefreshToken == refreshToken);
             if (tokenInUser)
             {
                 return CreateRefreshToken();
@@ -317,13 +326,13 @@ namespace PrintCetnrum_Web.Server.Controllers
             string refreshToken = tokenApiDto.RefreshToken;
             var principal = GetPrincipleFromExpiredToken(accessToken);
             var username = principal.Identity.Name;
-            var user = await _authContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            var user = await authContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
             if (user is null || user.Authentication.RefreshToken != refreshToken || user.Authentication.RefreshTokenExpiryTime <= DateTime.Now)
                 return BadRequest("Invalid Request");
             var newAccessToken = CreateJwt(user);
             var newRefreshToken = CreateRefreshToken();
             user.Authentication.RefreshToken = newRefreshToken;
-            await _authContext.SaveChangesAsync();
+            await authContext.SaveChangesAsync();
             return Ok(new TokenApiDto()
             {
                 AccessToken = newAccessToken,
@@ -334,7 +343,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpPost("send-reset-email/{email}")]
         public async Task<IActionResult> SendEmail(string email)
         {
-            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Email == email);
+            var user = await authContext.Users.FirstOrDefaultAsync(a => a.Email == email);
             if (user is null)
             {
                 return NotFound(new { StatusCode = 404, Message = "email Does Not Exist" });
@@ -344,12 +353,12 @@ namespace PrintCetnrum_Web.Server.Controllers
             var emailToken = Convert.ToBase64String(tokenBytes);
             user.Authentication.ResetPasswordToken = emailToken;
             user.Authentication.ResetPasswordExpiry = DateTime.Now.AddDays(1);
-            string from = _configuration["EmailSettings:From"];
+            string from = configuration["EmailSettings:From"];
             var emailModel = new EmailModel(email, "Reset Password", 
                 EmailBody.EmailStringBody(email, emailToken));
-            _emailService.SendEmail(emailModel);
-            _authContext.Entry(user).State = EntityState.Modified;
-            await _authContext.SaveChangesAsync();
+            emailService.SendEmail(emailModel);
+            authContext.Entry(user).State = EntityState.Modified;
+            await authContext.SaveChangesAsync();
             return Ok(new
             {
                 StatusCode = 200,
@@ -361,7 +370,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
             var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
-            var user = await _authContext.Users.AsNoTracking()
+            var user = await authContext.Users.AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
             if (user is null)
             {
@@ -384,8 +393,8 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
 
             user.Authentication.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
-            _authContext.Entry(user).State = EntityState.Modified;
-            await _authContext.SaveChangesAsync();
+            authContext.Entry(user).State = EntityState.Modified;
+            await authContext.SaveChangesAsync();
             return Ok(new
             {
                 StatusCode = 200,

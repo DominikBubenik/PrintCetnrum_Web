@@ -8,6 +8,7 @@
       <th scope="col" (click)="sortByUsername()">Username</th>
       <th scope="col" (click)="sortByName()">Name</th>
       <th scope="col" (click)="sortByEmail()">Email</th>
+      <th scope="col" >Phone</th>
       <th scope="col" (click)="sortByRole()">Role</th>
       <th scope="col" (click)="sortByStreet()">Street</th>
       <th scope="col" (click)="sortByCity()">City</th>
@@ -21,6 +22,7 @@
       <td>{{ user.userName }}</td>
       <td>{{ user.firstName }} {{ user.lastName }}</td>
       <td>{{ user.email }}</td>
+      <td>{{ user.phone }}</td>
       <td>{{ user.role }}</td>
       <td>{{ user.street }}</td>
       <td>{{ user.city }}</td>
@@ -31,8 +33,11 @@
           <button class="btn btn-primary me-2" (click)="onEdit(user)">
             <i class="bi bi-pencil"></i> Edit
           </button>
-          <button class="btn btn-danger me-2" (click)="onDeactivation(user.id)">
-            <i class="bi bi-trash"></i> Deactivate
+          <button class="btn me-2"
+                  [ngClass]="user.isActive ? 'btn-danger' : 'btn-success'"
+                  (click)="changeActivity(user.id, !user.isActive)">
+            <i [ngClass]="user.isActive ? 'bi bi-trash' : 'bi bi-check-circle'"></i>
+            {{ user.isActive ? 'Deactivate' : 'Activate' }}
           </button>
           <button class="btn btn-danger " (click)="onDelete(user.id)">
             <i class="bi bi-trash"></i> Delete
@@ -63,6 +68,10 @@
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="currentUser.phone" name="phone" required>
           </div>
           <div class="mb-3">
             <label for="street" class="form-label">Street</label>

@@ -26,7 +26,10 @@ export class RegisterPageComponent implements OnInit {
       lastName: ['', Validators.required],
       userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
+      phone: ['', [
+        Validators.required,
+        Validators.pattern(/^\+?\d{9,15}$/)
+      ]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     });

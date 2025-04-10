@@ -31,7 +31,7 @@ export class OrderService {
   }
 
   getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}get-orders/${this.authService.getfullNameFromToken()}`);
+    return this.http.get<Order[]>(`${this.baseUrl}get-orders`);
   }
 
   updateOrder(id: number, order: Order): Observable<void> {

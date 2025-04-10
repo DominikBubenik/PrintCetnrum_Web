@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DiplomaTextBox } from '../../models/design-files-models/diploma-container.model';
-import {DesignFilesHandlerService} from "../../services/file-services/design-files-handler.service";
+import { DesignFilesHandlerService } from "../../services/file-services/design-files-handler.service";
 
 @Component({
   selector: 'app-diploma-page',
@@ -40,8 +40,8 @@ export class DiplomaPageComponent {
     this.diplomaId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.diplomaId !== -1) {
       this.designFileService.getDesignFileById(this.diplomaId).subscribe(data => {
-          this.parseJson(data);
-        }
+        this.parseJson(data);
+      }
       );
     }
     this.history.push([...this.textBoxes]);
@@ -64,7 +64,6 @@ export class DiplomaPageComponent {
         bottom: rect.bottom
       };
       this.innerBorderMargin = innerRect.left - rect.left;
-      console.log('Container Position:', this.containerPosition, ' this is inner margin ', this.innerBorderMargin);
     }
   }
 
@@ -79,7 +78,7 @@ export class DiplomaPageComponent {
       y: centerY,
       width: 150,
       height: 40,
-      color: 'black'
+      color: this.textColor
     });
   }
 
@@ -245,7 +244,8 @@ export class DiplomaPageComponent {
 
   saveText() {
     Array.from(document.querySelectorAll('.text-box')).forEach((box, index) => {
-      this.textBoxes[index].text = box.textContent as string
+      this.textBoxes[index].text = box.textContent as string;
+      this.textBoxes[index].color = this.textColor;
     });
   }
 
@@ -309,6 +309,21 @@ export class DiplomaPageComponent {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.parseJson(file);
+    }
+  }
+
+  getBoardColorValue(): string {
+    switch (this.boardColor) {
+      case 'green':
+        return '#29332B';
+      case 'blue':
+        return '#282C40';
+      case 'black':
+        return '#333333';
+      case 'red':
+        return '#591527';
+      default:
+        return 'white';
     }
   }
 }

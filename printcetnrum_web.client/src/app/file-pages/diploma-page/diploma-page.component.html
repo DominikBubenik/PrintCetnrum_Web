@@ -17,6 +17,7 @@
         <div class="row controls-container">
           <label>Board Color</label>
           <select [(ngModel)]="boardColor" class="form-select">
+            <option value="default">Default</option>
             <option value="green">Green</option>
             <option value="blue">Blue</option>
             <option value="black">Black</option>
@@ -26,6 +27,7 @@
         <div class="row controls-container">
           <label>Text Color</label>
           <select [(ngModel)]="textColor" class="form-select">
+            <option value="black">Black</option>
             <option value="silver">Silver</option>
             <option value="gold">Gold</option>
           </select>
@@ -42,7 +44,9 @@
         </div>
       </div>
       <div class="col-md-9">
-        <div class="stamp-container" #stampContainer [ngClass]="{'text-box-selected': selectedIndex !== null}">
+        <div class="stamp-container" #stampContainer
+             [ngClass]="{'text-box-selected': selectedIndex !== null}"
+             [ngStyle]="{'background-color': getBoardColorValue()}">
           <div class="inner-border" #innerBoarder></div>
           <div *ngFor="let box of textBoxes; let i = index"
                class="text-box"
@@ -51,6 +55,7 @@
                [style.top.px]="box.y"
                [style.width.px]="box.width"
                [style.height.px]="box.height"
+               [style.color]="textColor"
                (mousedown)="startDrag($event, i)"
                (mousemove)="updateCursor($event)"
                (click)="selectTextBox($event, i)"

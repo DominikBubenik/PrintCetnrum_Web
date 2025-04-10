@@ -125,18 +125,19 @@ export class UsersListPageComponent {
     }
   }
 
-  onDeactivation(userId: number) {
+  changeActivity(userId: number, isActive: boolean) {
     if (confirm('Are you sure you want to deactivate this user?')) {
-      this.userStore.deleteUser(userId).subscribe(
-        () => {
-          SnackBarUtil.showSnackBar(this.snackBar, 'User deactivated successfully', "success");
+      console.log('User ID:', userId + ' and activiti = ' + isActive);
+      this.auth.setUserActivity(userId, isActive).subscribe(
+        (response: any) => {
+          SnackBarUtil.showSnackBar(this.snackBar, response.message, "success");
+          console.log('User activity updated:', response);
           this.loadUsers();
         },
         (error) => {
           SnackBarUtil.showSnackBar(this.snackBar, 'Failed to deactivate user', "error");
           console.error('Error deleting user:', error);
-        }
-      );
+        });
     }
   }
 }
