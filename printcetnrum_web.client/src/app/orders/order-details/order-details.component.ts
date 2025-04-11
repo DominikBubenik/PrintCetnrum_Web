@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OrderService } from '../../services/order.service';
+import { OrderService } from '../../services/order-services/order.service';
 import { Order, OrderItem } from '../../models/order-models/order.model';
-import { FileHandlerService } from '../../services/file-handler.service';
+import { FileHandlerService } from '../../services/file-services/file-handler.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../services/auth.service';
-import { UserStoreService } from '../../services/user-store.service';
+import { AuthService } from '../../services/auth-services/auth.service';
+import { UserStoreService } from '../../services/auth-services/user-store.service';
 import { SnackBarUtil } from '../../shared/snackbar-util';
 
 

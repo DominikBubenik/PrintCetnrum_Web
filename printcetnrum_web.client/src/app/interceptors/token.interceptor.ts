@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from './../services/auth.service';
-import { Injectable } from '@angular/core';
+import { AuthService } from '../services/auth-services/auth.service';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -10,12 +10,13 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { TokenApiModel } from '../models/token-api.model';
+import { TokenApiModel } from '../models/user-models/token-api.model';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-
-  constructor(private auth: AuthService, private snackBar: MatSnackBar, private router: Router) { }
+  private auth = inject(AuthService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const myToken = this.auth.getToken();

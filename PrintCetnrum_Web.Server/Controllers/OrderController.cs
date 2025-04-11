@@ -12,6 +12,7 @@ namespace PrintCetnrum_Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -197,10 +198,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpGet("get-orders/{userName}")]
-        public async Task<IActionResult> GetOrders(string userName)
+        [Authorize]
+        [HttpGet("get-orders")]
+        public async Task<IActionResult> GetOrders()
         {
+            var userName = User.Identity?.Name;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
             if (user == null)
             {

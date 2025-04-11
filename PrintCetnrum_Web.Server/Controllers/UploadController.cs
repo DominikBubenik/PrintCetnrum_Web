@@ -34,7 +34,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 return BadRequest("Select max 10 files");
             }
-            var maxFilesSize = 15 * 1024 * 1024; // 15MB per file
+            var maxFilesSize = 30 * 1024 * 1024; // 30MB per file
             int currentSize = 0;
             foreach (var file in files)
             {

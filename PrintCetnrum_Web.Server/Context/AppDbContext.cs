@@ -5,12 +5,8 @@ using PrintCetnrum_Web.Server.Models.UserModels;
 
 namespace PrintCetnrum_Web.Server.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-
-        }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }
@@ -35,7 +31,6 @@ namespace PrintCetnrum_Web.Server.Context
             builder.Entity<UserAuthentication>().ToTable("user_authentications");
             
 
-            // Specify decimal precision and scale for TotalPrice in the Order entity
             builder.Entity<Order>()
                 .Property(o => o.TotalPrice)
                 .HasPrecision(18, 2);

@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { UserStoreService } from '../services/user-store.service';
+import { AuthService } from '../services/auth-services/auth.service';
+import { UserStoreService } from '../services/auth-services/user-store.service';
 import { Subscription } from 'rxjs';
 
 @Component({

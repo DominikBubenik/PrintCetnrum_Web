@@ -20,6 +20,8 @@ namespace PrintCetnrum_Web.Server.Models.UserModels
 
         [MaxLength(255), Required]
         public string Email { get; set; }
+        [MaxLength(20), Required]
+        public string Phone { get; set; }
 
         public bool IsAccountActive { get; set; } = true;
 
