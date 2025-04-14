@@ -101,7 +101,7 @@ export class NewOrderComponent implements OnInit {
 
   isImage(extension: string): boolean {
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'];
-    return imageExtensions.includes(extension.toLowerCase());
+    return imageExtensions.includes(extension?.toLowerCase());
   }
 
   submitOrder(): void {
