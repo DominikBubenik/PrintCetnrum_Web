@@ -78,11 +78,10 @@ export class UserFilesComponent implements OnInit {
         this.files = files;
         this.stamps = stamps;
         this.diplomas = diplomas;
-        this.updateFileLists(); // <-- Only called after all three are done
+        this.updateFileLists();
       },
       error: (err) => {
         console.error('Error loading files:', err);
-        // Optional: handle fallback or partial loads
       }
     });
   }

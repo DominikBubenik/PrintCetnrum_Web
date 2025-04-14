@@ -46,4 +46,8 @@ export class DesignFilesHandlerService {
   getDesignFileById(fileId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/getDesignFileWithId`, fileId, { responseType: 'blob' });
   }
+
+  getDesignFilesById(listOfId: number[]): Observable<any> {
+    return this.http.post<UserFile[]>(`${this.baseUrl}/getDesignFilesWithId`, listOfId);
+  }
 }
