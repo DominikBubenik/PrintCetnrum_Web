@@ -1,151 +1,185 @@
-body {
+html, body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
 }
 
-header.masthead {
-  padding-top: 10.5rem;
-  padding-bottom: 6rem;
-  text-align: center;
-  color: #fff;
+a {
+  text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+}
+
+/* HEADER STYLES */
+.masthead {
+  height: 100vh;
+  width: 100%;
   background-image: url("../../assets/about-pictures/PrintCentrum_inside.jpg");
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  background-position: center center;
   background-size: cover;
-}
-
-  header.masthead .masthead-subheading {
-    font-size: 1.5rem;
-    font-style: italic;
-    line-height: 1.5rem;
-    margin-bottom: 25px;
-    font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  }
-
-  header.masthead .masthead-heading {
-    font-size: 3.25rem;
-    font-weight: 700;
-    line-height: 3.25rem;
-    margin-bottom: 2rem;
-    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  }
-
-@media (min-width: 768px) {
-  header.masthead {
-    padding-top: 17rem;
-    padding-bottom: 12.5rem;
-  }
-
-    header.masthead .masthead-subheading {
-      font-size: 2.25rem;
-      font-style: italic;
-      line-height: 2.25rem;
-      margin-bottom: 2rem;
-    }
-
-    header.masthead .masthead-heading {
-      font-size: 4.5rem;
-      font-weight: 700;
-      line-height: 4.5rem;
-      margin-bottom: 4rem;
-    }
-}
-
-.text-title-uppercase {
-  text-transform: uppercase !important;
+  background-position: center;
+  background-repeat: no-repeat;
   color: ivory;
+  padding: 0 20px;
+  text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
 
-.page-section {
-  padding: 60px 0;
+.masthead-heading {
+  font-size: 3rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
 }
 
-.text-center h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+.masthead-subheading {
+  font-size: 1.5rem;
+  font-style: italic;
 }
 
-.text-center h3 {
-  font-size: 1.25rem;
-  color: #6c757d;
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
-.row {
-  margin-right: 0;
-  margin-left: 0;
+.service-card {
+  background-color: var(--light);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-  .row .col-md-4 {
-    margin-bottom: 30px;
+  .service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
   }
 
-.my-3 {
-  margin-top: 1rem;
-}
-
-.text-muted {
-  color: #6c757d;
-}
-
-.fa-stack {
-  margin-bottom: 20px;
-  max-width: 100%;
-}
-
-.fa-stack-1x, .fa-stack-2x {
+.service-icon {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3B62D9;
+  color: var(--white);
   font-size: 3rem;
 }
 
+.service-content {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+  .service-content h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+  }
+
+  .service-content p {
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+.contact {
+  padding: 6rem 5%;
+  background-color: #3B62D9;
+  color: white;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+}
+
+.contact-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--secondary);
+}
+
+.contact-details {
+  list-style: none;
+}
+
+  .contact-details li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .contact-details i {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+    color: var(--primary);
+  }
+
+.contact-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--secondary);
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  font-size: 1rem;
+}
+
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: 2px solid var(--primary);
+  }
+
+.contact-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* SCROLL TO TOP BUTTON */
 .go-to-top {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #ccc;
-  width: 60px;
-  height: 60px;
+  bottom: 30px;
+  right: 50px;
+  background-color: #007bff;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   border: none;
-  padding: 10px;
-  border-radius: 5px;
-  opacity: 0.7;
-  transition: opacity 0.2s ease-in-out;
-  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.3s;
 }
 
   .go-to-top:hover {
     opacity: 1;
   }
 
-.container {
-  max-width: 100%;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.page-section.bg-light {
-  background-color: #f8f9fa;
-}
-
-.text-center p {
-  font-size: 1.1rem;
-  color: #6c757d;
-}
-
-@media (max-width: 576px) {
-  header.masthead {
-    padding-top: 8rem;
-    padding-bottom: 5rem;
-  }
-
-  .masthead-subheading,
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
   .masthead-heading {
-    padding: 0 10px;
-    word-wrap: break-word;
+    font-size: 2.2rem;
   }
 
-  .go-to-top {
-    width: 50px;
-    height: 50px;
+  .masthead-subheading {
+    font-size: 1.2rem;
+  }
+
+  .services-section {
+    text-align: center;
   }
 }
