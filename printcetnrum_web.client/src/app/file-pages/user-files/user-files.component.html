@@ -50,7 +50,7 @@
                        (markForPrint)="markForPrint($event)"
                        (editFile)="editFile($event)"
                        (openDeleteModal)="openDeleteModal($event, deleteModal)"
-                       (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showOtherFiles">
+                       *ngIf="showOtherFiles">
         </app-file-card>
         <app-file-card title="Images Files"
                        [files]="images"
@@ -58,7 +58,7 @@
                        (markForPrint)="markForPrint($event)"
                        (editFile)="editFile($event)"
                        (openDeleteModal)="openDeleteModal($event, deleteModal)"
-                       (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showImages">
+                       *ngIf="showImages">
         </app-file-card>
         <app-file-card title="PDF Files"
                        [files]="pdfFiles"
@@ -66,7 +66,7 @@
                        (markForPrint)="markForPrint($event)"
                        (editFile)="editFile($event)"
                        (openDeleteModal)="openDeleteModal($event, deleteModal)"
-                       (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showPDFFiles">
+                       *ngIf="showPDFFiles">
         </app-file-card>
         <app-file-card title="Word Files"
                        [files]="wordFiles"
@@ -74,7 +74,7 @@
                        (markForPrint)="markForPrint($event)"
                        (editFile)="editFile($event)"
                        (openDeleteModal)="openDeleteModal($event, deleteModal)"
-                       (toggleSelectFileCard)="toggleSelection($event)" *ngIf="showWordFiles">
+                       *ngIf="showWordFiles">
         </app-file-card>
         <app-file-card title="Stamps"
                        [files]="stamps"

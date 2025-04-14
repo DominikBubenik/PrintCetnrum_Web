@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FileHandlerService } from '../../services/file-services/file-handler.service';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { UserFile } from '../../models/user-models/user-file';
 import { Order, OrderItem } from '../../models/order-models/order.model';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 import { OrderService } from '../../services/order-services/order.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarUtil } from '../../shared/snackbar-util';
+import { DesignFilesHandlerService } from '../../services/file-services/design-files-handler.service';
 
 @Component({
   selector: 'app-new-order',
@@ -16,6 +17,8 @@ import { SnackBarUtil } from '../../shared/snackbar-util';
   styleUrls: ['./new-order.component.css']
 })
 export class NewOrderComponent implements OnInit {
+  private designFileService = inject(DesignFilesHandlerService);
+
   files: UserFile[] = [];
   order?: Order = undefined;
   orderItems: OrderItem[] = [];
@@ -26,7 +29,6 @@ export class NewOrderComponent implements OnInit {
   constructor(
     private fileHandlerService: FileHandlerService,
     private orderService: OrderService,
-    private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) { }
@@ -36,19 +38,31 @@ export class NewOrderComponent implements OnInit {
   }
 
   fetchFiles(): void {
-    this.fileHandlerService.fetchFiles().subscribe(
-      files => {
-        this.files = files.filter(file => file.shouldPrint);
+    const regularFiles$ = this.fileHandlerService.fetchFiles();
+    const stamps$ = this.designFileService.getUserStamps();
+    const diplomas$ = this.designFileService.getUserDiplomas();
+
+    forkJoin([regularFiles$, stamps$, diplomas$]).subscribe({
+      next: ([regularFiles, stamps, diplomas]) => {
+        stamps.forEach(file => file.isStamp = true);
+        diplomas.forEach(file => file.isDiploma = true);
+        this.files = [
+          ...regularFiles.filter(file => file.shouldPrint),
+          ...stamps.filter(file => file.shouldPrint),
+          ...diplomas.filter(file => file.shouldPrint)
+        ];
+        console.log(this.files);
         this.initializeOrder();
+
         if (this.order) {
           this.initializeOrderDetails();
         }
       },
-      error => {
-        console.error('Error fetching files:', error);
+      error: (err) => {
         SnackBarUtil.showSnackBar(this.snackBar, 'Failed to fetch files!', 'error');
+        console.error('File fetch error:', err);
       }
-    );
+    });
   }
 
   initializeOrder(): void {
@@ -71,6 +85,7 @@ export class NewOrderComponent implements OnInit {
       orderId: 0,
       userFileId: file.id,
       userFile: file,
+      isDesignFile: file.isDiploma || file.isStamp ? true : false,
       count: 1,
       color: 'black',
       paperType: 'regular',

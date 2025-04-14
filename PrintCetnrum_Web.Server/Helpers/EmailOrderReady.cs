@@ -3,7 +3,7 @@ using PrintCetnrum_Web.Server.Models.UserModels;
 
 public static class EmailOrderReady
 {
-    public static string GenerateOrderReadyEmailBody(string userName, string orderName, decimal totalPrice, List<OrderItem> orderItems, List<UserFile> orderFiles)
+    public static string GenerateOrderReadyEmailBody(string userName, string orderName, decimal totalPrice, List<OrderItem> orderItems, List<UserFile> orderFiles, List<DesignFile> designFiles)
     {
         string emailBody = $@"
         <html>
@@ -90,6 +90,18 @@ public static class EmailOrderReady
 
         foreach (var item in orderItems)
         {
+            if (item.IsDesignFile)
+            {
+                var designFile = designFiles.FirstOrDefault(f => f.Id == item.UserFileId);
+                emailBody += $@"
+                            <tr>
+                                <td>{designFile?.FileName ?? "Unnamed File"}</td>
+                                <td>{item.Description ?? "No description"}</td>
+                                <td>{item.Count}</td>
+                                <td>${item.Price:F2}</td>
+                            </tr>";
+                continue;
+            }
             var file = orderFiles.FirstOrDefault(f => f.Id == item.UserFileId);
             emailBody += $@"
                             <tr>

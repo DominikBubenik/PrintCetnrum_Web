@@ -28,8 +28,9 @@ export class FileHandlerService {
     return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken() }`);
   }
 
-  markForPrint(id: number, shouldPrint: boolean): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, shouldPrint);
+  markForPrint(id: number, shouldPrint: boolean, isFile: boolean): Observable<void> {
+    const data = { shouldPrint, isFile };
+    return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, data);
   }
 
   getFilesWithId(listOfId: number[]): Observable<UserFile[]> {

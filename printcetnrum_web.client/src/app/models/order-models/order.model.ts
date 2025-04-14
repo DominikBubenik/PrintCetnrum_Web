@@ -19,6 +19,7 @@ export interface OrderItem {
   orderId: number;
   userFileId: number;
   userFile: UserFile;
+  isDesignFile: boolean;
   count: number;
   color: string; 
   paperType: string; 

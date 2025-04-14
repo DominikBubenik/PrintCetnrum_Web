@@ -7,6 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { UserStoreService } from '../../services/auth-services/user-store.service';
 import { SnackBarUtil } from '../../shared/snackbar-util';
+import { switchMap, tap } from 'rxjs';
+import { DesignFilesHandlerService } from '../../services/file-services/design-files-handler.service';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class OrderDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private orderService: OrderService,
     private fileService: FileHandlerService,
+    private designFileService: DesignFilesHandlerService,
     private snackBar: MatSnackBar,
     private auth: AuthService,
     private userStore: UserStoreService
@@ -76,27 +79,35 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   getOrderDetails(orderId: number): void {
-    this.orderService.getOrderById(orderId).subscribe(
-      (order) => {
-        this.order = order;
-        this.orderService.getOrderItems(orderId).subscribe((items) => {
-          this.orderItems = items;
-
-          const fileIds = items.map(item => item.userFileId);
-
-          this.fileService.getFilesWithId(fileIds).subscribe((files) => {
-            this.orderItems.forEach(item => {
-              if (files) {
-                item.userFile = files.find(file => file?.id === item.userFileId) ?? { id: 0, fileName: '', fileUinique: '', shouldPrint: false, uploadDate: new Date, filePath: '', extension: '', isStamp: false, isDiploma: false };
-              }
-            });
-          });
+    this.orderService.getOrderById(orderId).pipe(
+      tap(order => this.order = order),
+      switchMap(() => this.orderService.getOrderItems(orderId)),
+      tap(items => this.orderItems = items),
+      switchMap(items => {
+        const fileIds = items.map(item => item.userFileId);
+        return this.fileService.getFilesWithId(fileIds);
+      }),
+      tap(files => {
+        if (!files) return;
+        this.orderItems.forEach(item => {
+          item.userFile = files.find(file => file?.id === item.userFileId) ?? {
+            id: 0,
+            fileName: '',
+            fileUinique: '',
+            shouldPrint: false,
+            uploadDate: new Date(),
+            filePath: '',
+            extension: '',
+            isStamp: false,
+            isDiploma: false
+          };
         });
-      },
-      (error) => {
-        console.error('Error fetching order details:', error);
+      })
+    ).subscribe({
+      error: (err) => {
+        console.error('Error fetching order details:', err);
       }
-    );
+    });
   }
 
   downloadFile(orderItem: OrderItem): void {

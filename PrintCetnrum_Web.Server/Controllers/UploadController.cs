@@ -150,18 +150,29 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         [Authorize]
         [HttpPut("updatePrintStatus/{id}")]
-        public async Task<IActionResult> UpdatePrintStatus(int id, [FromBody] bool shouldPrint)
+        public async Task<IActionResult> UpdatePrintStatus(int id, [FromBody] UpdatePrintDto dto)
         {
-            var file = await _dbContext.UserFiles.FindAsync(id);
-
-            if (file == null)
+            if (dto.IsFile)
             {
-                return NotFound("File not found.");
+                var file = await _dbContext.UserFiles.FindAsync(id);
+
+                if (file == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                file.ShouldPrint = dto.ShouldPrint;
             }
-
-            file.ShouldPrint = shouldPrint;
+            else
+            {
+                var designFile = await _dbContext.DesignFiles.FindAsync(id);
+                if (designFile == null)
+                {
+                    return NotFound("Design file not found.");
+                }
+                designFile.ShouldPrint = dto.ShouldPrint;
+            }
             await _dbContext.SaveChangesAsync();
-
             return NoContent();
         }
 

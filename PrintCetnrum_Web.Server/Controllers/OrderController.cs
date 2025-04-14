@@ -59,8 +59,10 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
 
             decimal totalPrice = 0;
-            var fileIds = items.Select(i => i.UserFileId).ToList();
-            var filesToUpdate = await _context.UserFiles.Where(f => fileIds.Contains(f.Id)).ToListAsync();
+            var designFileIds = items.Where(i => i.IsDesignFile).Select(i => i.UserFileId).ToList();
+            var ordinaryFileIds = items.Where(i => !i.IsDesignFile).Select(i => i.UserFileId).ToList();
+            var filesToUpdate = await _context.UserFiles.Where(f => ordinaryFileIds.Contains(f.Id)).ToListAsync();
+            var designFilesToUpdate = await _context.DesignFiles.Where(f => designFileIds.Contains(f.Id)).ToListAsync();
 
             foreach (var item in items)
             {
@@ -71,11 +73,12 @@ namespace PrintCetnrum_Web.Server.Controllers
             foreach (var file in filesToUpdate)
             {
                 file.ShouldPrint = false;
+            }  
+            foreach (var file in designFilesToUpdate)
+            {
+                file.ShouldPrint = false;
             }
-
             order.TotalPrice = totalPrice;
-
-            //dont forget to update order total price
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -101,20 +104,34 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
             var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
             var orderFiles = new List<UserFile>();
+            var designFiles = new List<DesignFile>();
 
             foreach (var item in orderItems)
             {
-                var userFile = await _context.UserFiles
-                    .Where(f => f.Id == item.UserFileId)
-                    .FirstOrDefaultAsync(); 
-
-                if (userFile != null) 
+                if (item.IsDesignFile)
                 {
-                    orderFiles.Add(userFile); 
+                    var designFile = await _context.DesignFiles
+                        .Where(f => f.Id == item.UserFileId)
+                        .FirstOrDefaultAsync();
+                    if (designFile != null)
+                    {
+                        designFiles.Add(designFile);
+                    }
+                }
+                else
+                {
+                    var userFile = await _context.UserFiles
+                        .Where(f => f.Id == item.UserFileId)
+                        .FirstOrDefaultAsync();
+
+                    if (userFile != null)
+                    {
+                        orderFiles.Add(userFile);
+                    }
                 }
             }
 
-            string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems, orderFiles);
+            string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems, orderFiles, designFiles);
 
 
             string subject = $"Your Order {order.OrderName} is Ready!";
