@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { UserFile } from '../../models/user-file';
+import { UserFile } from '../../models/user-models/user-file';
 import { FileHandlerService } from '../../services/file-services/file-handler.service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';

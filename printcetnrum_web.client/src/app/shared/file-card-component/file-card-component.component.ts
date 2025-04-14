@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { UserFile } from '../../models/user-file';
+import { UserFile } from '../../models/user-models/user-file';
 
 @Component({
   selector: 'app-file-card',
