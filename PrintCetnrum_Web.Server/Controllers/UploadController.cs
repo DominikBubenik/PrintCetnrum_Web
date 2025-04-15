@@ -125,7 +125,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteFile/{id}")]
         public async Task<IActionResult> DeleteFile(int id)
         {
             var file = await _dbContext.UserFiles.FindAsync(id);

@@ -38,7 +38,8 @@ export class FileHandlerService {
   }
 
   deleteFile(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}${id}`);
+    console.log('som v delete');
+    return this.http.delete<void>(`${this.baseUrl}deleteFile/${id}`);
   }
 
   getFile(id: number): Observable<UserFile> {

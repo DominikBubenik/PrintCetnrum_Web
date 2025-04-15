@@ -14,7 +14,7 @@ export class FileCardComponentComponent {
 
   @Output() markForPrint = new EventEmitter<{ id: number, shouldPrint: boolean, isFile: boolean }>();
   @Output() editFile = new EventEmitter<number>();
-  @Output() openDeleteModal = new EventEmitter<number>();
+  @Output() openDeleteModal = new EventEmitter<UserFile>();
 
   isImage(extension: string): boolean {
     return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'].includes(extension.toLowerCase());

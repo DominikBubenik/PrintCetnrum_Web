@@ -28,7 +28,7 @@ export class UserFilesComponent implements OnInit {
   markedFiles: UserFile[] = [];
   otherFiles: UserFile[] = [];
   baseUrl = environment.apiUrl;
-  fileIdToDelete: number | null = null;
+  fileToDelete: UserFile | null = null;
   criteria: string = 'date';
   showPDFFiles = true;
   showWordFiles = true;
@@ -126,20 +126,20 @@ export class UserFilesComponent implements OnInit {
     });
   }
 
-  openDeleteModal(fileId: number, modal: any): void {
-    this.fileIdToDelete = fileId;
+  openDeleteModal(file: UserFile, modal: any): void {
+    this.fileToDelete = file;
     this.modalService.open(modal);
   }
 
   confirmDelete(): void {
-    if (this.fileIdToDelete) {
-      if (this.stamps.filter(stamp => stamp.id === this.fileIdToDelete) || this.diplomas.filter(diploma => diploma.id === this.fileIdToDelete)) {
-        this.designFileService.deleteDesignFile(this.fileIdToDelete).subscribe(() => {
+    if (this.fileToDelete) {
+      if (this.fileToDelete.isDiploma || this.fileToDelete.isStamp) {
+        this.designFileService.deleteDesignFile(this.fileToDelete.id).subscribe(() => {
           this.fetchFiles();
           this.modalService.dismissAll();
         });
       } else {
-        this.fileHandlerService.deleteFile(this.fileIdToDelete).subscribe(() => {
+        this.fileHandlerService.deleteFile(this.fileToDelete.id).subscribe(() => {
           this.fetchFiles();
           this.modalService.dismissAll();
         });
