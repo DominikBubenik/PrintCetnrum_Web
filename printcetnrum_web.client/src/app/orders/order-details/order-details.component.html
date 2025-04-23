@@ -31,7 +31,7 @@
   </div>
   <div *ngIf="orderItems && orderItems.length > 0" class="order-items">
     <h4>Order Items</h4>
-    <h6 *ngIf="!order.isPreparedForCustomer && ">Prize will be displayed when the order will be ready</h6>
+    <h6 *ngIf="!order.isPreparedForCustomer">Prize will be displayed when the order will be ready</h6>
     <div class="table-responsive">
       <table class="table table-striped table-bordered">
         <thead>
