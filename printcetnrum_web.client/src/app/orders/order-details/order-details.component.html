@@ -1,6 +1,5 @@
 <body>
 <h2 class="text-center">Order Details</h2>
-
 <div *ngIf="order">
   <div class="order-info">
     <div class="info-item">
@@ -27,12 +26,12 @@
   </div>
   <div class="text-end mt-3">
     <button *ngIf="isAdmin" class="btn btn-primary" (click)="saveOrderChanges()">Save Changes</button>
-    <button *ngIf="isAdmin && !order.isPreparedForCustomer" class="btn btn-success" (click)="markOrderAsPrepared(true)">Mark as Done</button>
-    <button *ngIf="isAdmin && order.isPreparedForCustomer" class="btn btn-success" disabled>Email Send</button>
+    <button *ngIf="isAdmin && !order.isPreparedForCustomer" class="btn btn-success ms-2" (click)="markOrderAsPrepared(true)">Mark as Done</button>
+    <button *ngIf="isAdmin && order.isPreparedForCustomer" class="btn btn-success ms-2" disabled>Email Send</button>
   </div>
-
   <div *ngIf="orderItems && orderItems.length > 0" class="order-items">
     <h4>Order Items</h4>
+    <h6 *ngIf="!order.isPreparedForCustomer && ">Prize will be displayed when the order will be ready</h6>
     <div class="table-responsive">
       <table class="table table-striped table-bordered">
         <thead>
@@ -43,7 +42,7 @@
             <th>Color</th>
             <th>Size</th>
             <th>Paper Type</th>
-            <th>Price</th>
+            <th *ngIf="order.isPreparedForCustomer || isAdmin">Price</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -55,7 +54,7 @@
             <td>{{ item.color }}</td>
             <td>{{ item.size }}</td>
             <td>{{ item.paperType }}</td>
-            <td>
+            <td *ngIf="isAdmin || order.isPreparedForCustomer">
               <input *ngIf="isAdmin"
                      type="number"
                      class="form-control"
@@ -66,7 +65,7 @@
             <td>
               <button class="btn btn-success btn-sm" (click)="downloadFile(item)">Download</button>
               <button *ngIf="isAdmin"
-                      class="btn btn-danger btn-sm"
+                      class="btn btn-danger btn-sm ms-2"
                       (click)="removeItem(item)">
                 Remove
               </button>
@@ -74,12 +73,9 @@
           </tr>
         </tbody>
       </table>
-
     </div>
   </div>
-
 </div>
-
 <div *ngIf="!order" class="alert alert-warning">
   Loading order details...
 </div>

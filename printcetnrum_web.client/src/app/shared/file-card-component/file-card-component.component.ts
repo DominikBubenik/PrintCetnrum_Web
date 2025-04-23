@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { UserFile } from '../../models/user-file';
+import { UserFile } from '../../models/user-models/user-file';
 
 @Component({
   selector: 'app-file-card',
@@ -12,10 +12,9 @@ export class FileCardComponentComponent {
   @Input() baseUrl: string = '';
   @Input() selectedFiles: UserFile[] = [];
 
-  @Output() markForPrint = new EventEmitter<{ id: number, shouldPrint: boolean }>();
+  @Output() markForPrint = new EventEmitter<{ id: number, shouldPrint: boolean, isFile: boolean }>();
   @Output() editFile = new EventEmitter<number>();
-  @Output() openDeleteModal = new EventEmitter<number>();
-  @Output() toggleSelectFileCard = new EventEmitter<{ id: number, shouldPrint: boolean }>(); 
+  @Output() openDeleteModal = new EventEmitter<UserFile>();
 
   isImage(extension: string): boolean {
     return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'].includes(extension.toLowerCase());
@@ -23,16 +22,12 @@ export class FileCardComponentComponent {
 
   markFile(file: UserFile) {
     console.log('file-card');
-    this.markForPrint.emit({ id: file.id, shouldPrint: !file.shouldPrint });
+    const isFile = file.isStamp || file.isDiploma ? false : true;
+    this.markForPrint.emit({ id: file.id, shouldPrint: !file.shouldPrint, isFile: isFile });
   }
 
   isUnknownType(extension: string): boolean {
     return !['.pdf', '.doc', '.docx'].includes(extension.toLowerCase()) || !this.isImage(extension);
-  }
-
-  toggleSelection(file: UserFile) {
-    console.log('toglujem' + file.id);
-    this.toggleSelectFileCard.emit({ id: file.id, shouldPrint: false });
   }
 
   isFileSelected(file: UserFile): boolean {

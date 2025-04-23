@@ -9,10 +9,10 @@ namespace PrintCetnrum_Web.Server.Models.UserModels
         [Key]
         public int Id { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(50), Required]
         public string FirstName { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(50), Required]
         public string LastName { get; set; }
 
         [MaxLength(50), Required]

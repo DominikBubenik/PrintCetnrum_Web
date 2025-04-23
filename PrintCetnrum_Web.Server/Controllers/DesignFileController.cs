@@ -167,5 +167,27 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             return File(fileBytes, "application/json", fileName);
         }
+
+
+        [HttpPost("getDesignFilesWithId")]
+        public async Task<IActionResult> GetDesignFilesWithId([FromBody] List<int> listOfId)
+        {
+            if (listOfId == null || !listOfId.Any())
+            {
+                return BadRequest("List of IDs is empty or null.");
+            }
+
+            List<DesignFile> files = new List<DesignFile>();
+            foreach (var id in listOfId)
+            {
+                files.Add(await _dbContext.DesignFiles.FirstOrDefaultAsync(o => o.Id == id));
+            }
+
+            if (!files.Any())
+            {
+                return NotFound("No files found for the provided IDs.");
+            }
+            return Ok(files);
+        }
     }
 }

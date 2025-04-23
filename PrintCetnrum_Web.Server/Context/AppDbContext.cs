@@ -14,7 +14,6 @@ namespace PrintCetnrum_Web.Server.Context
         public DbSet<UserFile> UserFiles { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<PrizeList> PrizeList { get; set; }
         public DbSet<DesignFile> DesignFiles { get; set; }
         
 
@@ -24,7 +23,6 @@ namespace PrintCetnrum_Web.Server.Context
             builder.Entity<UserFile>().ToTable("user_files");
             builder.Entity<Order>().ToTable("orders");
             builder.Entity<OrderItem>().ToTable("order_items");
-            builder.Entity<PrizeList>().ToTable("prize_lists");
             builder.Entity<DesignFile>().ToTable("design_files");
             builder.Entity<Role>().ToTable("roles");
             builder.Entity<UserAddress>().ToTable("user_addresses");
@@ -46,10 +44,6 @@ namespace PrintCetnrum_Web.Server.Context
                 .WithMany()
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Restrict); 
-
-            builder.Entity<PrizeList>()
-                .HasIndex(p => p.ItemName)
-                .IsUnique();
         }
 
     }

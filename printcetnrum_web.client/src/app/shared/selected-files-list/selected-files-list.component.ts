@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { UserFile } from '../../models/user-file';
+import { UserFile } from '../../models/user-models/user-file';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -12,9 +12,8 @@ export class SelectedFilesListComponent {
   baseUrl = environment.apiUrl;
 
   getFileThumbnail(file: UserFile): string | null {
-    // Logic to get file thumbnail based on file type
     if (this.isImage(file.extension)) {
-      return this.baseUrl + file.filePath; // Assuming filePath contains the image URL
+      return this.baseUrl + file.filePath;
     }
     return null;
   }

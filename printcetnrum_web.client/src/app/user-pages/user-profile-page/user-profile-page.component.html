@@ -20,7 +20,7 @@
       <input type="text" class="form-control" [(ngModel)]="user.phone" name="phone" placeholder="Enter phone" />
     </div>
 
-    <h3>Address</h3>
+    <h4>Address</h4>
 
     <div class="form-group">
       <label>Street:</label>
@@ -38,7 +38,7 @@
     </div>
 
     <button type="button" class="btn btn-primary" (click)="saveUser()">Save</button>
-    <button type="button" class="btn btn-danger" (click)="openDeleteModal()">Deactivate</button>
+    <button type="button" class="btn btn-danger ms-4" (click)="openDeleteModal()">Deactivate</button>
   </form>
 
   <app-confirm-modal [title]="'Delete Account'"

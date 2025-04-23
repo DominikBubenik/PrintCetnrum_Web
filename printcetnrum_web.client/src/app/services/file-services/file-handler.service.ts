@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth-services/auth.service';
-import { UserFile } from '../../models/user-file';
+import { UserFile } from '../../models/user-models/user-file';
 import { UserStoreService } from '../auth-services/user-store.service';
 
 @Injectable({
@@ -28,8 +28,9 @@ export class FileHandlerService {
     return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken() }`);
   }
 
-  markForPrint(id: number, shouldPrint: boolean): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, shouldPrint);
+  markForPrint(id: number, shouldPrint: boolean, isFile: boolean): Observable<void> {
+    const data = { shouldPrint, isFile };
+    return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, data);
   }
 
   getFilesWithId(listOfId: number[]): Observable<UserFile[]> {
@@ -37,7 +38,8 @@ export class FileHandlerService {
   }
 
   deleteFile(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}${id}`);
+    console.log('som v delete');
+    return this.http.delete<void>(`${this.baseUrl}deleteFile/${id}`);
   }
 
   getFile(id: number): Observable<UserFile> {

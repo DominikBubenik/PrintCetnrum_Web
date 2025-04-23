@@ -56,7 +56,7 @@
                 [disabled]="order.isTakenByCustomer || !order.isPreparedForCustomer">
           Mark as Taken
         </button>
-        <button class="btn btn-danger"
+        <button *ngIf="isAdmin" class="btn btn-danger"
                 (click)="openDeleteModal(order.id)">
           Delete
         </button>

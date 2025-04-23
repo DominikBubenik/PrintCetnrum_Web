@@ -7,6 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { UserStoreService } from '../../services/auth-services/user-store.service';
 import { SnackBarUtil } from '../../shared/snackbar-util';
+import { forkJoin, of, switchMap, tap } from 'rxjs';
+import { DesignFilesHandlerService } from '../../services/file-services/design-files-handler.service';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class OrderDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private orderService: OrderService,
     private fileService: FileHandlerService,
+    private designFileService: DesignFilesHandlerService,
     private snackBar: MatSnackBar,
     private auth: AuthService,
     private userStore: UserStoreService
@@ -76,44 +79,83 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   getOrderDetails(orderId: number): void {
-    this.orderService.getOrderById(orderId).subscribe(
-      (order) => {
-        this.order = order;
-        this.orderService.getOrderItems(orderId).subscribe((items) => {
-          this.orderItems = items;
+    this.orderService.getOrderById(orderId).pipe(
+      tap(order => this.order = order),
+      switchMap(() => this.orderService.getOrderItems(orderId)),
+      tap(items => this.orderItems = items),
+      switchMap(items => {
+        const designFileIds: number[] = [];
+        const regularFileIds: number[] = [];
 
-          const fileIds = items.map(item => item.userFileId);
-
-          this.fileService.getFilesWithId(fileIds).subscribe((files) => {
-            this.orderItems.forEach(item => {
-              if (files) {
-                item.userFile = files.find(file => file?.id === item.userFileId) ?? { id: 0, fileName: '', fileUinique: '', shouldPrint: false, uploadDate: new Date, filePath: '', extension: '', isStamp: false, isDiploma: false };
-              }
-            });
-          });
+        items.forEach(item => {
+          if (item.isDesignFile) {
+            designFileIds.push(item.userFileId);
+          } else {
+            regularFileIds.push(item.userFileId);
+          }
         });
-      },
-      (error) => {
-        console.error('Error fetching order details:', error);
+
+        return forkJoin({
+          regularFiles: regularFileIds.length > 0 ? this.fileService.getFilesWithId(regularFileIds) : of([]),
+          designFiles: designFileIds.length > 0 ? this.designFileService.getDesignFilesById(designFileIds) : of([])
+        });
+      }),
+      tap(({ regularFiles, designFiles }) => {
+        const allFiles = [...regularFiles, ...designFiles];
+
+        this.orderItems.forEach(item => {
+          item.userFile = allFiles.find(file => file?.id === item.userFileId) ?? {
+            id: 0,
+            fileName: '',
+            fileUinique: '',
+            shouldPrint: false,
+            uploadDate: new Date(),
+            filePath: '',
+            extension: '',
+            isStamp: false,
+            isDiploma: false
+          };
+        });
+      })
+    ).subscribe({
+      error: (err) => {
+        console.error('Error fetching order details:', err);
       }
-    );
+    });
   }
 
   downloadFile(orderItem: OrderItem): void {
-    this.fileService.downloadFile(orderItem.userFileId).subscribe(
-      (fileBlob) => {
-        const downloadUrl = window.URL.createObjectURL(fileBlob);
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = orderItem.userFile.fileName;
-        link.click();
-        window.URL.revokeObjectURL(downloadUrl);
-      },
-      (error) => {
-        console.error('Error downloading file:', error);
-        SnackBarUtil.showSnackBar(this.snackBar, 'File could not be downloaded.', 'error');
-      }
-    );
+    if (orderItem.isDesignFile) {
+      this.designFileService.downloadDesignFile(orderItem.userFileId).subscribe(
+        (fileBlob) => {
+          const downloadUrl = window.URL.createObjectURL(fileBlob);
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.download = orderItem.userFile.fileName;
+          link.click();
+          window.URL.revokeObjectURL(downloadUrl);
+        },
+        (error) => {
+          console.error('Error downloading file:', error);
+          SnackBarUtil.showSnackBar(this.snackBar, 'File could not be downloaded.', 'error');
+        }
+      );
+    } else {
+      this.fileService.downloadFile(orderItem.userFileId).subscribe(
+        (fileBlob) => {
+          const downloadUrl = window.URL.createObjectURL(fileBlob);
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.download = orderItem.userFile.fileName;
+          link.click();
+          window.URL.revokeObjectURL(downloadUrl);
+        },
+        (error) => {
+          console.error('Error downloading file:', error);
+          SnackBarUtil.showSnackBar(this.snackBar, 'File could not be downloaded.', 'error');
+        }
+      );
+    }
   }
 
   removeItem(item: OrderItem): void {

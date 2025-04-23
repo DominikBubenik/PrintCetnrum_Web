@@ -18,6 +18,8 @@ public class DesignFile
     public string FilePath { get; set; }
     [Required]
     public DateTime DateCreated { get; set; }
+    [Required]
+    public bool ShouldPrint { get; set; }
     [MaxLength(50)]
     public string Type { get; set; }
     [ForeignKey("User")]

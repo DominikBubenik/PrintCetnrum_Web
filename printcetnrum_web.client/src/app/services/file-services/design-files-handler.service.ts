@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../auth-services/auth.service";
 import {Observable} from "rxjs";
-import {UserFile} from "../../models/user-file";
+import {UserFile} from "../../models/user-models/user-file";
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +45,9 @@ export class DesignFilesHandlerService {
 
   getDesignFileById(fileId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/getDesignFileWithId`, fileId, { responseType: 'blob' });
+  }
+
+  getDesignFilesById(listOfId: number[]): Observable<any> {
+    return this.http.post<UserFile[]>(`${this.baseUrl}/getDesignFilesWithId`, listOfId);
   }
 }
