@@ -19,6 +19,7 @@ export class UserFilesComponent implements OnInit {
   private fileHandlerService = inject(FileHandlerService);
   private modalService = inject(NgbModal);
   private router = inject(Router);
+
   files: UserFile[] = [];
   stamps: UserFile[] = [];
   diplomas: UserFile[] = [];

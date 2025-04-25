@@ -1,10 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FileHandlerService } from '../../services/file-services/file-handler.service';
-import { AuthService } from '../../services/auth-services/auth.service';
 import { UserFile } from '../../models/user-models/user-file';
 import { Order, OrderItem } from '../../models/order-models/order.model';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { OrderService } from '../../services/order-services/order.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
