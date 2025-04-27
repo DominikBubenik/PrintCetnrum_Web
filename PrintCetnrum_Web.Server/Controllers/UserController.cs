@@ -43,7 +43,7 @@ namespace PrintCetnrum_Web.Server.Controllers
             var newAccessToken = userAuthentication.Token;
             var newRefreshToken = CreateRefreshToken();
             userAuthentication.RefreshToken = newRefreshToken;
-            userAuthentication.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
+            userAuthentication.RefreshTokenExpiryTime = DateTime.Now.AddHours(1);
             await authContext.SaveChangesAsync();
 
             return Ok(new TokenApiDto()
