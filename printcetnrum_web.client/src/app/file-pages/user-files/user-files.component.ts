@@ -19,6 +19,7 @@ export class UserFilesComponent implements OnInit {
   private fileHandlerService = inject(FileHandlerService);
   private modalService = inject(NgbModal);
   private router = inject(Router);
+
   files: UserFile[] = [];
   stamps: UserFile[] = [];
   diplomas: UserFile[] = [];
@@ -154,7 +155,6 @@ export class UserFilesComponent implements OnInit {
   editFile(id: number) {
     this.router.navigate(['/edit', id]);
   }
-
 
   sortFiles(criteria: string): void {
     if (criteria === 'date') {

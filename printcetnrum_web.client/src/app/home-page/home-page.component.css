@@ -13,7 +13,6 @@ h1, h2, h3, h4 {
   font-weight: 700;
 }
 
-/* HEADER STYLES */
 .masthead {
   height: 100vh;
   width: 100%;
@@ -146,7 +145,6 @@ h1, h2, h3, h4 {
   resize: vertical;
 }
 
-/* SCROLL TO TOP BUTTON */
 .go-to-top {
   position: fixed;
   bottom: 30px;
@@ -169,7 +167,6 @@ h1, h2, h3, h4 {
     opacity: 1;
   }
 
-/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
   .masthead-heading {
     font-size: 2.2rem;

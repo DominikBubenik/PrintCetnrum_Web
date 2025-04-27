@@ -9,7 +9,7 @@ export class ConfirmModalComponent {
   @Input() title: string = 'Confirm Action';
   @Input() message: string = 'Are you sure you want to proceed?';
   @Input() confirmButtonText: string = 'Confirm';
-  @Input() isVisible: boolean = false; // Controls modal visibility
+  @Input() isVisible: boolean = false;
 
   @Output() confirmed = new EventEmitter<void>();
   @Output() canceled = new EventEmitter<void>();

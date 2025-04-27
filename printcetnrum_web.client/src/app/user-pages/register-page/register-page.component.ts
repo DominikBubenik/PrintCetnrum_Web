@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-register-page',
   templateUrl: './register-page.component.html',
-  styleUrls: ['./register-page.component.css'] // Update with your CSS path
+  styleUrls: ['./register-page.component.css'] 
 })
 export class RegisterPageComponent implements OnInit {
   registerForm: FormGroup;
@@ -60,4 +60,3 @@ export class RegisterPageComponent implements OnInit {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 }
-

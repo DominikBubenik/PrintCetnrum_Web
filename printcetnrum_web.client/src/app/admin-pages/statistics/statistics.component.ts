@@ -16,7 +16,6 @@ export class StatisticsComponent implements OnInit {
   orderStatus: any[] = [];
   loading = true;
   error = false;
-
   view: [number, number] = [700, 300];
   showXAxis = true;
   showYAxis = true;

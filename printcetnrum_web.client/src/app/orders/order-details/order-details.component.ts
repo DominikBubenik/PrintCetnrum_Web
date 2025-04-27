@@ -214,5 +214,4 @@ export class OrderDetailsComponent implements OnInit {
       }
     );
   }
-
 }

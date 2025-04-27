@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrintCetnrum_Web.Server", "
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "printcetnrum_web.client", "printcetnrum_web.client\printcetnrum_web.client.esproj", "{B27F48B7-1775-4740-BD6B-2A43DE8E3BFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{22E7EA04-25BC-465C-9D7B-4C3FB1263278}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{B27F48B7-1775-4740-BD6B-2A43DE8E3BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B27F48B7-1775-4740-BD6B-2A43DE8E3BFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B27F48B7-1775-4740-BD6B-2A43DE8E3BFF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{22E7EA04-25BC-465C-9D7B-4C3FB1263278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E7EA04-25BC-465C-9D7B-4C3FB1263278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E7EA04-25BC-465C-9D7B-4C3FB1263278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E7EA04-25BC-465C-9D7B-4C3FB1263278}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

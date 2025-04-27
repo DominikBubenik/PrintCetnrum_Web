@@ -168,7 +168,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             return File(fileBytes, "application/json", fileName);
         }
 
-
         [HttpPost("getDesignFilesWithId")]
         public async Task<IActionResult> GetDesignFilesWithId([FromBody] List<int> listOfId)
         {

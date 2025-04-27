@@ -3,9 +3,38 @@ import { UsersListPageComponent } from './users-list-page.component';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { UserStoreService } from '../../services/auth-services/user-store.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { User } from '../../models/user-models/user.model';
 import { FormsModule } from '@angular/forms';
+
+const dummyUsers: User[] = [
+  {
+    id: 1,
+    firstName: 'John',
+    lastName: 'Doe',
+    userName: 'john123',
+    email: 'john@example.com',
+    phone: '1234567890',
+    role: 'Admin',
+    street: 'Main Street',
+    city: 'Springfield',
+    postcode: '12345',
+    isActive: true
+  },
+  {
+    id: 2,
+    firstName: 'Jane',
+    lastName: 'Smith',
+    userName: 'jane_s',
+    email: 'jane@example.com',
+    phone: '0987654321',
+    role: 'User',
+    street: 'Second Street',
+    city: 'Greendale',
+    postcode: '54321',
+    isActive: false
+  }
+];
 
 describe('UsersListPageComponent', () => {
   let component: UsersListPageComponent;
@@ -13,15 +42,11 @@ describe('UsersListPageComponent', () => {
   let mockAuthService: any;
   let mockUserStoreService: any;
 
-  const dummyUsers: User[] = [
-    { id: 1, userName: 'john123', firstName: 'John', lastName: 'Doe', email: 'john@example.com', role: 'Admin', street: 'Main', city: 'City', postcode: '12345', isActive: true },
-    { id: 2, userName: 'jane456', firstName: 'Jane', lastName: 'Doe', email: 'jane@example.com', role: 'User', street: 'Second', city: 'Town', postcode: '67890', isActive: true }
-  ];
-
   beforeEach(async () => {
     mockAuthService = {
       getAllUsers: jasmine.createSpy('getAllUsers').and.returnValue(of(dummyUsers)),
-      logOut: jasmine.createSpy('logOut')
+      logOut: jasmine.createSpy('logOut'),
+      setUserActivity: jasmine.createSpy('setUserActivity').and.returnValue(of({ message: 'User deactivated' }))
     };
 
     mockUserStoreService = {
@@ -79,7 +104,7 @@ describe('UsersListPageComponent', () => {
   it('should update user on save', () => {
     component.currentUser = { ...dummyUsers[0] };
     component.onSave();
-    expect(mockUserStoreService.updateUser).toHaveBeenCalled();
+    expect(mockUserStoreService.updateUser).toHaveBeenCalledWith(1, jasmine.any(Object));
   });
 
   it('should delete user on confirm', () => {
@@ -94,9 +119,15 @@ describe('UsersListPageComponent', () => {
     expect(mockUserStoreService.deleteUser).not.toHaveBeenCalled();
   });
 
-  it('should deactivate user on confirm', () => {
+  it('should call setUserActivity on confirm', () => {
     spyOn(window, 'confirm').and.returnValue(true);
-    component.onDeactivation(2);
-    expect(mockUserStoreService.deleteUser).toHaveBeenCalledWith(2);
+    component.changeActivity(2, false);
+    expect(mockAuthService.setUserActivity).toHaveBeenCalledWith(2, false);
+  });
+
+  it('should not call setUserActivity if not confirmed', () => {
+    spyOn(window, 'confirm').and.returnValue(false);
+    component.changeActivity(2, false);
+    expect(mockAuthService.setUserActivity).not.toHaveBeenCalled();
   });
 });

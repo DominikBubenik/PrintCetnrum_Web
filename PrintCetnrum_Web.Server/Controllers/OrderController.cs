@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrintCetnrum_Web.Server.Context;
-using PrintCetnrum_Web.Server.Helpers;
 using PrintCetnrum_Web.Server.Models;
 using PrintCetnrum_Web.Server.Models.OrderModels;
 using PrintCetnrum_Web.Server.Models.UserModels;
@@ -133,7 +132,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems, orderFiles, designFiles);
 
-
             string subject = $"Your Order {order.OrderName} is Ready!";
             var emailModel = new EmailModel(user.Email, subject, emailBody);
             _emailService.SendEmail(emailModel);
@@ -156,7 +154,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             return Ok(order);
         }
-
 
         [HttpPut("update-order/{id}")]
         public async Task<IActionResult> UpdateOrder(int id, Order order)
@@ -183,7 +180,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
-
         [HttpDelete("delete-order/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
@@ -198,7 +194,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             return NoContent();
         }
-
 
         [HttpPatch("update-price/{id}")]
         public async Task<IActionResult> UpdateOrderPrice(int id, decimal newPrice)
