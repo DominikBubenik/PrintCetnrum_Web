@@ -5,17 +5,17 @@ using PrintCetnrum_Web.Server.Models.UserModels;
 
 namespace PrintCetnrum_Web.Server.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-
-        }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserAddress> UserAddresses { get; set; }
+        public DbSet<UserAuthentication> UserAuthentications { get; set; }
         public DbSet<UserFile> UserFiles { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<PrizeList> PrizeList { get; set; }
+        public DbSet<DesignFile> DesignFiles { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -23,9 +23,12 @@ namespace PrintCetnrum_Web.Server.Context
             builder.Entity<UserFile>().ToTable("user_files");
             builder.Entity<Order>().ToTable("orders");
             builder.Entity<OrderItem>().ToTable("order_items");
-            builder.Entity<PrizeList>().ToTable("prize_lists");
+            builder.Entity<DesignFile>().ToTable("design_files");
+            builder.Entity<Role>().ToTable("roles");
+            builder.Entity<UserAddress>().ToTable("user_addresses");
+            builder.Entity<UserAuthentication>().ToTable("user_authentications");
+            
 
-            // Specify decimal precision and scale for TotalPrice in the Order entity
             builder.Entity<Order>()
                 .Property(o => o.TotalPrice)
                 .HasPrecision(18, 2);
@@ -41,10 +44,6 @@ namespace PrintCetnrum_Web.Server.Context
                 .WithMany()
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Restrict); 
-
-            builder.Entity<PrizeList>()
-                .HasIndex(p => p.ItemName)
-                .IsUnique();
         }
 
     }

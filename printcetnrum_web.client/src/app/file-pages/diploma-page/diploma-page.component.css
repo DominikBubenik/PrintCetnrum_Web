@@ -1,0 +1,42 @@
+.stamp-container {
+  flex-grow: 1;
+  width: 450px;
+  height: 600px;
+  border: 2px solid black;
+  overflow: hidden;
+  background-color: white;
+  position: relative;
+  margin: 20px auto;
+}
+
+.row {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.inner-border {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  border: 2px dashed #000;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.text-box-selected .inner-border {
+  opacity: 1;
+}
+
+.text-box {
+  font-size: 20px;
+  position: absolute;
+}
+
+.controls-container {
+  padding: 10px;
+  margin-top: 20px;
+}

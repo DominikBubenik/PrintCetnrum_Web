@@ -1,0 +1,60 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AuthService } from '../auth-services/auth.service';
+import { UserFile } from '../../models/user-models/user-file';
+import { UserStoreService } from '../auth-services/user-store.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FileHandlerService {
+  private http = inject(HttpClient);
+  private auth = inject(AuthService);
+  private baseUrl = 'https://localhost:7074/api/Upload/';
+
+  uploadFiles(files: File[]): Observable<{ filePath: string }[]> {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('files', file); 
+    });
+    formData.append('userName', this.auth.getfullNameFromToken());
+    formData.append('shouldPrint', String(false));
+    return this.http.post<{ filePath: string }[]>(this.baseUrl + 'uploadFiles', formData);
+  }
+
+  fetchFiles(): Observable<UserFile[]> {
+    return this.http.get<UserFile[]>(this.baseUrl + `getUserFiles?userName=${this.auth.getfullNameFromToken() }`);
+  }
+
+  markForPrint(id: number, shouldPrint: boolean, isFile: boolean): Observable<void> {
+    const data = { shouldPrint, isFile };
+    return this.http.put<void>(`${this.baseUrl}updatePrintStatus/${id}`, data);
+  }
+
+  getFilesWithId(listOfId: number[]): Observable<UserFile[]> {
+    return this.http.post<UserFile[]>(`${this.baseUrl}getFilesWithId`, listOfId);
+  }
+
+  deleteFile(id: number): Observable<void> {
+    console.log('som v delete');
+    return this.http.delete<void>(`${this.baseUrl}deleteFile/${id}`);
+  }
+
+  getFile(id: number): Observable<UserFile> {
+    return this.http.get<UserFile>(`${this.baseUrl}getUserFile/${id}`);
+  }
+
+  saveChanges(id: number, file: File): Observable<number> {
+    const formData = new FormData();
+    formData.append('newFile', file);
+    return this.http.put<number>(`${this.baseUrl}replaceFile/${id}`, formData);
+  }
+
+
+  downloadFile(fileId: number) {
+    return this.http.get(`${this.baseUrl}downloadFile/${fileId}`, {
+      responseType: 'blob',
+    });
+  }
+}

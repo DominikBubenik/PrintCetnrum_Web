@@ -1,0 +1,182 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+}
+
+.masthead {
+  height: 100vh;
+  width: 100%;
+  background-image: url("../../assets/about-pictures/PrintCentrum_inside.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: ivory;
+  padding: 0 20px;
+  text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+
+.masthead-heading {
+  font-size: 3rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.masthead-subheading {
+  font-size: 1.5rem;
+  font-style: italic;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.service-card {
+  background-color: var(--light);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+  .service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+
+.service-icon {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3B62D9;
+  color: var(--white);
+  font-size: 3rem;
+}
+
+.service-content {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+  .service-content h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+  }
+
+  .service-content p {
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+.contact {
+  padding: 6rem 5%;
+  background-color: #3B62D9;
+  color: white;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+}
+
+.contact-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--secondary);
+}
+
+.contact-details {
+  list-style: none;
+}
+
+  .contact-details li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .contact-details i {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+    color: var(--primary);
+  }
+
+.contact-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--secondary);
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  font-size: 1rem;
+}
+
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: 2px solid var(--primary);
+  }
+
+.contact-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.go-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  background-color: #007bff;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+  .go-to-top:hover {
+    opacity: 1;
+  }
+
+@media (max-width: 768px) {
+  .masthead-heading {
+    font-size: 2.2rem;
+  }
+
+  .masthead-subheading {
+    font-size: 1.2rem;
+  }
+
+  .services-section {
+    text-align: center;
+  }
+}

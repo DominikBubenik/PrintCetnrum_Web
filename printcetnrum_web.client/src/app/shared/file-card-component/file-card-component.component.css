@@ -1,0 +1,122 @@
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 3px solid #007bff;
+  display: inline-block;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.marked-file {
+  border: 2px solid #28a745;
+  background-color: #e6f9e6;
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+@media (max-width: 1200px) {
+  .file-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .file-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .file-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .file-card {
+    width: 400px;
+    max-height: 700px;
+  }
+}
+
+.file-card {
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  max-height: 700px;
+  padding: 1rem;
+  background-color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+  .file-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  }
+
+.file-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 90%;
+  padding-top: 90%;
+  overflow: hidden;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-placeholder {
+  font-size: 1.5rem;
+  color: #aaa;
+}
+
+  .file-placeholder i {
+    font-size: 2rem;
+  }
+
+.file-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0.25rem 0;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.file-date {
+  font-size: 0.75rem;
+  color: #777;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.file-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+}

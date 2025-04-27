@@ -9,11 +9,14 @@ namespace PrintCetnrum_Web.Server.Models.UserModels
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(255)]
         public string FileName { get; set; }
         [Required]
+        [MaxLength(50)]
         public string UniqueName { get; set; }
 
         [Required]
+        [MaxLength(255)]
         public string FilePath { get; set; }
 
         [Required]
@@ -26,7 +29,7 @@ namespace PrintCetnrum_Web.Server.Models.UserModels
         public int UserId { get; set; }
 
         public User User { get; set; }
-
+        [MaxLength(50)]
         public string Extension { get; set; }
 
         public long FileSize { get; set; }

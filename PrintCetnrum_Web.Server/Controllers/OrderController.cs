@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using PrintCetnrum_Web.Server.Context;
-using PrintCetnrum_Web.Server.Helpers;
 using PrintCetnrum_Web.Server.Models;
 using PrintCetnrum_Web.Server.Models.OrderModels;
 using PrintCetnrum_Web.Server.Models.UserModels;
@@ -13,17 +11,16 @@ namespace PrintCetnrum_Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
 
-        public OrderController(AppDbContext context, IEmailService emailService, IConfiguration configuration)
+        public OrderController(AppDbContext context, IEmailService emailService)
         {
             _context = context;
             _emailService = emailService;
-            _configuration = configuration;
         }
 
         [HttpPost("create-order")]
@@ -43,8 +40,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             string timeStamp = DateTime.Now.ToString("yyMMddHHmmss");
             order.OrderName = $"{timeStamp}{order.UserId}";
-
-            order.TotalPrice = order.TotalPrice;
             order.OrderCreated = DateTime.UtcNow;
 
             _context.Orders.Add(order);
@@ -56,28 +51,35 @@ namespace PrintCetnrum_Web.Server.Controllers
         [HttpPost("add-order-items")]
         public async Task<IActionResult> AddOrderItems([FromBody] OrderItem[] items, [FromQuery] string orderName)
         {
-            var order = this._context.Orders.FirstOrDefault(o => o.OrderName == orderName);
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderName == orderName);
             if (order == null)
             {
                 return BadRequest("No Order Found!");
             }
 
             decimal totalPrice = 0;
+            var designFileIds = items.Where(i => i.IsDesignFile).Select(i => i.UserFileId).ToList();
+            var ordinaryFileIds = items.Where(i => !i.IsDesignFile).Select(i => i.UserFileId).ToList();
+            var filesToUpdate = await _context.UserFiles.Where(f => ordinaryFileIds.Contains(f.Id)).ToListAsync();
+            var designFilesToUpdate = await _context.DesignFiles.Where(f => designFileIds.Contains(f.Id)).ToListAsync();
 
             foreach (var item in items)
             {
                 item.OrderId = order.Id;
                 totalPrice += item.Count * item.Price;
-                this._context.OrderItems.Add(item);
+                _context.OrderItems.Add(item);
             }
-
+            foreach (var file in filesToUpdate)
+            {
+                file.ShouldPrint = false;
+            }  
+            foreach (var file in designFilesToUpdate)
+            {
+                file.ShouldPrint = false;
+            }
             order.TotalPrice = totalPrice;
-
-            //dont forget to update order total price
             await _context.SaveChangesAsync();
-            
             return Ok();
-
         }
 
         [HttpPost("send-order-ready-email/{orderId}")]
@@ -101,21 +103,34 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
             var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
             var orderFiles = new List<UserFile>();
+            var designFiles = new List<DesignFile>();
 
             foreach (var item in orderItems)
             {
-                var userFile = await _context.UserFiles
-                    .Where(f => f.Id == item.UserFileId)
-                    .FirstOrDefaultAsync(); 
-
-                if (userFile != null) 
+                if (item.IsDesignFile)
                 {
-                    orderFiles.Add(userFile); 
+                    var designFile = await _context.DesignFiles
+                        .Where(f => f.Id == item.UserFileId)
+                        .FirstOrDefaultAsync();
+                    if (designFile != null)
+                    {
+                        designFiles.Add(designFile);
+                    }
+                }
+                else
+                {
+                    var userFile = await _context.UserFiles
+                        .Where(f => f.Id == item.UserFileId)
+                        .FirstOrDefaultAsync();
+
+                    if (userFile != null)
+                    {
+                        orderFiles.Add(userFile);
+                    }
                 }
             }
 
-            string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems, orderFiles);
-
+            string emailBody = EmailOrderReady.GenerateOrderReadyEmailBody(user.UserName, order.OrderName, order.TotalPrice, orderItems, orderFiles, designFiles);
 
             string subject = $"Your Order {order.OrderName} is Ready!";
             var emailModel = new EmailModel(user.Email, subject, emailBody);
@@ -139,7 +154,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             return Ok(order);
         }
-
 
         [HttpPut("update-order/{id}")]
         public async Task<IActionResult> UpdateOrder(int id, Order order)
@@ -166,7 +180,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
-
         [HttpDelete("delete-order/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
@@ -181,7 +194,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             return NoContent();
         }
-
 
         [HttpPatch("update-price/{id}")]
         public async Task<IActionResult> UpdateOrderPrice(int id, decimal newPrice)
@@ -198,17 +210,18 @@ namespace PrintCetnrum_Web.Server.Controllers
             return NoContent();
         }
 
-
-        [HttpGet("get-orders/{userName}")]
-        public async Task<IActionResult> GetOrders(string userName)
+        [Authorize]
+        [HttpGet("get-orders")]
+        public async Task<IActionResult> GetOrders()
         {
+            var userName = User.Identity?.Name;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
             if (user == null)
             {
                 return NotFound("User not found.");
             }
- 
-            if (user.Role == "Admin")
+            var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Id == user.RoleId);
+            if (userRole.Name == "Admin")
             {
                 var orders = await _context.Orders
                     .Include(o => o.OrderItems)

@@ -19,9 +19,9 @@ namespace PrintCetnrum_Web.Server.UtilityService
             emailMessage.From.Add(new MailboxAddress("PrintCentrum", from));
             emailMessage.To.Add(new MailboxAddress(emailModel.To, emailModel.To));
             emailMessage.Subject = emailModel.Subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)//Html
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                Text = emailModel.Content//string.Format(emailModel.Content) //
+                Text = emailModel.Content
             };
             using (var client = new SmtpClient())
             {
@@ -42,7 +42,6 @@ namespace PrintCetnrum_Web.Server.UtilityService
                     client.Dispose();
                 }
             }
-            //var apiKey = _configuration["SendGrid:ApiKey"];
         }
     }
 }

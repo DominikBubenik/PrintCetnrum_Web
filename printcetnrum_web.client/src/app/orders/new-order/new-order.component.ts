@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FileHandlerService } from '../../services/file-handler.service';
-import { AuthService } from '../../services/auth.service';
-import { UserFile } from '../../models/user-file';
+import { Component, inject, OnInit } from '@angular/core';
+import { FileHandlerService } from '../../services/file-services/file-handler.service';
+import { UserFile } from '../../models/user-models/user-file';
 import { Order, OrderItem } from '../../models/order-models/order.model';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject } from 'rxjs';
-import { OrderService } from '../../services/order.service';
+import { forkJoin } from 'rxjs';
+import { OrderService } from '../../services/order-services/order.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarUtil } from '../../shared/snackbar-util';
+import { DesignFilesHandlerService } from '../../services/file-services/design-files-handler.service';
 
 @Component({
   selector: 'app-new-order',
@@ -16,6 +16,8 @@ import { SnackBarUtil } from '../../shared/snackbar-util';
   styleUrls: ['./new-order.component.css']
 })
 export class NewOrderComponent implements OnInit {
+  private designFileService = inject(DesignFilesHandlerService);
+
   files: UserFile[] = [];
   order?: Order = undefined;
   orderItems: OrderItem[] = [];
@@ -26,7 +28,6 @@ export class NewOrderComponent implements OnInit {
   constructor(
     private fileHandlerService: FileHandlerService,
     private orderService: OrderService,
-    private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) { }
@@ -36,19 +37,31 @@ export class NewOrderComponent implements OnInit {
   }
 
   fetchFiles(): void {
-    this.fileHandlerService.fetchFiles().subscribe(
-      files => {
-        this.files = files.filter(file => file.shouldPrint);
+    const regularFiles$ = this.fileHandlerService.fetchFiles();
+    const stamps$ = this.designFileService.getUserStamps();
+    const diplomas$ = this.designFileService.getUserDiplomas();
+
+    forkJoin([regularFiles$, stamps$, diplomas$]).subscribe({
+      next: ([regularFiles, stamps, diplomas]) => {
+        stamps.forEach(file => file.isStamp = true);
+        diplomas.forEach(file => file.isDiploma = true);
+        this.files = [
+          ...regularFiles.filter(file => file.shouldPrint),
+          ...stamps.filter(file => file.shouldPrint),
+          ...diplomas.filter(file => file.shouldPrint)
+        ];
+        console.log(this.files);
         this.initializeOrder();
+
         if (this.order) {
           this.initializeOrderDetails();
         }
       },
-      error => {
-        console.error('Error fetching files:', error);
+      error: (err) => {
         SnackBarUtil.showSnackBar(this.snackBar, 'Failed to fetch files!', 'error');
+        console.error('File fetch error:', err);
       }
-    );
+    });
   }
 
   initializeOrder(): void {
@@ -71,6 +84,7 @@ export class NewOrderComponent implements OnInit {
       orderId: 0,
       userFileId: file.id,
       userFile: file,
+      isDesignFile: file.isDiploma || file.isStamp ? true : false,
       count: 1,
       color: 'black',
       paperType: 'regular',
@@ -86,18 +100,15 @@ export class NewOrderComponent implements OnInit {
 
   isImage(extension: string): boolean {
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'];
-    return imageExtensions.includes(extension.toLowerCase());
+    return imageExtensions.includes(extension?.toLowerCase());
   }
 
   submitOrder(): void {
-    console.log('ideeem');
     if (!this.order) {
       return;
     }
-    console.log('ideeem');
     this.orderService.createOrder(this.order).subscribe(
       (createdOrder) => {
-        console.log('vytvaram objednavku');
         this.orderService.addOrderItems(createdOrder.orderName, this.orderItems).subscribe(
           () => {
             this.order = undefined;
@@ -105,7 +116,6 @@ export class NewOrderComponent implements OnInit {
             this.router.navigate(['/allOrders']);
           },
           (error) => {
-            console.error('Error adding order items:', error);
             SnackBarUtil.showSnackBar(this.snackBar, 'Failed to add order items!', 'error');
           }
         );
@@ -115,5 +125,20 @@ export class NewOrderComponent implements OnInit {
         SnackBarUtil.showSnackBar(this.snackBar, 'Creating order failed!', 'error');
       }
     );
+  }
+
+  getFileIcon(extension: string): string {
+    switch (extension) {
+      case '.pdf':
+        return 'bi bi-filetype-pdf pdf';
+      case '.doc':
+      case '.docx':
+        return 'bi bi-file-earmark-word word';
+      case '.xls':
+      case '.xlsx':
+        return 'bi bi-filetype-xlsx excel';
+      default:
+        return 'bi bi-file-earmark-text';
+    }
   }
 }

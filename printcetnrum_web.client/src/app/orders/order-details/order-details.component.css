@@ -3,15 +3,15 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 20px; /* Add spacing between items */
-  padding: 10px; /* Add padding for better spacing */
-  background-color: #f9f9f9; /* Light background for better visibility */
-  border: 1px solid #ddd; /* Subtle border for a clean look */
-  border-radius: 8px; /* Rounded corners */
+  gap: 20px;
+  padding: 10px; 
+  background-color: #f9f9f9; 
+  border: 1px solid #ddd;
+  border-radius: 8px; 
 }
 
 .info-item {
-  font-size: 16px; /* Adjust font size for readability */
+  font-size: 16px; 
   margin: 5px 0;
 }
 
@@ -26,25 +26,22 @@
 }
 
 .table-responsive {
-  max-height: 80vh; /* Add a height limit */
-  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 80vh; 
+  overflow-y: auto; 
 }
 
 .table th,
 .table td {
-  text-align: center; /* Center align content for better readability */
-  vertical-align: middle; /* Align content vertically */
+  text-align: center; 
+  vertical-align: middle;
 }
 
 .table thead th {
-  background-color: #f8f9fa; /* Light gray header background */
-  font-weight: bold; /* Bold header text */
+  background-color: #f8f9fa; 
+  font-weight: bold;
 }
 
 .btn-sm {
   padding: 5px 10px;
   font-size: 14px;
 }
-
-
-

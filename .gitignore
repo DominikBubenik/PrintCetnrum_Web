@@ -363,3 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 /printcetnrum_web.client/printcetnrum_web.client.esproj
 /PrintCetnrum_Web.Server/wwwroot/UserData
+/data_model_printCentrum.mwb
+/data_model_printCentrum.mwb.bak
+/printcetnrum_web.client/package-lock.json
+/data_model_printCentrum.mwb.bak.bak
+/PrintCetnrum_Web.Server.zip

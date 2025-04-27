@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -23,3 +24,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 body {
   padding-top: 35px;
 }
+
+.upload-button button {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+  .upload-button button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .upload-button button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }

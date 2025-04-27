@@ -14,17 +14,22 @@ namespace PrintCetnrum_Web.Server.Models.OrderModels
 
         public Order Order { get; set; }
         [Required]
-        public int UserFileId { get; set; } 
+        public int UserFileId { get; set; }
 
-        //public UserFile UserFile { get; set; }
+        [Required]
+        public bool IsDesignFile { get; set; }
 
         [Required]
         public int Count { get; set; }
         [Required]
         public decimal Price { get; set; }
+        [MaxLength(50)]
         public string Color { get; set; }
+        [MaxLength(50)]
         public string PaperType { get; set; }
+        [MaxLength(50)]
         public string Size { get; set; }
+        [MaxLength(255)]
         public string Description { get; set; }
     }
 }

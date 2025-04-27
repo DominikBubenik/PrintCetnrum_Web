@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrintCetnrum_Web.Server.Context;
-using PrintCetnrum_Web.Server.Models;
 using PrintCetnrum_Web.Server.Models.UserModels;
 
 namespace PrintCetnrum_Web.Server.Controllers
@@ -30,8 +29,20 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 return BadRequest("No files uploaded.");
             }
-            var maxFilesSize = 15 * 1024 * 1024; // 15MB per file
-            
+            if (files.Count > 10)
+            {
+                return BadRequest("Select max 10 files");
+            }
+            var maxFilesSize = 30 * 1024 * 1024; // 30MB per file
+            int currentSize = 0;
+            foreach (var file in files)
+            {
+                currentSize += (int)file.Length;
+                if (currentSize > maxFilesSize)
+                {
+                    return BadRequest($"Files are too large. Maximum size allowed is 15MB.");
+                }
+            }
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);
             if (user == null)
             {
@@ -45,17 +56,11 @@ namespace PrintCetnrum_Web.Server.Controllers
             }
 
             var uploadedFiles = new List<object>();
-            int currentSize = 0;
             foreach (var file in files)
             {
                 if (file.Length == 0)
                 {
-                    continue; // Skip empty files
-                }
-                currentSize += (int)file.Length;
-                if (currentSize > maxFilesSize)
-                {
-                    return BadRequest($"Files are too large. Maximum size allowed is 15MB.");
+                    continue;
                 }
                 var fileName = Path.GetFileName(file.FileName);
                 var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
@@ -90,7 +95,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             return Ok(uploadedFiles);
         }
 
-
         [Authorize]
         [HttpGet("getUserFiles")]
         public async Task<IActionResult> GetUserFiles([FromQuery] string userName)
@@ -120,7 +124,7 @@ namespace PrintCetnrum_Web.Server.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteFile/{id}")]
         public async Task<IActionResult> DeleteFile(int id)
         {
             var file = await _dbContext.UserFiles.FindAsync(id);
@@ -145,18 +149,29 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         [Authorize]
         [HttpPut("updatePrintStatus/{id}")]
-        public async Task<IActionResult> UpdatePrintStatus(int id, [FromBody] bool shouldPrint)
+        public async Task<IActionResult> UpdatePrintStatus(int id, [FromBody] UpdatePrintDto dto)
         {
-            var file = await _dbContext.UserFiles.FindAsync(id);
-
-            if (file == null)
+            if (dto.IsFile)
             {
-                return NotFound("File not found.");
+                var file = await _dbContext.UserFiles.FindAsync(id);
+
+                if (file == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                file.ShouldPrint = dto.ShouldPrint;
             }
-
-            file.ShouldPrint = shouldPrint;
+            else
+            {
+                var designFile = await _dbContext.DesignFiles.FindAsync(id);
+                if (designFile == null)
+                {
+                    return NotFound("Design file not found.");
+                }
+                designFile.ShouldPrint = dto.ShouldPrint;
+            }
             await _dbContext.SaveChangesAsync();
-
             return NoContent();
         }
 
@@ -209,7 +224,6 @@ namespace PrintCetnrum_Web.Server.Controllers
             {
                 await newFile.CopyToAsync(stream);
             }
-
             var userFile = new UserFile
             {
                 FileName = fileName,
@@ -225,7 +239,8 @@ namespace PrintCetnrum_Web.Server.Controllers
             _dbContext.UserFiles.Add(userFile);
             await _dbContext.SaveChangesAsync();
 
-            var oldFilePath = Path.Combine(_uploadsFolder, currentFile.FilePath);
+            var relativePath = currentFile.FilePath.TrimStart('/');
+            var oldFilePath = Path.Combine(_uploadsFolder, relativePath);
             if (System.IO.File.Exists(oldFilePath))
             {
                 System.IO.File.Delete(oldFilePath);
@@ -264,7 +279,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         private string GetMimeType(string fileExtension)
         {
-            // You can customize the MIME types as needed
             switch (fileExtension.ToLower())
             {
                 case ".jpg":
@@ -293,7 +307,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 case ".mp4":
                     return "video/mp4";
                 default:
-                    return "application/octet-stream"; // Fallback for unknown types
+                    return "application/octet-stream"; 
             }
         }
 
@@ -311,15 +325,11 @@ namespace PrintCetnrum_Web.Server.Controllers
                 files.Add(await _dbContext.UserFiles.FirstOrDefaultAsync(o => o.Id == id));
             }
 
-         
-
             if (!files.Any())
             {
                 return NotFound("No files found for the provided IDs.");
             }
-
             return Ok(files);
         }
-
     }
 }

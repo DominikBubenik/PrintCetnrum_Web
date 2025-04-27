@@ -1,6 +1,4 @@
-import { UserFile } from "../user-file";
-import { User } from "../user.model";
-
+import { UserFile } from "../user-models/user-file";
 export interface Order {
   id: number;
   orderCreated: Date;
@@ -19,6 +17,7 @@ export interface OrderItem {
   orderId: number;
   userFileId: number;
   userFile: UserFile;
+  isDesignFile: boolean;
   count: number;
   color: string; 
   paperType: string; 

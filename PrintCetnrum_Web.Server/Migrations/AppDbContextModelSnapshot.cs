@@ -44,7 +44,8 @@ namespace PrintCetnrum_Web.Server.Migrations
 
                     b.Property<string>("OrderName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("OrderTakenTime")
                         .HasColumnType("datetime2");
@@ -72,25 +73,32 @@ namespace PrintCetnrum_Web.Server.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsDesignFile")
+                        .HasColumnType("bit");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<string>("PaperType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Size")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("UserFileId")
                         .HasColumnType("int");
@@ -102,7 +110,7 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.ToTable("order_items", (string)null);
                 });
 
-            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.PrizeList", b =>
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.DesignFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,19 +118,57 @@ namespace PrintCetnrum_Web.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("ShouldPrint")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemName")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
-                    b.ToTable("prize_lists", (string)null);
+                    b.ToTable("design_files", (string)null);
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("roles", (string)null);
                 });
 
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.User", b =>
@@ -133,23 +179,80 @@ namespace PrintCetnrum_Web.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("AcountCreated")
+                    b.Property<DateTime>("AccountCreated")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsAccountActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserAddress", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PostCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Street")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("user_addresses", (string)null);
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserAuthentication", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime2");
@@ -158,20 +261,16 @@ namespace PrintCetnrum_Web.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ResetPasswordToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("UserId");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("users", (string)null);
+                    b.ToTable("user_authentications", (string)null);
                 });
 
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserFile", b =>
@@ -183,15 +282,18 @@ namespace PrintCetnrum_Web.Server.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Extension")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("FilePath")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
@@ -201,7 +303,8 @@ namespace PrintCetnrum_Web.Server.Migrations
 
                     b.Property<string>("UniqueName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
@@ -238,6 +341,50 @@ namespace PrintCetnrum_Web.Server.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.DesignFile", b =>
+                {
+                    b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.User", b =>
+                {
+                    b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserAddress", b =>
+                {
+                    b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
+                        .WithOne("Address")
+                        .HasForeignKey("PrintCetnrum_Web.Server.Models.UserModels.UserAddress", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserAuthentication", b =>
+                {
+                    b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
+                        .WithOne("Authentication")
+                        .HasForeignKey("PrintCetnrum_Web.Server.Models.UserModels.UserAuthentication", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.UserFile", b =>
                 {
                     b.HasOne("PrintCetnrum_Web.Server.Models.UserModels.User", "User")
@@ -252,6 +399,13 @@ namespace PrintCetnrum_Web.Server.Migrations
             modelBuilder.Entity("PrintCetnrum_Web.Server.Models.OrderModels.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("PrintCetnrum_Web.Server.Models.UserModels.User", b =>
+                {
+                    b.Navigation("Address");
+
+                    b.Navigation("Authentication");
                 });
 #pragma warning restore 612, 618
         }

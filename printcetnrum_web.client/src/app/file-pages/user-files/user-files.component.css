@@ -1,0 +1,178 @@
+.main-container {
+  display: flex;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #ffffff;
+  border-right: 1px solid #e1e4e8;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  transition: width 0.3s ease;
+}
+
+.files-container {
+  flex-grow: 1;
+  overflow-y: auto; 
+  padding: 20px;
+  background-color: #f4f6f9;
+  height: calc(100vh - 250px); 
+}
+
+
+.file-actions-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+  .file-actions-row .btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    text-transform: none;
+    font-weight: 500;
+  }
+
+    .file-actions-row .btn i {
+      margin-right: 5px;
+      font-size: 1rem;
+    }
+
+.sorting-options {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+  .sorting-options select {
+    width: 200px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+  }
+
+    .sorting-options select:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f4f6f9;
+}
+
+@media (max-width: 1200px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e1e4e8;
+  }
+}
+
+@media (max-width: 768px) {
+  .file-actions-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+    .file-actions-row .btn {
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+  .sorting-options {
+    flex-direction: column;
+  }
+
+    .sorting-options select {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+  .filter-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #007bff;
+  }
+
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn:hover::after {
+    opacity: 1;
+  }
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+  .btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #4e555b;
+  }
