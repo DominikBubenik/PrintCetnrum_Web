@@ -7,7 +7,6 @@ import { DebugElement } from '@angular/core';
 describe('FileCardComponentComponent', () => {
   let component: FileCardComponentComponent;
   let fixture: ComponentFixture<FileCardComponentComponent>;
-  let markForPrintButton: DebugElement;
   let editButton: DebugElement;
   let deleteButton: DebugElement;
 

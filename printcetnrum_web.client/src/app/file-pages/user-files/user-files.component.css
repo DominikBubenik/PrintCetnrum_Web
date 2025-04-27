@@ -77,14 +77,12 @@
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
 
-/* Content Area Styling */
 .content {
   flex-grow: 1;
   padding: 20px;
   background-color: #f4f6f9;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 1200px) {
   .main-container {
     flex-direction: column;
@@ -138,7 +136,6 @@
     accent-color: #007bff;
   }
 
-/* Subtle Hover and Focus Effects */
 .btn {
   position: relative;
   overflow: hidden;
@@ -160,7 +157,6 @@
     opacity: 1;
   }
 
-/* Additional Fine-Tuning */
 .btn-primary {
   background-color: #007bff;
   border-color: #007bff;

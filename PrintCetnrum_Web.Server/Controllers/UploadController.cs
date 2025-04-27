@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrintCetnrum_Web.Server.Context;
-using PrintCetnrum_Web.Server.Models;
 using PrintCetnrum_Web.Server.Models.UserModels;
 
 namespace PrintCetnrum_Web.Server.Controllers
@@ -280,7 +279,6 @@ namespace PrintCetnrum_Web.Server.Controllers
 
         private string GetMimeType(string fileExtension)
         {
-            // You can customize the MIME types as needed
             switch (fileExtension.ToLower())
             {
                 case ".jpg":
@@ -309,7 +307,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 case ".mp4":
                     return "video/mp4";
                 default:
-                    return "application/octet-stream"; // Fallback for unknown types
+                    return "application/octet-stream"; 
             }
         }
 
@@ -327,15 +325,11 @@ namespace PrintCetnrum_Web.Server.Controllers
                 files.Add(await _dbContext.UserFiles.FirstOrDefaultAsync(o => o.Id == id));
             }
 
-         
-
             if (!files.Any())
             {
                 return NotFound("No files found for the provided IDs.");
             }
-
             return Ok(files);
         }
-
     }
 }

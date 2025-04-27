@@ -95,7 +95,16 @@ namespace Testing
         [Test]
         public async Task GetUserDesignFiles_ShouldReturnOk_WhenUserExists()
         {
-            var user = new User { Id = 2, UserName = "existinguser" };
+            var user = new User
+            {
+                Id = 2,
+                UserName = "existinguser",
+                Email = "existinguser@example.com",
+                FirstName = "Existing",
+                LastName = "User",
+                Phone = "123-456-7890"
+            };
+
             _dbContext.Users.Add(user);
             _dbContext.DesignFiles.Add(new DesignFile
             {

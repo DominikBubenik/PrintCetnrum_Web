@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResetPasswordPageComponent } from './reset-password-page.component';
-import { FormBuilder, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ReactiveFormsModule} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResetPasswordService } from '../../services/auth-services/reset-password.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
-import { SnackBarUtil } from '../../shared/snackbar-util';
 import { LoginPageComponent } from '../login-page/login-page.component';
 import { ResetPassword } from '../../models/user-models/reset-password.model';
 

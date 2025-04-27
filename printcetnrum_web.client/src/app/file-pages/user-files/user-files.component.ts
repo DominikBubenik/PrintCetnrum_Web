@@ -156,7 +156,6 @@ export class UserFilesComponent implements OnInit {
     this.router.navigate(['/edit', id]);
   }
 
-
   sortFiles(criteria: string): void {
     if (criteria === 'date') {
       this.files.sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()).reverse;

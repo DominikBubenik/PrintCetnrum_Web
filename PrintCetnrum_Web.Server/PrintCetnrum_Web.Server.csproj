@@ -46,7 +46,6 @@
   <ItemGroup>
     <Folder Include="Context\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Tests\ControllerTests\" />
     <Folder Include="wwwroot\UserData\" />
   </ItemGroup>
 

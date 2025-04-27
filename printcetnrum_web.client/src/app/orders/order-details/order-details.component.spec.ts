@@ -8,9 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { UserStoreService } from '../../services/auth-services/user-store.service';
-import { SnackBarUtil } from '../../shared/snackbar-util';
 import { Order, OrderItem } from '../../models/order-models/order.model';
-import { UserFile } from '../../models/user-models/user-file';
 
 describe('OrderDetailsComponent', () => {
   let component: OrderDetailsComponent;

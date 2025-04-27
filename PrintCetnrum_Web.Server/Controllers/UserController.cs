@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 using PrintCetnrum_Web.Server.Context;
 using PrintCetnrum_Web.Server.Helpers;
 using PrintCetnrum_Web.Server.Models;
@@ -83,10 +82,9 @@ namespace PrintCetnrum_Web.Server.Controllers
             if (await CheckUsernameExistAsync(userParam.UserName))
                 return BadRequest(new { Message = "Username Already Exist" });
 
-            //psawword strength checking
-            //var passMessage = CheckPasswordStrength(userParam.Password);
-            //if (!string.IsNullOrEmpty(passMessage))
-            //    return BadRequest(new { Message = passMessage.ToString() });
+            var passMessage = CheckPasswordStrength(userParam.Password);
+            if (!string.IsNullOrEmpty(passMessage))
+                return BadRequest(new { Message = passMessage.ToString() });
             var hashedPassword = PasswordHasher.HashPassword(userParam.Password);
             
             var user = new User

@@ -111,7 +111,7 @@ header {
   font-weight: bold;
   border-left: 4px solid var(--printcentrum-accent);
 }
-/* User dropdown styling */
+
 .user-profile-dropdown {
   position: relative;
   display: inline-block;
@@ -185,11 +185,11 @@ header {
     transform: translateY(0);
   }
 }
-/* Hide mobile elements in desktop view */
+
 .desktop_menu:not(.mobile_menu) .user-name-mobile {
   display: none;
 }
-/* Mobile styles */
+
 @media screen and (max-width: 900px) {
   header {
     height: 64px;
@@ -264,7 +264,7 @@ header {
     margin-right: 10px;
     color: var(--printcentrum-dark-blue);
   }
-/* Main content padding adjustment */
+
 body {
   padding-top: 80px;
   font-family: 'Roboto', 'Segoe UI', sans-serif;

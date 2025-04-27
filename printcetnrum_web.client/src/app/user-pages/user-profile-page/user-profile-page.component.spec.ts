@@ -3,7 +3,6 @@ import { UserProfilePageComponent } from './user-profile-page.component';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
-import { SnackBarUtil } from '../../shared/snackbar-util';
 import { User } from '../../models/user-models/user.model';
 
 describe('UserProfilePageComponent', () => {

@@ -3,7 +3,7 @@ import { UsersListPageComponent } from './users-list-page.component';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { UserStoreService } from '../../services/auth-services/user-store.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { User } from '../../models/user-models/user.model';
 import { FormsModule } from '@angular/forms';
 

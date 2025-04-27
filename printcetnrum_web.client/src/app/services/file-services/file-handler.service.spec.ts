@@ -25,7 +25,6 @@ describe('FileHandlerService', () => {
     service = TestBed.inject(FileHandlerService);
     httpMock = TestBed.inject(HttpTestingController);
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    userStoreService = TestBed.inject(UserStoreService) as jasmine.SpyObj<UserStoreService>;
   });
 
   afterEach(() => {

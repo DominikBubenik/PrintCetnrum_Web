@@ -1,5 +1,4 @@
 import { UserFile } from "../user-models/user-file";
-
 export interface Order {
   id: number;
   orderCreated: Date;

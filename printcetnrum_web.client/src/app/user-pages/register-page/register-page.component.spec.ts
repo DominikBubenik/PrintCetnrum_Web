@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterPageComponent } from './register-page.component';
-import { FormBuilder, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
-import { SnackBarUtil } from '../../shared/snackbar-util';
 import { LoginPageComponent } from '../login-page/login-page.component';
 
 describe('RegisterPageComponent', () => {

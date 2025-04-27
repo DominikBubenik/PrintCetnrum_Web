@@ -9,7 +9,6 @@ import { UserStoreService } from '../auth-services/user-store.service';
   providedIn: 'root'
 })
 export class FileHandlerService {
-  private userStore = inject(UserStoreService);
   private http = inject(HttpClient);
   private auth = inject(AuthService);
   private baseUrl = 'https://localhost:7074/api/Upload/';

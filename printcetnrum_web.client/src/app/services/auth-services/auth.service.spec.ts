@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, of } from 'rxjs';
+import { of } from 'rxjs';
 import { UserStoreService } from './user-store.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { TokenApiModel } from '../../models/user-models/token-api.model';
