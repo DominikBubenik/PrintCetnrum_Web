@@ -349,8 +349,9 @@ namespace PrintCetnrum_Web.Server.Controllers
 
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var emailToken = Convert.ToBase64String(tokenBytes);
-            user.Authentication.ResetPasswordToken = emailToken;
-            user.Authentication.ResetPasswordExpiry = DateTime.Now.AddDays(1);
+            var auth = await authContext.UserAuthentications.FirstOrDefaultAsync(a => a.UserId == user.Id);
+            auth.ResetPasswordToken = emailToken;
+            auth.ResetPasswordExpiry = DateTime.Now.AddDays(1);
             string from = configuration["EmailSettings:From"];
             var emailModel = new EmailModel(email, "Reset Password", 
                 EmailBody.EmailStringBody(email, emailToken));
@@ -378,9 +379,10 @@ namespace PrintCetnrum_Web.Server.Controllers
                     Message = "email Does Not Exist"
                 });
             }
-
-            var tokenCode = user.Authentication.ResetPasswordToken;
-            DateTime emailTokenExpiry = user.Authentication.ResetPasswordExpiry;
+            var auth = await authContext.UserAuthentications
+                .FirstOrDefaultAsync(a => a.UserId == user.Id);
+            var tokenCode = auth.ResetPasswordToken;
+            DateTime emailTokenExpiry = auth.ResetPasswordExpiry;
             if (tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
             {
                 return BadRequest(new
@@ -390,7 +392,7 @@ namespace PrintCetnrum_Web.Server.Controllers
                 });
             }
 
-            user.Authentication.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
+            auth.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
             authContext.Entry(user).State = EntityState.Modified;
             await authContext.SaveChangesAsync();
             return Ok(new
